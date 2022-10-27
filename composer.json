@@ -1,0 +1,36 @@
+{
+    "name": "netgen/ibexa-fieldtype-enhanced-link",
+    "description": "Netgen's enhanced link field type for Ibexa",
+    "type": "ibexa-bundle",
+    "authors": [
+        {
+            "name": "Netgen",
+            "homepage": "https://netgen.io"
+        }
+    ],
+    "require": {
+        "ext-dom": "*",
+        "php": "^7.4 || ^8.0",
+        "ibexa/core": "4.2.2",
+        "ibexa/content-forms": "4.2.2",
+        "ibexa/admin-ui": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "license": "GPL-2.0-only",
+    "autoload": {
+        "psr-4": {
+            "Netgen\\IbexaFieldTypeEnhancedLink\\": "lib/",
+            "Netgen\\IbexaFieldTypeEnhancedLinkBundle\\": "bundle/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Netgen\\IbexaFieldTypeEnhancedLink\\Tests\\": "tests/lib",
+            "Netgen\\IbexaFieldTypeEnhancedLinkBundle\\Tests\\": "tests/bundle"
+        }
+    },
+    "scripts": {
+        "test": "@php vendor/bin/phpunit --colors=always"
+    }
+}

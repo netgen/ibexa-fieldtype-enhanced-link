@@ -1,0 +1,63 @@
+{# remove or consolidate with ui/field_type/preview #}
+{% extends '@IbexaCore/content_fields.html.twig' %}
+
+{% trans_default_domain 'fieldtypes_preview' %}
+
+{% block ngenhancedlink_field %}
+    {% apply spaceless %}
+        {% if not ibexa_field_is_empty( content, field ) %}
+            {% set attr = attr|merge({'class': (attr.class|default('') ~ ' ibexa-field-preview ibexa-field-preview--ezobjectrelationlist')|trim}) %}
+            <h1>THIS IS TEMPLATE FOR ADMIN VIEW (PREVIEW)</h1>
+            <div {{ block( 'field_attributes' ) }}>
+                {% embed '@ibexadesign/ui/component/table/table.html.twig' with {
+                    headline: 'ezobjectrelation.single_relation'|trans|desc('Single relation'),
+                    head_cols: [
+                        { content: 'ezobjectrelation.name'|trans|desc('Name') },
+                        { content: 'ezobjectrelation.content_type'|trans|desc('Content Type') },
+                        { content: 'ezobjectrelation.created'|trans|desc('Created') },
+                    ],
+                } %}
+                    {% block tbody %}
+                        {% embed '@ibexadesign/ui/component/table/table_body_row.html.twig' with { field: field } %}
+                            {% block body_row_cells %}
+                                {{ render(controller('Ibexa\\Bundle\\AdminUi\\Controller\\ContentController::relationViewAction', {
+                                    'contentId': field.value.destinationContentId,
+                                } )) }}
+                            {% endblock %}
+                        {% endembed %}
+                    {% endblock %}
+                {% endembed %}
+            </div>
+        {% endif %}
+    {% endapply %}
+{% endblock %}
+
+{# The simple_block_field block is a shorthand html block-based fields (like eztext or ezrichtext) #}
+{# You can define a field_value variable before rendering this one if you need special operation for rendering content (i.e. nl2br) #}
+{% block simple_block_field %}
+    {% apply spaceless %}
+        {% if field_value is not defined %}
+            {% set field_value = field.value %}
+        {% endif %}
+        <div {{ block( 'field_attributes' ) }}>
+    {% endapply %}{{ field_value|raw }}{% apply spaceless %}
+    </div>
+{% endapply %}
+{% endblock %}
+
+{% block simple_inline_field %}
+    {% apply spaceless %}
+        {% if field_value is not defined %}
+            {% set field_value = field.value %}
+        {% endif %}
+        <span {{ block( 'field_attributes' ) }}>{{ field_value }}</span>
+    {% endapply %}
+{% endblock %}
+
+{# Block for field attributes rendering. Useful to add a custom class, id or whatever HTML attribute to the field markup #}
+{% block field_attributes %}
+    {% apply spaceless %}
+        {% set attr = attr|default( {} ) %}
+        {% for attrname, attrvalue in attr %}{{ attrname }}="{{ attrvalue }}" {% endfor %}
+    {% endapply %}
+{% endblock %}

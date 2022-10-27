@@ -1,0 +1,47 @@
+parameters:
+    ng.fieldtype.enhanced_link.identifier: 'ngenhancedlink'
+
+services:
+    Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type:
+        parent: Ibexa\Core\FieldType\FieldType
+        public: true
+        arguments:
+            - '@Ibexa\Core\Persistence\Cache\ContentHandler'
+            - '@Ibexa\Core\Repository\Validator\TargetContentValidatorInterface'
+        tags:
+            - { name: ibexa.field_type, alias: 'ngenhancedlink' }
+
+    Netgen\IbexaFieldTypeEnhancedLink\Persistence\Legacy\FieldValueConverter:
+        tags:
+            - { name: ibexa.field_type.storage.legacy.converter, alias: '%ng.fieldtype.enhanced_link.identifier%' }
+
+    Netgen\IbexaFieldTypeEnhancedLink\Form\EnhancedLinkFormMapper:
+        arguments:
+            - '@ibexa.api.service.content_type'
+            - '@ibexa.api.service.location'
+        tags:
+            - { name: ibexa.admin_ui.field_type.form.mapper.definition, fieldType: 'ngenhancedlink' }
+#            - { name: ibexa.admin_ui.field_type.form.mapper.value, fieldType: '%ng.fieldtype.enhanced_link.identifier%' }
+
+    Netgen\IbexaFieldTypeEnhancedLink\FieldType\SearchFields:
+        tags:
+            - { name: ibexa.field_type.indexable, alias: 'ngenhancedlink' }
+
+    Netgen\IbexaFieldTypeEnhancedLink\ContentForms\FieldType\Mapper\EnhancedLinkFormMapper:
+        arguments:
+            - '@ibexa.api.service.content_type'
+            - '@ibexa.api.service.location'
+        tags:
+            - { name: ibexa.admin_ui.field_type.form.mapper.value, fieldType: ngenhancedlink }
+
+    Netgen\IbexaFieldTypeEnhancedLink\ContentForms\Form\Type\FieldType\EnhancedLinkFieldType:
+        arguments:
+            - '@ibexa.api.service.content'
+            - '@ibexa.api.service.content_type'
+        tags:
+            - { name: 'form.type' }
+
+    Netgen\IbexaFieldTypeEnhancedLink\AdminUi\UniversalDiscovery\Event\Subscriber\:
+        resource: "../../../lib/AdminUi/UniversalDiscovery/Event/Subscriber/*"
+        public: true
+        tags: ['kernel.event_subscriber']

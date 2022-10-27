@@ -1,0 +1,14 @@
+{% extends '@ibexadesign/content/form_fields.html.twig' %}
+
+{% trans_default_domain 'ezplatform_content_forms_content' %}
+
+{% use '@ibexadesign/ui/field_type/edit/relation_base.html.twig' %}
+
+{% block ibexa_fieldtype_ngenhancedlink_widget %}
+    <h1>THIS IS TEMPLATE FOR FIELD VALUE EDIT</h1>
+    {% set limit = 1 %}
+    {% set default_location = form.vars.default_location ? form.vars.default_location.id : null %}
+    {% set allowed_content_type_identifiers = form.parent.vars.value.fieldDefinition.fieldSettings.selectionContentTypes %}
+    {% set helper = 'ezobjectrelation.helper'|trans|desc('Stores a Relation to a Content item.') %}
+    {{ block('ezobjectrelation_base_widget') }}
+{% endblock %}
