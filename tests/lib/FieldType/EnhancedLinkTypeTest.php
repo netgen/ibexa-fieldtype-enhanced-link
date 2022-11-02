@@ -4,7 +4,7 @@
  * @copyright Copyright (C) Ibexa AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
-namespace Netgen\IbexaFieldTypeEnhancedLink\Tests;
+namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\FieldType;
 
 use Ibexa\Contracts\Core\FieldType\Value as SPIValue;
 use Ibexa\Contracts\Core\Persistence\Content\Handler as SPIContentHandler;
@@ -19,7 +19,7 @@ use Ibexa\Core\FieldType\ValidationError;
 use Ibexa\Core\Repository\Validator\TargetContentValidatorInterface;
 use Ibexa\Tests\Core\FieldType\FieldTypeTest;
 
-class TypeTest extends FieldTypeTest
+class EnhancedLinkTypeTest extends FieldTypeTest
 {
     private const DESTINATION_CONTENT_ID = 14;
 
