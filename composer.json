@@ -30,7 +30,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Netgen\\IbexaFieldTypeEnhancedLink\\Tests\\": "tests/lib",
+            "Netgen\\IbexaFieldTypeEnhancedLink\\Tests\\Integration\\": "tests/integration",
+            "Netgen\\IbexaFieldTypeEnhancedLink\\Tests\\Unit\\": "tests/lib",
             "Netgen\\IbexaFieldTypeEnhancedLinkBundle\\Tests\\": "tests/bundle"
         }
     },

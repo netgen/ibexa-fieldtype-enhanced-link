@@ -61,7 +61,7 @@ class FieldValueConverter implements Converter
 
         $defaultLocation = $doc->createElement('contentobject-placement');
         if (!empty($fieldSettings['selectionRoot'])) {
-            $defaultLocation->setAttribute('node-id', (int)$fieldSettings['selectionRoot']);
+            $defaultLocation->setAttribute('node-id', (string)$fieldSettings['selectionRoot']);
         }
         $root->appendChild($defaultLocation);
 

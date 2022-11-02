@@ -8,15 +8,29 @@ use Ibexa\Core\FieldType\Value as BaseValue;
 
 class Value extends BaseValue
 {
-    public ?int $destinationContentId;
+    public const LinkTypeInternal = 'internal';
+    public const LinkTypeExternal = 'external';
+
+    public string $linkType;
+    public $destinationContentId;
 
     /**
      * @noinspection MagicMethodsValidityInspection
      * @noinspection PhpMissingParentConstructorInspection
      */
-    public function __construct(?int $destinationContentId = null)
+    public function __construct($destinationContentId = null)
     {
         $this->destinationContentId = $destinationContentId;
+    }
+
+    public function isInternal(): bool
+    {
+
+    }
+
+    public function isExternal(): bool
+    {
+
     }
 
     public function __toString()

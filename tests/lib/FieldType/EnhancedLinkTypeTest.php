@@ -1,10 +1,8 @@
 <?php
 
-/**
- * @copyright Copyright (C) Ibexa AS. All rights reserved.
- * @license For full copyright and license information view LICENSE file distributed with this source code.
- */
-namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\FieldType;
+declare(strict_types=1);
+
+namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Unit\FieldType;
 
 use Ibexa\Contracts\Core\FieldType\Value as SPIValue;
 use Ibexa\Contracts\Core\Persistence\Content\Handler as SPIContentHandler;
@@ -14,10 +12,10 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Relation;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentException;
 use Ibexa\Core\FieldType\Relation\Type as RelationType;
-use Ibexa\Core\FieldType\Relation\Value;
 use Ibexa\Core\FieldType\ValidationError;
 use Ibexa\Core\Repository\Validator\TargetContentValidatorInterface;
 use Ibexa\Tests\Core\FieldType\FieldTypeTest;
+use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 
 class EnhancedLinkTypeTest extends FieldTypeTest
 {
@@ -121,17 +119,12 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         ];
     }
 
-    /**
-     * Returns the empty value expected from the field type.
-     *
-     * @return \Ibexa\Core\FieldType\Relation\Value
-     */
-    protected function getEmptyValueExpectation()
+    protected function getEmptyValueExpectation(): Value
     {
         return new Value();
     }
 
-    public function provideInvalidInputForAcceptValue()
+    public function provideInvalidInputForAcceptValue(): array
     {
         return [
             [
@@ -141,36 +134,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         ];
     }
 
-    /**
-     * Data provider for valid input to acceptValue().
-     *
-     * Returns an array of data provider sets with 2 arguments: 1. The valid
-     * input to acceptValue(), 2. The expected return value from acceptValue().
-     * For example:
-     *
-     * <code>
-     *  return array(
-     *      array(
-     *          null,
-     *          null
-     *      ),
-     *      array(
-     *          __FILE__,
-     *          new BinaryFileValue( array(
-     *              'path' => __FILE__,
-     *              'fileName' => basename( __FILE__ ),
-     *              'fileSize' => filesize( __FILE__ ),
-     *              'downloadCount' => 0,
-     *              'mimeType' => 'text/plain',
-     *          ) )
-     *      ),
-     *      // ...
-     *  );
-     * </code>
-     *
-     * @return array
-     */
-    public function provideValidInputForAcceptValue()
+    public function provideValidInputForAcceptValue(): array
     {
         return [
             [
@@ -188,42 +152,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         ];
     }
 
-    /**
-     * Provide input for the toHash() method.
-     *
-     * Returns an array of data provider sets with 2 arguments: 1. The valid
-     * input to toHash(), 2. The expected return value from toHash().
-     * For example:
-     *
-     * <code>
-     *  return array(
-     *      array(
-     *          null,
-     *          null
-     *      ),
-     *      array(
-     *          new BinaryFileValue( array(
-     *              'path' => 'some/file/here',
-     *              'fileName' => 'sindelfingen.jpg',
-     *              'fileSize' => 2342,
-     *              'downloadCount' => 0,
-     *              'mimeType' => 'image/jpeg',
-     *          ) ),
-     *          array(
-     *              'path' => 'some/file/here',
-     *              'fileName' => 'sindelfingen.jpg',
-     *              'fileSize' => 2342,
-     *              'downloadCount' => 0,
-     *              'mimeType' => 'image/jpeg',
-     *          )
-     *      ),
-     *      // ...
-     *  );
-     * </code>
-     *
-     * @return array
-     */
-    public function provideInputForToHash()
+    public function provideInputForToHash(): array
     {
         return [
             [
@@ -237,42 +166,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         ];
     }
 
-    /**
-     * Provide input to fromHash() method.
-     *
-     * Returns an array of data provider sets with 2 arguments: 1. The valid
-     * input to fromHash(), 2. The expected return value from fromHash().
-     * For example:
-     *
-     * <code>
-     *  return array(
-     *      array(
-     *          null,
-     *          null
-     *      ),
-     *      array(
-     *          array(
-     *              'path' => 'some/file/here',
-     *              'fileName' => 'sindelfingen.jpg',
-     *              'fileSize' => 2342,
-     *              'downloadCount' => 0,
-     *              'mimeType' => 'image/jpeg',
-     *          ),
-     *          new BinaryFileValue( array(
-     *              'path' => 'some/file/here',
-     *              'fileName' => 'sindelfingen.jpg',
-     *              'fileSize' => 2342,
-     *              'downloadCount' => 0,
-     *              'mimeType' => 'image/jpeg',
-     *          ) )
-     *      ),
-     *      // ...
-     *  );
-     * </code>
-     *
-     * @return array
-     */
-    public function provideInputForFromHash()
+    public function provideInputForFromHash(): array
     {
         return [
             [
@@ -286,29 +180,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         ];
     }
 
-    /**
-     * Provide data sets with field settings which are considered valid by the
-     * {@link validateFieldSettings()} method.
-     *
-     * Returns an array of data provider sets with a single argument: A valid
-     * set of field settings.
-     * For example:
-     *
-     * <code>
-     *  return array(
-     *      array(
-     *          array(),
-     *      ),
-     *      array(
-     *          array( 'rows' => 2 )
-     *      ),
-     *      // ...
-     *  );
-     * </code>
-     *
-     * @return array
-     */
-    public function provideValidFieldSettings()
+    public function provideValidFieldSettings(): array
     {
         return [
             [
@@ -503,5 +375,3 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         ];
     }
 }
-
-class_alias(RelationTest::class, 'eZ\Publish\Core\FieldType\Tests\RelationTest');
