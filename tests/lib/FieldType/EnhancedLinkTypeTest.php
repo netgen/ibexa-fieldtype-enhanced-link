@@ -11,10 +11,10 @@ use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\Relation;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentException;
-use Ibexa\Core\FieldType\Relation\Type as RelationType;
 use Ibexa\Core\FieldType\ValidationError;
 use Ibexa\Core\Repository\Validator\TargetContentValidatorInterface;
 use Ibexa\Tests\Core\FieldType\FieldTypeTest;
+use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 
 class EnhancedLinkTypeTest extends FieldTypeTest
@@ -60,20 +60,9 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         $this->targetContentValidator = $this->createMock(TargetContentValidatorInterface::class);
     }
 
-    /**
-     * Returns the field type under test.
-     *
-     * This method is used by all test cases to retrieve the field type under
-     * test. Just create the FieldType instance using mocks from the provided
-     * get*Mock() methods and/or custom get*Mock() implementations. You MUST
-     * NOT take care for test case wide caching of the field type, just return
-     * a new instance from this method!
-     *
-     * @return \Ibexa\Core\FieldType\Relation\Type
-     */
-    protected function createFieldTypeUnderTest()
+    protected function createFieldTypeUnderTest(): Type
     {
-        $fieldType = new RelationType(
+        $fieldType = new Type(
             $this->contentHandler,
             $this->targetContentValidator
         );
@@ -87,22 +76,17 @@ class EnhancedLinkTypeTest extends FieldTypeTest
      *
      * @return array
      */
-    protected function getValidatorConfigurationSchemaExpectation()
+    protected function getValidatorConfigurationSchemaExpectation(): array
     {
         return [];
     }
 
-    /**
-     * Returns the settings schema expected from the field type.
-     *
-     * @return array
-     */
-    protected function getSettingsSchemaExpectation()
+    protected function getSettingsSchemaExpectation(): array
     {
         return [
             'selectionMethod' => [
                 'type' => 'int',
-                'default' => RelationType::SELECTION_BROWSE,
+                'default' => Type::SELECTION_BROWSE,
             ],
             'selectionRoot' => [
                 'type' => 'string',
@@ -185,50 +169,27 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         return [
             [
                 [
-                    'selectionMethod' => RelationType::SELECTION_BROWSE,
+                    'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => 42,
                 ],
             ],
             [
                 [
-                    'selectionMethod' => RelationType::SELECTION_DROPDOWN,
+                    'selectionMethod' => Type::SELECTION_DROPDOWN,
                     'selectionRoot' => 'some-key',
                 ],
             ],
         ];
     }
 
-    /**
-     * Provide data sets with field settings which are considered invalid by the
-     * {@link validateFieldSettings()} method. The method must return a
-     * non-empty array of validation error when receiving such field settings.
-     *
-     * Returns an array of data provider sets with a single argument: A valid
-     * set of field settings.
-     * For example:
-     *
-     * <code>
-     *  return array(
-     *      array(
-     *          true,
-     *      ),
-     *      array(
-     *          array( 'nonExistentKey' => 2 )
-     *      ),
-     *      // ...
-     *  );
-     * </code>
-     *
-     * @return array
-     */
-    public function provideInValidFieldSettings()
+    public function provideInValidFieldSettings(): array
     {
         return [
             [
                 // Unknown key
                 [
                     'unknownKey' => 23,
-                    'selectionMethod' => RelationType::SELECTION_BROWSE,
+                    'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => 42,
                 ],
             ],
@@ -242,7 +203,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             [
                 // Invalid selectionRoot
                 [
-                    'selectionMethod' => RelationType::SELECTION_DROPDOWN,
+                    'selectionMethod' => Type::SELECTION_DROPDOWN,
                     'selectionRoot' => [],
                 ],
             ],
@@ -250,9 +211,9 @@ class EnhancedLinkTypeTest extends FieldTypeTest
     }
 
     /**
-     * @covers \Ibexa\Core\FieldType\Relation\Type::getRelations
+     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\InvalidArgumentException
      */
-    public function testGetRelations()
+    public function testGetRelations(): void
     {
         $ft = $this->createFieldTypeUnderTest();
         $this->assertEquals(
@@ -323,9 +284,9 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         );
     }
 
-    protected function provideFieldTypeIdentifier()
+    protected function provideFieldTypeIdentifier(): string
     {
-        return 'ezobjectrelation';
+        return 'ngenhancedlink';
     }
 
     /**
