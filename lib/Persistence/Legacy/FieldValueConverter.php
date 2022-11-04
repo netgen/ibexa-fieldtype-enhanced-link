@@ -15,16 +15,22 @@ class FieldValueConverter implements Converter
 {
     public function toStorageValue(FieldValue $value, StorageFieldValue $storageFieldValue): void
     {
-        $storageFieldValue->dataInt = !empty($value->data['destinationContentId'])
-            ? $value->data['destinationContentId']
-            : null;
+        if (empty($value->data['id'])) {
+            $storageFieldValue->dataInt=null;
+            $storageFieldValue->dataText=null;
+        } else {
+            $storageFieldValue->dataInt=$value->data['id'];
+            $storageFieldValue->dataText=$value->data['type'];
+        }
         $storageFieldValue->sortKeyInt = (int)$value->sortKey;
     }
 
     public function toFieldValue(StorageFieldValue $value, FieldValue $fieldValue): void
     {
         $fieldValue->data = [
-            'destinationContentId' => $value->dataInt ?: null,
+            'id' => $value->dataInt ?: null,
+            'type' => $value->dataText,
+            'text' => 'text'
         ];
         $fieldValue->sortKey = (int)$value->sortKeyInt;
     }
