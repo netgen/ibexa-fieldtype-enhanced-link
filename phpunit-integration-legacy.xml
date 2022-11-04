@@ -18,4 +18,9 @@
             <file>tests/integration/Core/Repository/FieldType/EnhancedLinkIntegrationTest.php</file>
         </testsuite>
     </testsuites>
+    <coverage>
+        <include>
+            <directory suffix=".php">lib</directory>
+        </include>
+    </coverage>
 </phpunit>
