@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Yaml\Yaml;
+use function file_get_contents;
 
 class NetgenIbexaFieldTypeEnhancedLinkExtension extends Extension implements PrependExtensionInterface
 {
@@ -21,7 +22,7 @@ class NetgenIbexaFieldTypeEnhancedLinkExtension extends Extension implements Pre
     {
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator(__DIR__ . '/../Resources/config')
+            new FileLocator(__DIR__ . '/../Resources/config'),
         );
 
         $loader->load('default_parameters.yaml');
