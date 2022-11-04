@@ -45,3 +45,20 @@ services:
         resource: "../../../lib/AdminUi/UniversalDiscovery/Event/Subscriber/*"
         public: true
         tags: ['kernel.event_subscriber']
+
+    Netgen\IbexaFieldTypeEnhancedLink\FieldType\TargetContentValidator:
+        arguments:
+            $contentHandler: '@Ibexa\Contracts\Core\Persistence\Content\Handler'
+            $contentTypeHandler: '@Ibexa\Contracts\Core\Persistence\Content\Type\Handler'
+
+    Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage\Gateway\DoctrineStorage:
+        class: Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage\Gateway\DoctrineStorage
+        arguments: [ '@ibexa.api.storage_engine.legacy.connection' ]
+
+    Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage:
+        class: Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage
+        arguments:
+            - '@Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage\Gateway\DoctrineStorage'
+            - "@?logger"
+        tags:
+            - { name: ibexa.field_type.storage.external.handler, alias: ngenhancedlink }
