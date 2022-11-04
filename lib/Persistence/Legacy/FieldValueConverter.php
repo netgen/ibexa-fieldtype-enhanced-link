@@ -16,22 +16,20 @@ class FieldValueConverter implements Converter
     public function toStorageValue(FieldValue $value, StorageFieldValue $storageFieldValue): void
     {
         if (empty($value->data['id'])) {
-            $storageFieldValue->dataInt=null;
             $storageFieldValue->dataText=null;
         } else {
-            $storageFieldValue->dataInt=$value->data['id'];
-            $storageFieldValue->dataText=$value->data['type'];
+            $storageFieldValue->dataText= json_encode($value->data);
         }
         $storageFieldValue->sortKeyInt = (int)$value->sortKey;
     }
 
     public function toFieldValue(StorageFieldValue $value, FieldValue $fieldValue): void
     {
-        $fieldValue->data = [
-            'id' => $value->dataInt ?: null,
-            'type' => $value->dataText,
-            'text' => 'text'
-        ];
+        if ($value->dataText) {
+            $fieldValue->data = json_decode($value->dataText, true);
+        } else {
+            $fieldValue->data = null;
+        }
         $fieldValue->sortKey = (int)$value->sortKeyInt;
     }
 

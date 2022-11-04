@@ -70,6 +70,10 @@ class EnhancedLinkStorage extends GatewayBasedStorage
 
     public function getFieldData(VersionInfo $versionInfo, Field $field, array $context)
     {
+        if ($field->value->data === null) {
+            return;
+        }
+
         $id = $field->value->data['id'];
         if (empty($id) || $field->value->data['type']!=='external') {
             //$field->value->externalData = null;

@@ -13,7 +13,8 @@
         "php": "^7.4 || ^8.0",
         "ibexa/core": "4.2.2",
         "ibexa/content-forms": "4.2.2",
-        "ibexa/admin-ui": "*"
+        "ibexa/admin-ui": "*",
+      "ext-json": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
