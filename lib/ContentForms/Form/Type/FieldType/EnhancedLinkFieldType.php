@@ -64,10 +64,10 @@ class EnhancedLinkFieldType extends AbstractType
         /** @var \Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value $data */
         $data = $form->getData();
 
-        if (!$data instanceof Value || null === $data->destinationContentId) {
+        if (!$data instanceof Value || null === $data->link) {
             return;
         }
-        $contentId = $data->destinationContentId;
+        $contentId = $data->link;
         $contentInfo = null;
         $contentType = null;
         $unauthorized = false;
@@ -79,7 +79,7 @@ class EnhancedLinkFieldType extends AbstractType
             $unauthorized = true;
         }
 
-        $view->vars['relations'][$data->destinationContentId] = [
+        $view->vars['relations'][$data->link] = [
             'contentInfo' => $contentInfo,
             'contentType' => $contentType,
             'unauthorized' => $unauthorized,
