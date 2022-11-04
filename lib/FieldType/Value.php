@@ -6,35 +6,36 @@ namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType;
 
 use Ibexa\Core\FieldType\Value as BaseValue;
 
+use function is_int;
+use function is_string;
+
 class Value extends BaseValue
 {
-    public const LinkTypeInternal = 'internal';
-    public const LinkTypeExternal = 'external';
-
-    public string $linkType;
-    public $destinationContentId;
+    public $link;
+    public ?string $text;
 
     /**
      * @noinspection MagicMethodsValidityInspection
      * @noinspection PhpMissingParentConstructorInspection
+     *
+     * @param mixed|null $link
      */
-    public function __construct($destinationContentId = null)
+    public function __construct($link = null, ?string $text = null)
     {
-        $this->destinationContentId = $destinationContentId;
-    }
-
-    public function isInternal(): bool
-    {
-
-    }
-
-    public function isExternal(): bool
-    {
-
+        // promjeni text u labelu, dodaj konstante za opciju modala
+        $this->link = $link;
+        $this->text = $text;
     }
 
     public function __toString()
     {
-        return (string)$this->destinationContentId;
+        if (is_string($this->link)) {
+            return $this->link;
+        }
+        if (is_int($this->link)) {
+            return (string) ($this->link);
+        }
+
+        return '';
     }
 }
