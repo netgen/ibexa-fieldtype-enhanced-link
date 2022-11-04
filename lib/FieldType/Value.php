@@ -33,9 +33,19 @@ class Value extends BaseValue
             return $this->link;
         }
         if (is_int($this->link)) {
-            return (string) ($this->link);
+            return (string) $this->link;
         }
 
         return '';
+    }
+
+    public function isExternal(): bool
+    {
+        return is_string($this->link);
+    }
+
+    public function isInternal(): bool
+    {
+        return is_int($this->link);
     }
 }

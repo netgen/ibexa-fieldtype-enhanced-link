@@ -9,28 +9,43 @@
             {% set attr = attr|merge({'class': (attr.class|default('') ~ ' ibexa-field-preview ibexa-field-preview--ezobjectrelationlist')|trim}) %}
             <h1>THIS IS TEMPLATE FOR ADMIN VIEW (PREVIEW)</h1>
             <div {{ block( 'field_attributes' ) }}>
-                {% embed '@ibexadesign/ui/component/table/table.html.twig' with {
-                    headline: 'ezobjectrelation.single_relation'|trans|desc('Single relation'),
-                    head_cols: [
-                        { content: 'ezobjectrelation.name'|trans|desc('Name') },
-                        { content: 'ezobjectrelation.content_type'|trans|desc('Content Type') },
-                        { content: 'ezobjectrelation.created'|trans|desc('Created') },
-                    ],
-                } %}
-                    {% block tbody %}
-                        {% embed '@ibexadesign/ui/component/table/table_body_row.html.twig' with { field: field } %}
-                            {% block body_row_cells %}
-                                {{ render(controller('Ibexa\\Bundle\\AdminUi\\Controller\\ContentController::relationViewAction', {
-                                    'contentId': field.value.destinationContentId,
-                                } )) }}
-                            {% endblock %}
-                        {% endembed %}
-                    {% endblock %}
-                {% endembed %}
+                {% if field.value.isInternal%}
+                    {% embed '@ibexadesign/ui/component/table/table.html.twig' with {
+                        headline: 'ezobjectrelation.single_relation'|trans|desc('Enhanced link'),
+                        head_cols: [
+                            { content: 'ezobjectrelation.name'|trans|desc('Name') },
+                            { content: 'ezobjectrelation.content_type'|trans|desc('Content Type') },
+                            { content: 'ezobjectrelation.created'|trans|desc('Created') },
+                        ],
+                    } %}
+                        {% block tbody %}
+                            {% embed '@ibexadesign/ui/component/table/table_body_row.html.twig' with { field: field } %}
+                                {% block body_row_cells %}
+                                    {{ render(controller('Ibexa\\Bundle\\AdminUi\\Controller\\ContentController::relationViewAction', {
+                                        'contentId': field.value.link,
+                                    } )) }}
+                                {% endblock %}
+                            {% endembed %}
+                        {% endblock %}
+                    {% endembed %}
+                    <h3>Label: {{ field.value.text }}</h3>
+                    <h3>Type: internal</h3>
+                {% endif %}
+                {% if field.value.isExternal %}
+                    <h2>{% if not ibexa_field_is_empty( content, field ) %}
+                            <a href="{{ field.value.link }}"
+                                    {{ block( 'field_attributes' ) }}>{{ field.value.text ? field.value.text : field.value.link }}</a>
+                        {% endif %}</h2>
+                    <h3>URL: {{ field.value.link }}</h3>
+                    <h3>Label: {{ field.value.text }}</h3>
+                    <h3>Type: external</h3>
+                {% endif %}
             </div>
         {% endif %}
     {% endapply %}
 {% endblock %}
+
+
 
 {# The simple_block_field block is a shorthand html block-based fields (like eztext or ezrichtext) #}
 {# You can define a field_value variable before rendering this one if you need special operation for rendering content (i.e. nl2br) #}
