@@ -13,20 +13,26 @@ use Ibexa\Core\Persistence\Legacy\Content\StorageFieldValue;
 
 class FieldValueConverter implements Converter
 {
+    /**
+     * @throws \JsonException
+     */
     public function toStorageValue(FieldValue $value, StorageFieldValue $storageFieldValue): void
     {
         if (empty($value->data['id'])) {
             $storageFieldValue->dataText=null;
         } else {
-            $storageFieldValue->dataText= json_encode($value->data);
+            $storageFieldValue->dataText= json_encode($value->data, JSON_THROW_ON_ERROR);
         }
         $storageFieldValue->sortKeyInt = (int)$value->sortKey;
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function toFieldValue(StorageFieldValue $value, FieldValue $fieldValue): void
     {
         if ($value->dataText) {
-            $fieldValue->data = json_decode($value->dataText, true);
+            $fieldValue->data = json_decode($value->dataText, true, 512, JSON_THROW_ON_ERROR);
         } else {
             $fieldValue->data = null;
         }

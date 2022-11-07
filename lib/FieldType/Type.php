@@ -21,6 +21,12 @@ class Type extends FieldType
 {
     public const SELECTION_BROWSE = 0;
     public const SELECTION_DROPDOWN = 1;
+    public const ALLOWED_LINK_TYPE_EXTERNAL = 'external';
+    public const ALLOWED_LINK_TYPE_INTERNAL = 'internal';
+    public const ALLOWED_TARGET_LINK = 'link';
+    public const ALLOWED_TARGET_IN_PLACE = 'in_place';
+    public const ALLOWED_TARGET_MODAL = 'modal';
+    public const ALLOWED_TARGET_LINK_IN_NEW_TAB = 'link_new_tab';
 
     protected $settingsSchema = [
         'selectionMethod' => [
@@ -38,6 +44,23 @@ class Type extends FieldType
         'selectionContentTypes' => [
             'type' => 'array',
             'default' => [],
+        ],
+        'allowedLinkType' => [
+            'type' => 'array',
+            'default' => [
+                self::ALLOWED_LINK_TYPE_EXTERNAL,
+                self::ALLOWED_LINK_TYPE_INTERNAL
+            ],
+        ],
+        'allowedTargets' => [
+            'type' => 'array',
+            'default' => [
+                self::ALLOWED_TARGET_LINK
+            ],
+        ],
+        'enableQueryParameter' => [
+            'type' => 'bool',
+            'default' => false,
         ],
     ];
 
@@ -96,6 +119,7 @@ class Type extends FieldType
                         );
                     }
                     break;
+                case 'enableQueryParameter':
                 case 'rootDefaultLocation':
                     if (!is_bool($value) && $value !== null) {
                         $validationErrors[] = new ValidationError(
@@ -115,6 +139,36 @@ class Type extends FieldType
                             null,
                             [
                                 '%setting%' => $name,
+                            ],
+                            "[$name]"
+                        );
+                    }
+                    break;
+                case 'allowedLinkType':
+                    if (!is_array($value) || !in_array($value, [self::ALLOWED_LINK_TYPE_INTERNAL, self::ALLOWED_LINK_TYPE_EXTERNAL], true)) {
+                        $validationErrors[] = new ValidationError(
+                            "Setting '%setting%' value must be either %external% or %internal%",
+                            null,
+                            [
+                                '%setting%' => $name,
+                                '%external%' => self::ALLOWED_LINK_TYPE_EXTERNAL,
+                                '%internal%' => self::ALLOWED_LINK_TYPE_INTERNAL,
+                            ],
+                            "[$name]"
+                        );
+                    }
+                    break;
+                case 'allowedTargets':
+                    if (!is_array($value) || !in_array($value, [self::ALLOWED_TARGET_LINK, self::ALLOWED_TARGET_LINK_IN_NEW_TAB, self::ALLOWED_TARGET_IN_PLACE, self::ALLOWED_TARGET_MODAL], true)) {
+                        $validationErrors[] = new ValidationError(
+                            "Setting '%setting%' value must be one or either %link%, %link_in_new_tab%, %in_place% and/or %modal%",
+                            null,
+                            [
+                                '%setting%' => $name,
+                                '%link%' => self::ALLOWED_TARGET_LINK,
+                                '%link_in_new_tab%' => self::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                                '%in_place%' => self::ALLOWED_TARGET_IN_PLACE,
+                                '%modal%' => self::ALLOWED_TARGET_MODAL,
                             ],
                             "[$name]"
                         );
