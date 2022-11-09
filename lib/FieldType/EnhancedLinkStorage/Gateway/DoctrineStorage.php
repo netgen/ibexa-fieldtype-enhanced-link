@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage\Gateway;
 
 use Doctrine\DBAL\Connection;
@@ -7,6 +9,9 @@ use Doctrine\DBAL\ParameterType;
 use Ibexa\Core\FieldType\Url\UrlStorage\Gateway;
 use Ibexa\Core\Persistence\Legacy\URL\Gateway\DoctrineDatabase;
 use PDO;
+
+use function md5;
+use function time;
 
 class DoctrineStorage extends Gateway
 {
@@ -39,7 +44,7 @@ class DoctrineStorage extends Gateway
             $query
                 ->select(
                     $this->connection->quoteIdentifier('id'),
-                    $this->connection->quoteIdentifier('url')
+                    $this->connection->quoteIdentifier('url'),
                 )
                 ->from(self::URL_TABLE)
                 ->where('id IN (:ids)')
@@ -72,11 +77,11 @@ class DoctrineStorage extends Gateway
             $query
                 ->select(
                     $this->connection->quoteIdentifier('id'),
-                    $this->connection->quoteIdentifier('url')
+                    $this->connection->quoteIdentifier('url'),
                 )
                 ->from(self::URL_TABLE)
                 ->where(
-                    $query->expr()->in('url', ':urls')
+                    $query->expr()->in('url', ':urls'),
                 )
                 ->setParameter(':urls', $urls, Connection::PARAM_STR_ARRAY);
 
@@ -110,7 +115,7 @@ class DoctrineStorage extends Gateway
                     'modified' => ':modified',
                     'original_url_md5' => ':original_url_md5',
                     'url' => ':url',
-                ]
+                ],
             )
             ->setParameter(':created', $time, PDO::PARAM_INT)
             ->setParameter(':modified', $time, PDO::PARAM_INT)
@@ -120,8 +125,8 @@ class DoctrineStorage extends Gateway
 
         $query->execute();
 
-        return (int)$this->connection->lastInsertId(
-            $this->getSequenceName(self::URL_TABLE, 'id')
+        return (int) $this->connection->lastInsertId(
+            $this->getSequenceName(self::URL_TABLE, 'id'),
         );
     }
 
@@ -143,7 +148,7 @@ class DoctrineStorage extends Gateway
                     'contentobject_attribute_id' => ':contentobject_attribute_id',
                     'contentobject_attribute_version' => ':contentobject_attribute_version',
                     'url_id' => ':url_id',
-                ]
+                ],
             )
             ->setParameter(':contentobject_attribute_id', $fieldId, PDO::PARAM_INT)
             ->setParameter(':contentobject_attribute_version', $versionNo, PDO::PARAM_INT)
@@ -170,13 +175,13 @@ class DoctrineStorage extends Gateway
                 $selectQuery->expr()->andX(
                     $selectQuery->expr()->in(
                         'link.contentobject_attribute_id',
-                        ':contentobject_attribute_id'
+                        ':contentobject_attribute_id',
                     ),
                     $selectQuery->expr()->in(
                         'link.contentobject_attribute_version',
-                        ':contentobject_attribute_version'
-                    )
-                )
+                        ':contentobject_attribute_version',
+                    ),
+                ),
             )
             ->setParameter(':contentobject_attribute_id', $fieldId, ParameterType::INTEGER)
             ->setParameter(':contentobject_attribute_version', $versionNo, ParameterType::INTEGER);
@@ -195,13 +200,13 @@ class DoctrineStorage extends Gateway
                 $deleteQuery->expr()->and(
                     $deleteQuery->expr()->in(
                         'contentobject_attribute_id',
-                        ':contentobject_attribute_id'
+                        ':contentobject_attribute_id',
                     ),
                     $deleteQuery->expr()->in(
                         'contentobject_attribute_version',
-                        ':contentobject_attribute_version'
-                    )
-                )
+                        ':contentobject_attribute_version',
+                    ),
+                ),
             )
             ->setParameter(':contentobject_attribute_id', $fieldId, ParameterType::INTEGER)
             ->setParameter(':contentobject_attribute_version', $versionNo, ParameterType::INTEGER);
@@ -211,8 +216,8 @@ class DoctrineStorage extends Gateway
                 ->andWhere(
                     $deleteQuery->expr()->notIn(
                         'url_id',
-                        ':url_ids'
-                    )
+                        ':url_ids',
+                    ),
                 )
                 ->setParameter('url_ids', $excludeUrlIds, Connection::PARAM_INT_ARRAY);
         }
@@ -241,13 +246,13 @@ class DoctrineStorage extends Gateway
                 'url',
                 $this->connection->quoteIdentifier(self::URL_LINK_TABLE),
                 'link',
-                'url.id = link.url_id'
+                'url.id = link.url_id',
             )
             ->where(
                 $query->expr()->in(
                     'url.id',
-                    ':url_ids'
-                )
+                    ':url_ids',
+                ),
             )
             ->andWhere($query->expr()->isNull('link.url_id'))
             ->setParameter('url_ids', $potentiallyOrphanedUrls, Connection::PARAM_INT_ARRAY)

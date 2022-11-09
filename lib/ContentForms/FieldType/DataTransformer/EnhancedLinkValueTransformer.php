@@ -7,6 +7,8 @@ namespace Netgen\IbexaFieldTypeEnhancedLink\ContentForms\FieldType\DataTransform
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 use Symfony\Component\Form\DataTransformerInterface;
 
+use function is_numeric;
+
 class EnhancedLinkValueTransformer implements DataTransformerInterface
 {
     public function transform($value)

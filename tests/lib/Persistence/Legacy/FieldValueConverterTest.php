@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Unit\Persistence\Legacy;
 
 use Ibexa\Contracts\Core\Persistence\Content\FieldTypeConstraints;
@@ -39,17 +41,17 @@ class FieldValueConverterTest extends TestCase
                             'selectionContentTypes' => ['article', 'blog_post'],
                             'rootDefaultLocation' => true,
                         ],
-                    ]
+                    ],
                 ),
-            ]
+            ],
         );
 
         $expectedStorageFieldDefinition = new StorageFieldDefinition();
-        $expectedStorageFieldDefinition->dataText5 = <<<EOT
-<?xml version="1.0" encoding="utf-8"?>
-<related-objects><constraints><allowed-class contentclass-identifier="article"/><allowed-class contentclass-identifier="blog_post"/></constraints><selection_type value="0"/><root_default_location value="1"/><contentobject-placement node-id="12345"/></related-objects>
+        $expectedStorageFieldDefinition->dataText5 = <<<'EOT'
+        <?xml version="1.0" encoding="utf-8"?>
+        <related-objects><constraints><allowed-class contentclass-identifier="article"/><allowed-class contentclass-identifier="blog_post"/></constraints><selection_type value="0"/><root_default_location value="1"/><contentobject-placement node-id="12345"/></related-objects>
 
-EOT;
+        EOT;
         // For BC these are still set
         $expectedStorageFieldDefinition->dataInt1 = 0;
         $expectedStorageFieldDefinition->dataInt2 = 12345;
@@ -58,9 +60,9 @@ EOT;
 
         $this->converter->toStorageFieldDefinition($fieldDefinition, $actualStorageFieldDefinition);
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectedStorageFieldDefinition,
-            $actualStorageFieldDefinition
+            $actualStorageFieldDefinition,
         );
     }
 }

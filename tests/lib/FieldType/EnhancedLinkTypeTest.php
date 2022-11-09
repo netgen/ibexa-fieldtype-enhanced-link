@@ -60,54 +60,6 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         $this->targetContentValidator = $this->createMock(TargetContentValidatorInterface::class);
     }
 
-    protected function createFieldTypeUnderTest(): Type
-    {
-        $fieldType = new Type(
-            $this->contentHandler,
-            $this->targetContentValidator
-        );
-        $fieldType->setTransformationProcessor($this->getTransformationProcessorMock());
-
-        return $fieldType;
-    }
-
-    /**
-     * Returns the validator configuration schema expected from the field type.
-     *
-     * @return array
-     */
-    protected function getValidatorConfigurationSchemaExpectation(): array
-    {
-        return [];
-    }
-
-    protected function getSettingsSchemaExpectation(): array
-    {
-        return [
-            'selectionMethod' => [
-                'type' => 'int',
-                'default' => Type::SELECTION_BROWSE,
-            ],
-            'selectionRoot' => [
-                'type' => 'string',
-                'default' => null,
-            ],
-            'rootDefaultLocation' => [
-                'type' => 'bool',
-                'default' => false,
-            ],
-            'selectionContentTypes' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-        ];
-    }
-
-    protected function getEmptyValueExpectation(): Value
-    {
-        return new Value();
-    }
-
     public function provideInvalidInputForAcceptValue(): array
     {
         return [
@@ -216,11 +168,11 @@ class EnhancedLinkTypeTest extends FieldTypeTest
     public function testGetRelations(): void
     {
         $ft = $this->createFieldTypeUnderTest();
-        $this->assertEquals(
+        self::assertEquals(
             [
                 Relation::FIELD => [70],
             ],
-            $ft->getRelations($ft->acceptValue(70))
+            $ft->getRelations($ft->acceptValue(70)),
         );
     }
 
@@ -253,40 +205,11 @@ class EnhancedLinkTypeTest extends FieldTypeTest
 
         $validationErrors = $this->doValidate(
             ['fieldSettings' => ['selectionContentTypes' => $allowedContentTypes]],
-            new Value($destinationContentId)
+            new Value($destinationContentId),
         );
 
         self::assertIsArray($validationErrors);
         self::assertEquals([$this->generateContentTypeValidationError('test')], $validationErrors);
-    }
-
-    private function generateValidationError(string $contentId): ValidationError
-    {
-        return new ValidationError(
-            'Content with identifier %contentId% is not a valid relation target',
-            null,
-            [
-                '%contentId%' => $contentId,
-            ],
-            'targetContentId'
-        );
-    }
-
-    private function generateContentTypeValidationError(string $contentTypeIdentifier): ValidationError
-    {
-        return new ValidationError(
-            'Content Type %contentTypeIdentifier% is not a valid relation target',
-            null,
-            [
-                '%contentTypeIdentifier%' => $contentTypeIdentifier,
-            ],
-            'targetContentId'
-        );
-    }
-
-    protected function provideFieldTypeIdentifier(): string
-    {
-        return 'ngenhancedlink';
     }
 
     /**
@@ -334,5 +257,82 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         return [
             [[], new Value('invalid'), []],
         ];
+    }
+
+    protected function createFieldTypeUnderTest(): Type
+    {
+        $fieldType = new Type(
+            $this->contentHandler,
+            $this->targetContentValidator,
+        );
+        $fieldType->setTransformationProcessor($this->getTransformationProcessorMock());
+
+        return $fieldType;
+    }
+
+    /**
+     * Returns the validator configuration schema expected from the field type.
+     *
+     * @return array
+     */
+    protected function getValidatorConfigurationSchemaExpectation(): array
+    {
+        return [];
+    }
+
+    protected function getSettingsSchemaExpectation(): array
+    {
+        return [
+            'selectionMethod' => [
+                'type' => 'int',
+                'default' => Type::SELECTION_BROWSE,
+            ],
+            'selectionRoot' => [
+                'type' => 'string',
+                'default' => null,
+            ],
+            'rootDefaultLocation' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
+            'selectionContentTypes' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+        ];
+    }
+
+    protected function getEmptyValueExpectation(): Value
+    {
+        return new Value();
+    }
+
+    protected function provideFieldTypeIdentifier(): string
+    {
+        return 'ngenhancedlink';
+    }
+
+    private function generateValidationError(string $contentId): ValidationError
+    {
+        return new ValidationError(
+            'Content with identifier %contentId% is not a valid relation target',
+            null,
+            [
+                '%contentId%' => $contentId,
+            ],
+            'targetContentId',
+        );
+    }
+
+    private function generateContentTypeValidationError(string $contentTypeIdentifier): ValidationError
+    {
+        return new ValidationError(
+            'Content Type %contentTypeIdentifier% is not a valid relation target',
+            null,
+            [
+                '%contentTypeIdentifier%' => $contentTypeIdentifier,
+            ],
+            'targetContentId',
+        );
     }
 }

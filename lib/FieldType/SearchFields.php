@@ -9,6 +9,8 @@ use Ibexa\Contracts\Core\Persistence\Content\Field;
 use Ibexa\Contracts\Core\Persistence\Content\Type\FieldDefinition;
 use Ibexa\Contracts\Core\Search;
 
+use function reset;
+
 class SearchFields implements Indexable
 {
     public function getIndexData(Field $field, FieldDefinition $fieldDefinition): array
@@ -17,7 +19,7 @@ class SearchFields implements Indexable
             new Search\Field(
                 'value',
                 reset($field->value->data),
-                new Search\FieldType\StringField()
+                new Search\FieldType\StringField(),
             ),
         ];
     }

@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType;
 
 use Ibexa\Contracts\Core\FieldType\GatewayBasedStorage;
 use Ibexa\Contracts\Core\FieldType\StorageGatewayInterface;
 use Ibexa\Contracts\Core\Persistence\Content\Field;
 use Ibexa\Contracts\Core\Persistence\Content\VersionInfo;
-use Ibexa\Core\FieldType\Url\UrlStorage;
 use Psr\Log\LoggerInterface;
 
 class EnhancedLinkStorage extends GatewayBasedStorage
@@ -23,7 +24,7 @@ class EnhancedLinkStorage extends GatewayBasedStorage
      * @param \Ibexa\Contracts\Core\FieldType\StorageGatewayInterface $gateway
      * @param \Psr\Log\LoggerInterface $logger
      */
-    public function __construct(StorageGatewayInterface $gateway, LoggerInterface $logger = null)
+    public function __construct(StorageGatewayInterface $gateway, ?LoggerInterface $logger = null)
     {
         parent::__construct($gateway);
         $this->logger = $logger;
@@ -59,7 +60,7 @@ class EnhancedLinkStorage extends GatewayBasedStorage
         $this->gateway->unlinkUrl(
             $field->id,
             $versionInfo->versionNo,
-            [$urlId]
+            [$urlId],
         );
 
         $field->value->data['id'] = $urlId;
@@ -75,8 +76,8 @@ class EnhancedLinkStorage extends GatewayBasedStorage
         }
 
         $id = $field->value->data['id'];
-        if (empty($id) || $field->value->data['type']!=='external') {
-            //$field->value->externalData = null;
+        if (empty($id) || $field->value->data['type'] !== 'external') {
+            // $field->value->externalData = null;
 
             return;
         }
