@@ -94,7 +94,11 @@ class FieldValueConverter implements Converter
             return;
         }
 
-        $decodedJson = json_decode($storageDef->dataText5, true, 512, JSON_THROW_ON_ERROR);
+        try {
+            $decodedJson = json_decode($storageDef->dataText5, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            return;
+        }
         $fieldSettings = &$fieldDef->fieldTypeConstraints->fieldSettings;
         $fieldSettings['selectionMethod'] = $decodedJson['selection_method'];
         $fieldSettings['selectionRoot'] = $decodedJson['current_object_placement'];
