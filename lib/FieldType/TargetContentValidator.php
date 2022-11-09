@@ -8,6 +8,8 @@ use Ibexa\Contracts\Core\Persistence\Content;
 use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
 use Ibexa\Core\FieldType\ValidationError;
 
+use function in_array;
+
 /**
  * Validator for checking existence of content and its content type.
  */
@@ -27,30 +29,31 @@ class TargetContentValidator
         $this->contentTypeHandler = $contentTypeHandler;
     }
 
-    public function validate(int $value, array $allowedContentTypes = []): ?ValidationError
+    public function validate(Value $value, array $allowedContentTypes = []): ?ValidationError
     {
         try {
-            $content = $this->contentHandler->load($value);
-            $contentType = $this->contentTypeHandler->load($content->versionInfo->contentInfo->contentTypeId);
-
-            if (!empty($allowedContentTypes) && !in_array($contentType->identifier, $allowedContentTypes, true)) {
-                return new ValidationError(
-                    'Content Type %contentTypeIdentifier% is not a valid relation target',
-                    null,
-                    [
-                        '%contentTypeIdentifier%' => $contentType->identifier,
-                    ],
-                    'targetContentId'
-                );
+            if ($value->isInternal()) {
+                $content = $this->contentHandler->load((int) $value->reference);
+                $contentType = $this->contentTypeHandler->load($content->versionInfo->contentInfo->contentTypeId);
+                if (!empty($allowedContentTypes) && !in_array($contentType->identifier, $allowedContentTypes, true)) {
+                    return new ValidationError(
+                        'Content Type %contentTypeIdentifier% is not a valid relation target',
+                        null,
+                        [
+                            '%contentTypeIdentifier%' => $contentType->identifier,
+                        ],
+                        'targetContentId',
+                    );
+                }
             }
         } catch (NotFoundException $e) {
             return new ValidationError(
-                'Content with identifier %contentId% is not a valid relation target',
+                'Content with identifier %contentId% is not a valid enhanced link target',
                 null,
                 [
-                    '%contentId%' => $value,
+                    '%contentId%' => (int) $value->reference,
                 ],
-                'targetContentId'
+                'targetContentId',
             );
         }
 
