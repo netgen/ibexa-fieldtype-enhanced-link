@@ -22,11 +22,11 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
             ->add('selectionRoot', RelationType::class, [
                 'required' => true,
                 'property_path' => 'fieldSettings[selectionRoot]',
-                'label' => /** @Desc("Starting Location") */ 'field_definition.ngenhancedlink.selection_root',
+                'label' => /* @Desc("Starting Location") */ 'field_definition.ngenhancedlink.selection_root',
             ])
             ->add('rootDefaultLocation', CheckboxType::class, [
                 'required' => false,
-                'label' => /** @Desc("Root Default Location") */ 'field_definition.ngenhancedlink.root_default_location',
+                'label' => /* @Desc("Root Default Location") */ 'field_definition.ngenhancedlink.root_default_location',
                 'property_path' => 'fieldSettings[rootDefaultLocation]',
             ])
             ->add('selectionContentTypes', ChoiceType::class, [
@@ -35,8 +35,15 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
                 'multiple' => true,
                 'required' => false,
                 'property_path' => 'fieldSettings[selectionContentTypes]',
-                'label' => /** @Desc("Allowed Content Types") */ 'field_definition.ngenhancedlink.selection_content_types',
+                'label' => /* @Desc("Allowed Content Types") */ 'field_definition.ngenhancedlink.selection_content_types',
                 'disabled' => $isTranslation,
+            ])
+            ->add('allowedTargets', ChoiceType::class, [
+                'choices' => ['Link' => 'link', 'Link in new tab' => 'link_new_tab', 'Embed / in_place' => 'in_place', 'Modal' => 'modal'],
+                'property_path' => 'fieldSettings[allowedTargets]',
+                'label' => /* @Desc("Allowed Targets") */ 'field_definition.ngenhancedlink.selection_allowed_targets',
+                'multiple' => true,
+                'expanded' => true,
             ]);
     }
 
