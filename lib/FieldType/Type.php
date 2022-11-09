@@ -18,6 +18,7 @@ use Ibexa\Core\FieldType\Value as BaseValue;
 
 use function array_intersect;
 use function count;
+use function in_array;
 use function is_array;
 use function is_bool;
 use function is_int;
@@ -165,7 +166,7 @@ class Type extends FieldType
                 case 'allowedLinkType':
                     if (!is_array($value) || count(array_intersect($value, [self::ALLOWED_LINK_TYPE_INTERNAL, self::ALLOWED_LINK_TYPE_EXTERNAL])) === 0) {
                         $validationErrors[] = new ValidationError(
-                            "Setting '%setting%' value must be either %external% or %internal%",
+                            "Setting '%setting%' value must be %external% and/or %internal%",
                             null,
                             [
                                 '%setting%' => $name,
@@ -237,18 +238,28 @@ class Type extends FieldType
             return $validationErrors;
         }
 
-        $allowedContentTypes = $fieldDefinition->getFieldSettings()['selectionContentTypes'] ?? [];
         $allowedTargets = $fieldDefinition->getFieldSettings()['allowedTargets'] ?? [];
+        if (!empty($allowedTargets) && !in_array($value->target, $allowedTargets, true)) {
+            $validationErrors[] = new ValidationError(
+                'Target %target% is not a valid target',
+                null,
+                [
+                    '%target%' => $value->target,
+                ],
+                'allowedTargets',
+            );
+        }
 
+        $allowedContentTypes = $fieldDefinition->getFieldSettings()['selectionContentTypes'] ?? [];
         $validationError = $this->targetContentValidator->validate(
             $value,
             $allowedContentTypes,
-            $allowedTargets,
         );
-        dump("Validation errors: ");
-        dump($validationError);
+        if (isset($validationError)) {
+            $validationErrors[] = $validationError;
+        }
 
-        return $validationError === null ? $validationErrors : [$validationError];
+        return $validationErrors;
     }
 
     public function getEmptyValue(): Value

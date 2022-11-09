@@ -29,7 +29,7 @@ class TargetContentValidator
         $this->contentTypeHandler = $contentTypeHandler;
     }
 
-    public function validate(Value $value, array $allowedContentTypes = [], array $allowedTargets = []): ?ValidationError
+    public function validate(Value $value, array $allowedContentTypes = []): ?ValidationError
     {
         try {
             if ($value->isInternal()) {
@@ -45,16 +45,6 @@ class TargetContentValidator
                         'targetContentId',
                     );
                 }
-            }
-            if (!empty($allowedTargets) && !in_array($value->target, $allowedTargets, true)) {
-                return new ValidationError(
-                    'Target %target% is not a valid target',
-                    null,
-                    [
-                        '%target%' => $value->target,
-                    ],
-                    'targetContentId',
-                );
             }
         } catch (NotFoundException $e) {
             return new ValidationError(
