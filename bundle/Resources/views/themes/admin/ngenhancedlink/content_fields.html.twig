@@ -22,23 +22,27 @@
                             {% embed '@ibexadesign/ui/component/table/table_body_row.html.twig' with { field: field } %}
                                 {% block body_row_cells %}
                                     {{ render(controller('Ibexa\\Bundle\\AdminUi\\Controller\\ContentController::relationViewAction', {
-                                        'contentId': field.value.link,
+                                        'contentId': field.value.reference,
                                     } )) }}
                                 {% endblock %}
                             {% endembed %}
                         {% endblock %}
                     {% endembed %}
-                    <h3>Label: {{ field.value.text }}</h3>
+                    <h3>Label: {{ field.value.label }}</h3>
                     <h3>Type: internal</h3>
+                    <h3>Target: {{ field.value.target }}</h3>
+                    <h3>Suffix: {{ field.value.suffix }}</h3>
                 {% endif %}
                 {% if field.value.isExternal %}
                     <h2>{% if not ibexa_field_is_empty( content, field ) %}
-                            <a href="{{ field.value.link }}"
-                                    {{ block( 'field_attributes' ) }}>{{ field.value.text ? field.value.text : field.value.link }}</a>
+                            <a href="{{ field.value.reference }}"
+                                    {{ block( 'field_attributes' ) }}>{{ field.value.label ? field.value.label : field.value.reference }}</a>
                         {% endif %}</h2>
-                    <h3>URL: {{ field.value.link }}</h3>
-                    <h3>Label: {{ field.value.text }}</h3>
+                    <h3>URL: {{ field.value.reference }}</h3>
+                    <h3>Label: {{ field.value.label }}</h3>
                     <h3>Type: external</h3>
+                    <h3>Target: {{ field.value.target }}</h3>
+                    <h3>Suffix: {{ field.value.suffix }}</h3>
                 {% endif %}
             </div>
         {% endif %}

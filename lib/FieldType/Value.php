@@ -11,29 +11,35 @@ use function is_string;
 
 class Value extends BaseValue
 {
-    public $link;
-    public ?string $text;
+    public const DEFAULT_TARGET = 'link';
+
+    public $reference;
+    public ?string $label;
+    public string $target;
+    public ?string $suffix;
 
     /**
      * @noinspection MagicMethodsValidityInspection
      * @noinspection PhpMissingParentConstructorInspection
      *
-     * @param mixed|null $link
+     * @param mixed|null $reference
+     * @param mixed $target
      */
-    public function __construct($link = null, ?string $text = null)
+    public function __construct($reference = null, ?string $label = null, $target = self::DEFAULT_TARGET, ?string $suffix = null)
     {
-        // promjeni text u labelu, dodaj konstante za opciju modala
-        $this->link = $link;
-        $this->text = $text;
+        $this->reference = $reference;
+        $this->label = $label;
+        $this->target = $target;
+        $this->suffix = $suffix;
     }
 
     public function __toString()
     {
-        if (is_string($this->link)) {
-            return $this->link;
+        if (is_string($this->reference)) {
+            return $this->reference;
         }
-        if (is_int($this->link)) {
-            return (string) $this->link;
+        if (is_int($this->reference)) {
+            return (string) $this->reference;
         }
 
         return '';
@@ -41,11 +47,11 @@ class Value extends BaseValue
 
     public function isExternal(): bool
     {
-        return is_string($this->link);
+        return is_string($this->reference);
     }
 
     public function isInternal(): bool
     {
-        return is_int($this->link);
+        return is_int($this->reference);
     }
 }
