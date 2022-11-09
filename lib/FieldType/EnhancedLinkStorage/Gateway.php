@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage;
 
 use Ibexa\Contracts\Core\FieldType\StorageGateway;

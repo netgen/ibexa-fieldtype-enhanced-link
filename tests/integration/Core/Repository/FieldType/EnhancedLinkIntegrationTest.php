@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Integration\Core\Repository\FieldType;
 
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
@@ -7,8 +9,8 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\Core\Repository\Values\Content\Relation as APIRelation;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
 use Ibexa\Core\Repository\Values\Content\Relation;
-use Ibexa\Tests\Integration\Core\Repository\FieldType\RelationSearchBaseIntegrationTestTrait;
 use Ibexa\Tests\Integration\Core\Repository\FieldType\BaseIntegrationTest;
+use Ibexa\Tests\Integration\Core\Repository\FieldType\RelationSearchBaseIntegrationTestTrait;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 
 /**
@@ -41,7 +43,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
                     'type' => APIRelation::FIELD,
                     'sourceContentInfo' => $content->contentInfo,
                     'destinationContentInfo' => $contentService->loadContentInfo(4),
-                ]
+                ],
             ),
         ];
     }
@@ -61,7 +63,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
                     'type' => APIRelation::FIELD,
                     'sourceContentInfo' => $content->contentInfo,
                     'destinationContentInfo' => $contentService->loadContentInfo(49),
-                ]
+                ],
             ),
         ];
     }
@@ -158,9 +160,9 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
 
     public function assertFieldDataLoadedCorrect(Field $field): void
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             Value::class,
-            $field->value
+            $field->value,
         );
 
         $expectedData = [
@@ -168,7 +170,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         ];
         $this->assertPropertiesCorrect(
             $expectedData,
-            $field->value
+            $field->value,
         );
     }
 
@@ -196,7 +198,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         ];
         $this->assertPropertiesCorrect(
             $expectedData,
-            $field->value
+            $field->value,
         );
     }
 
@@ -207,9 +209,9 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
 
     public function assertCopiedFieldDataLoadedCorrectly(Field $field): void
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             Value::class,
-            $field->value
+            $field->value,
         );
 
         $expectedData = [
@@ -218,7 +220,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
 
         $this->assertPropertiesCorrect(
             $expectedData,
-            $field->value
+            $field->value,
         );
     }
 

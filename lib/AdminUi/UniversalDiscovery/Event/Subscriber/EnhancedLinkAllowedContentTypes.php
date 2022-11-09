@@ -7,6 +7,10 @@ namespace Netgen\IbexaFieldTypeEnhancedLink\AdminUi\UniversalDiscovery\Event\Sub
 use Ibexa\AdminUi\UniversalDiscovery\Event\ConfigResolveEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+use function array_intersect;
+use function array_values;
+use function in_array;
+
 class EnhancedLinkAllowedContentTypes implements EventSubscriberInterface
 {
     /**
@@ -27,7 +31,7 @@ class EnhancedLinkAllowedContentTypes implements EventSubscriberInterface
         $context = $event->getContext();
         $config = $event->getConfig();
 
-        if (!in_array($event->getConfigName(), ['single', 'multiple'])) {
+        if (!in_array($event->getConfigName(), ['single', 'multiple'], true)) {
             return;
         }
 
@@ -42,8 +46,8 @@ class EnhancedLinkAllowedContentTypes implements EventSubscriberInterface
             $intersection = array_values(
                 array_intersect(
                     $config['allowed_content_types'],
-                    $context['allowed_content_types']
-                )
+                    $context['allowed_content_types'],
+                ),
             );
 
             $config['allowed_content_types'] = empty($intersection)

@@ -31,10 +31,10 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
                                 $fieldForm->getConfig()->getOption('location'),
                             ),
                             'root_default_location' => $fieldSettings['rootDefaultLocation'] ?? false,
-                        ]
+                        ],
                     )
                     ->setAutoInitialize(false)
-                    ->getForm()
+                    ->getForm(),
             );
     }
 }
