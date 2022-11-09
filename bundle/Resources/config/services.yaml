@@ -7,7 +7,7 @@ services:
         public: true
         arguments:
             - '@Ibexa\Core\Persistence\Cache\ContentHandler'
-            - '@Ibexa\Core\Repository\Validator\TargetContentValidatorInterface'
+            - '@Netgen\IbexaFieldTypeEnhancedLink\FieldType\TargetContentValidator'
         tags:
             - { name: ibexa.field_type, alias: 'ngenhancedlink' }
 

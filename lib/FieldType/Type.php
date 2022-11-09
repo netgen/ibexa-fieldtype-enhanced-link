@@ -15,7 +15,13 @@ use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
 use Ibexa\Core\FieldType\FieldType;
 use Ibexa\Core\FieldType\ValidationError;
 use Ibexa\Core\FieldType\Value as BaseValue;
-use Ibexa\Core\Repository\Validator\TargetContentValidatorInterface;
+
+use function array_intersect;
+use function count;
+use function is_array;
+use function is_bool;
+use function is_int;
+use function is_string;
 
 class Type extends FieldType
 {
@@ -39,7 +45,7 @@ class Type extends FieldType
         ],
         'rootDefaultLocation' => [
             'type' => 'bool',
-            'default' => false,
+            'default' => true,
         ],
         'selectionContentTypes' => [
             'type' => 'array',
@@ -49,13 +55,16 @@ class Type extends FieldType
             'type' => 'array',
             'default' => [
                 self::ALLOWED_LINK_TYPE_EXTERNAL,
-                self::ALLOWED_LINK_TYPE_INTERNAL
+                self::ALLOWED_LINK_TYPE_INTERNAL,
             ],
         ],
         'allowedTargets' => [
             'type' => 'array',
             'default' => [
-                self::ALLOWED_TARGET_LINK
+                self::ALLOWED_TARGET_LINK,
+                self::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                self::ALLOWED_TARGET_IN_PLACE,
+                self::ALLOWED_TARGET_MODAL,
             ],
         ],
         'enableQueryParameter' => [
@@ -65,11 +74,11 @@ class Type extends FieldType
     ];
 
     private SPIContentHandler $handler;
-    private TargetContentValidatorInterface $targetContentValidator;
+    private TargetContentValidator $targetContentValidator;
 
     public function __construct(
         SPIContentHandler $handler,
-        TargetContentValidatorInterface $targetContentValidator
+        TargetContentValidator $targetContentValidator
     ) {
         $this->handler = $handler;
         $this->targetContentValidator = $targetContentValidator;
@@ -87,8 +96,9 @@ class Type extends FieldType
                     [
                         '%setting%' => $name,
                     ],
-                    "[$name]"
+                    "[{$name}]",
                 );
+
                 continue;
             }
 
@@ -103,10 +113,12 @@ class Type extends FieldType
                                 '%selection_browse%' => self::SELECTION_BROWSE,
                                 '%selection_dropdown%' => self::SELECTION_DROPDOWN,
                             ],
-                            "[$name]"
+                            "[{$name}]",
                         );
                     }
+
                     break;
+
                 case 'selectionRoot':
                     if (!is_int($value) && !is_string($value) && $value !== null) {
                         $validationErrors[] = new ValidationError(
@@ -115,10 +127,12 @@ class Type extends FieldType
                             [
                                 '%setting%' => $name,
                             ],
-                            "[$name]"
+                            "[{$name}]",
                         );
                     }
+
                     break;
+
                 case 'enableQueryParameter':
                 case 'rootDefaultLocation':
                     if (!is_bool($value) && $value !== null) {
@@ -128,10 +142,12 @@ class Type extends FieldType
                             [
                                 '%setting%' => $name,
                             ],
-                            "[$name]"
+                            "[{$name}]",
                         );
                     }
+
                     break;
+
                 case 'selectionContentTypes':
                     if (!is_array($value)) {
                         $validationErrors[] = new ValidationError(
@@ -140,12 +156,14 @@ class Type extends FieldType
                             [
                                 '%setting%' => $name,
                             ],
-                            "[$name]"
+                            "[{$name}]",
                         );
                     }
+
                     break;
+
                 case 'allowedLinkType':
-                    if (!is_array($value) || !in_array($value, [self::ALLOWED_LINK_TYPE_INTERNAL, self::ALLOWED_LINK_TYPE_EXTERNAL], true)) {
+                    if (!is_array($value) || count(array_intersect($value, [self::ALLOWED_LINK_TYPE_INTERNAL, self::ALLOWED_LINK_TYPE_EXTERNAL])) === 0) {
                         $validationErrors[] = new ValidationError(
                             "Setting '%setting%' value must be either %external% or %internal%",
                             null,
@@ -154,12 +172,14 @@ class Type extends FieldType
                                 '%external%' => self::ALLOWED_LINK_TYPE_EXTERNAL,
                                 '%internal%' => self::ALLOWED_LINK_TYPE_INTERNAL,
                             ],
-                            "[$name]"
+                            "[{$name}]",
                         );
                     }
+
                     break;
+
                 case 'allowedTargets':
-                    if (!is_array($value) || !in_array($value, [self::ALLOWED_TARGET_LINK, self::ALLOWED_TARGET_LINK_IN_NEW_TAB, self::ALLOWED_TARGET_IN_PLACE, self::ALLOWED_TARGET_MODAL], true)) {
+                    if (!is_array($value) || count(array_intersect($value, [self::ALLOWED_TARGET_LINK, self::ALLOWED_TARGET_LINK_IN_NEW_TAB, self::ALLOWED_TARGET_IN_PLACE, self::ALLOWED_TARGET_MODAL])) === 0) {
                         $validationErrors[] = new ValidationError(
                             "Setting '%setting%' value must be one or either %link%, %link_in_new_tab%, %in_place% and/or %modal%",
                             null,
@@ -170,9 +190,10 @@ class Type extends FieldType
                                 '%in_place%' => self::ALLOWED_TARGET_IN_PLACE,
                                 '%modal%' => self::ALLOWED_TARGET_MODAL,
                             ],
-                            "[$name]"
+                            "[{$name}]",
                         );
                     }
+
                     break;
             }
         }
@@ -188,19 +209,20 @@ class Type extends FieldType
     public function getName(SPIValue $value, FieldDefinition $fieldDefinition, string $languageCode): string
     {
         /** @var Value $value */
-        if (is_string($value->link)) {
-            return (string)$value->text;
+        if (is_string($value->reference)) {
+            return (string) $value->label;
         }
-        if (is_int($value->link)) {
+        if (is_int($value->reference)) {
             try {
-                $contentInfo = $this->handler->loadContentInfo($value->link);
-                $versionInfo = $this->handler->loadVersionInfo($value->link, $contentInfo->currentVersionNo);
+                $contentInfo = $this->handler->loadContentInfo($value->reference);
+                $versionInfo = $this->handler->loadVersionInfo($value->reference, $contentInfo->currentVersionNo);
             } catch (NotFoundException $e) {
                 return '';
             }
 
             return $versionInfo->names[$languageCode] ?? $versionInfo->names[$contentInfo->mainLanguageCode];
         }
+
         return '';
     }
 
@@ -211,16 +233,20 @@ class Type extends FieldType
     {
         /** @var Value $value */
         $validationErrors = [];
-        if ($this->isEmptyValue($value)  || is_string($value->link)) {
+        if ($this->isEmptyValue($value)) {
             return $validationErrors;
         }
 
         $allowedContentTypes = $fieldDefinition->getFieldSettings()['selectionContentTypes'] ?? [];
+        $allowedTargets = $fieldDefinition->getFieldSettings()['allowedTargets'] ?? [];
 
         $validationError = $this->targetContentValidator->validate(
-            (int) $value->link,
-            $allowedContentTypes
+            $value,
+            $allowedContentTypes,
+            $allowedTargets,
         );
+        dump("Validation errors: ");
+        dump($validationError);
 
         return $validationError === null ? $validationErrors : [$validationError];
     }
@@ -239,69 +265,30 @@ class Type extends FieldType
      */
     public function isEmptyValue(SPIValue $value): bool
     {
-        /** @var Value $value */
-        return !isset($value->link);
-    }
-
-    /**
-     * Inspects given $inputValue and potentially converts it into a dedicated value object.
-     *
-     * @param int|string|\Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo|Value $inputValue
-     *
-     * @return Value
-     */
-    protected function createValueFromInput($inputValue)
-    {
-        // ContentInfo
-        if ($inputValue instanceof ContentInfo) {
-            return new Value($inputValue->id);
-        } elseif (is_int($inputValue) || is_string($inputValue)) {
-            return new Value($inputValue);
-        }
-
-        return $this->getEmptyValue();
-    }
-
-    /**
-     * Throws an exception if value structure is not of expected format.
-     *
-     * @param Value $value
-     *@throws \Ibexa\Contracts\Core\Repository\Exceptions\InvalidArgumentException If the value does not match the expected structure.
-     *
-     */
-    protected function checkValueStructure(BaseValue $value): void
-    {
-        if (isset($value->link) && !is_int($value->link) && !is_string($value->link)) {
-            throw new InvalidArgumentType(
-                '$value->link',
-                'int|string',
-                $value->link
-            );
-        }
-    }
-
-    protected function getSortInfo(BaseValue $value): string
-    {
-        return (string)$value;
+        /* @var Value $value */
+        return !isset($value->reference);
     }
 
     public function fromHash($hash): Value
     {
         if ($hash !== null) {
-            $link = $hash['link'];
-            if (isset($link)) {
-                return new Value($link, $hash['text']);
+            $reference = $hash['reference'];
+            if (isset($reference)) {
+                return new Value($reference, $hash['label'], $hash['target'], $hash['suffix']);
             }
         }
+
         return $this->getEmptyValue();
     }
 
     public function toHash(SPIValue $value): array
     {
-        /** @var Value $value */
+        /* @var Value $value */
         return [
-            'link' => $value->link,
-            'text' => $value->text,
+            'reference' => $value->reference,
+            'label' => $value->label,
+            'target' => $value->target,
+            'suffix' => $value->suffix,
         ];
     }
 
@@ -314,41 +301,45 @@ class Type extends FieldType
     {
         /** @var Value $fieldValue */
         $relations = [];
-        if ($fieldValue->link !== null) {
-            $relations[Relation::FIELD] = [$fieldValue->link];
+        if ($fieldValue->reference !== null) {
+            $relations[Relation::FIELD] = [$fieldValue->reference];
         }
 
         return $relations;
     }
 
-    public function toPersistenceValue(SPIValue $value)
+    public function toPersistenceValue(SPIValue $value): FieldValue
     {
         /** @var Value $value */
-        if (is_string($value->link)) {
+        if (is_string($value->reference)) {
             return new FieldValue(
                 [
                     'data' => [
                         'id' => null,
-                        'text' => $value->text,
+                        'label' => $value->label,
                         'type' => 'external',
+                        'target' => $value->target,
+                        'suffix' => $value->suffix,
                     ],
-                    'externalData' => $value->link,
+                    'externalData' => $value->reference,
                     'sortKey' => $this->getSortInfo($value),
-                ]
+                ],
             );
         }
 
-        if (is_int($value->link)) {
+        if (is_int($value->reference)) {
             return new FieldValue(
                 [
                     'data' => [
-                        'id' => $value->link,
-                        'text' => $value->text,
+                        'id' => $value->reference,
+                        'label' => $value->label,
                         'type' => 'internal',
+                        'target' => $value->target,
+                        'suffix' => $value->suffix,
                     ],
                     'externalData' => null,
                     'sortKey' => $this->getSortInfo($value),
-                ]
+                ],
             );
         }
 
@@ -357,7 +348,7 @@ class Type extends FieldType
                 'data' => [],
                 'externalData' => null,
                 'sortKey' => null,
-            ]
+            ],
         );
     }
 
@@ -372,19 +363,65 @@ class Type extends FieldType
      */
     public function fromPersistenceValue(FieldValue $fieldValue): Value
     {
-        if ($fieldValue->data === null || !isset($fieldValue->data['id']) || ($fieldValue->data['type']==='external' && $fieldValue->externalData === null)) {
+        if ($fieldValue->data === null || !isset($fieldValue->data['id']) || ($fieldValue->data['type'] === 'external' && $fieldValue->externalData === null)) {
             return $this->getEmptyValue();
         }
-        if ($fieldValue->data['type']==='external') {
+        if ($fieldValue->data['type'] === 'external') {
             return new Value(
                 $fieldValue->externalData,
-                $fieldValue->data['text']
+                $fieldValue->data['label'],
+                $fieldValue->data['target'],
+                $fieldValue->data['suffix'],
             );
         }
 
         return new Value(
             $fieldValue->data['id'],
-            $fieldValue->data['text']
+            $fieldValue->data['label'],
+            $fieldValue->data['target'],
+            $fieldValue->data['suffix'],
         );
+    }
+
+    /**
+     * Inspects given $inputValue and potentially converts it into a dedicated value object.
+     *
+     * @param int|string|\Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo|Value $inputValue
+     *
+     * @return Value
+     */
+    protected function createValueFromInput($inputValue): Value
+    {
+        if ($inputValue instanceof ContentInfo) {
+            return new Value($inputValue->id);
+        }
+        if (is_int($inputValue) || is_string($inputValue)) {
+            return new Value($inputValue);
+        }
+
+        return $inputValue;
+    }
+
+    /**
+     * Throws an exception if value structure is not of expected format.
+     *
+     * @param Value $value
+     *
+     *@throws \Ibexa\Contracts\Core\Repository\Exceptions\InvalidArgumentException if the value does not match the expected structure
+     */
+    protected function checkValueStructure(BaseValue $value): void
+    {
+        if (isset($value->reference) && !is_int($value->reference) && !is_string($value->reference)) {
+            throw new InvalidArgumentType(
+                '$value->reference',
+                'int|string',
+                $value->reference,
+            );
+        }
+    }
+
+    protected function getSortInfo(BaseValue $value): string
+    {
+        return (string) $value;
     }
 }
