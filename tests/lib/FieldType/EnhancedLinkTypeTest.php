@@ -4,19 +4,28 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Unit\FieldType;
 
+use Http\Discovery\Exception\NotFoundException;
+use Ibexa\Contracts\Core\Exception\InvalidArgumentType;
 use Ibexa\Contracts\Core\FieldType\Value as SPIValue;
 use Ibexa\Contracts\Core\Persistence\Content\Handler as SPIContentHandler;
 use Ibexa\Contracts\Core\Persistence\Content\VersionInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\Relation;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
+use Ibexa\Contracts\Core\Repository\Values\ValueObject;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentException;
 use Ibexa\Core\FieldType\ValidationError;
 use Ibexa\Core\Repository\Validator\TargetContentValidatorInterface;
 use Ibexa\Tests\Core\FieldType\FieldTypeTest;
+use Netgen\IbexaFieldTypeEnhancedLink\FieldType\TargetContentValidator;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
+use function PHPUnit\Framework\stringContains;
+use Ibexa\Contracts\Core\Persistence\Content\FieldValue;
 
+/**
+ * @group type
+ */
 class EnhancedLinkTypeTest extends FieldTypeTest
 {
     private const DESTINATION_CONTENT_ID = 14;
@@ -57,7 +66,75 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             ->with(self::DESTINATION_CONTENT_ID, $currentVersionNo)
             ->willReturn($versionInfo);
 
-        $this->targetContentValidator = $this->createMock(TargetContentValidatorInterface::class);
+        $this->targetContentValidator = $this->createMock(TargetContentValidator::class);
+    }
+
+    protected function createFieldTypeUnderTest(): Type
+    {
+        $fieldType = new Type(
+            $this->contentHandler,
+            $this->targetContentValidator
+        );
+        $fieldType->setTransformationProcessor($this->getTransformationProcessorMock());
+
+        return $fieldType;
+    }
+
+    /**
+     * Returns the validator configuration schema expected from the field type.
+     *
+     * @return array
+     */
+    protected function getValidatorConfigurationSchemaExpectation(): array
+    {
+        return [];
+    }
+
+    protected function getSettingsSchemaExpectation(): array
+    {
+        return [
+            'selectionMethod' => [
+                'type' => 'int',
+                'default' => Type::SELECTION_BROWSE,
+            ],
+            'selectionRoot' => [
+                'type' => 'string',
+                'default' => null,
+            ],
+            'rootDefaultLocation' => [
+                'type' => 'bool',
+                'default' => true,
+            ],
+            'selectionContentTypes' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'allowedLinkType' => [
+                'type' => 'array',
+                'default' => [
+                    Type::ALLOWED_LINK_TYPE_EXTERNAL,
+                    Type::ALLOWED_LINK_TYPE_INTERNAL,
+                ],
+            ],
+            'allowedTargets' => [
+                'type' => 'array',
+                'default' => [
+                    Type::ALLOWED_TARGET_LINK,
+                    Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                    Type::ALLOWED_TARGET_IN_PLACE,
+                    Type::ALLOWED_TARGET_MODAL,
+                ],
+            ],
+            'enableQueryParameter' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
+        ];
+    }
+
+    protected function getEmptyValueExpectation(): Value
+    {
+        return new Value();
     }
 
     public function provideInvalidInputForAcceptValue(): array
@@ -92,12 +169,22 @@ class EnhancedLinkTypeTest extends FieldTypeTest
     {
         return [
             [
-                new Value(23),
-                ['destinationContentId' => 23],
+                new Value(23, 'test', 'link', null),
+                [
+                    'reference' => 23,
+                    'label' => 'test',
+                    'target' => 'link',
+                    'suffix' => null
+                ],
             ],
             [
                 new Value(),
-                ['destinationContentId' => null],
+                [
+                    'reference' => null,
+                    'label' => null,
+                    'target' => Value::DEFAULT_TARGET,
+                    'suffix' => null,
+                ],
             ],
         ];
     }
@@ -106,11 +193,21 @@ class EnhancedLinkTypeTest extends FieldTypeTest
     {
         return [
             [
-                ['destinationContentId' => 23],
-                new Value(23),
+                [
+                    'reference' => 23,
+                    'label' => 'test',
+                    'target' => 'link',
+                    'suffix' => null
+                ],
+                new Value(23, 'test', 'link', null),
             ],
             [
-                ['destinationContentId' => null],
+                [
+                    'reference' => null,
+                    'label' => null,
+                    'target' => Value::DEFAULT_TARGET,
+                    'suffix' => null,
+                ],
                 new Value(),
             ],
         ];
@@ -122,14 +219,37 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             [
                 [
                     'selectionMethod' => Type::SELECTION_BROWSE,
-                    'selectionRoot' => 42,
-                ],
+                    'selectionRoot' => null,
+                    'rootDefaultLocation' => true,
+                    'selectionContentTypes' => [],
+                    'allowedLinkType' => [
+                        Type::ALLOWED_LINK_TYPE_EXTERNAL,
+                        Type::ALLOWED_LINK_TYPE_INTERNAL,
+                    ],
+                    'allowedTargets' => [
+                        Type::ALLOWED_TARGET_LINK,
+                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                        Type::ALLOWED_TARGET_IN_PLACE,
+                        Type::ALLOWED_TARGET_MODAL,
+                    ],
+                    'enableQueryParameter' => false,
+                ]
             ],
             [
                 [
-                    'selectionMethod' => Type::SELECTION_DROPDOWN,
-                    'selectionRoot' => 'some-key',
-                ],
+                    'selectionMethod' => Type::SELECTION_BROWSE,
+                    'selectionRoot' => null,
+                    'rootDefaultLocation' => true,
+                    'selectionContentTypes' => [],
+                    'allowedLinkType' => [
+                        Type::ALLOWED_LINK_TYPE_EXTERNAL,
+                    ],
+                    'allowedTargets' => [
+                        Type::ALLOWED_TARGET_IN_PLACE,
+                        Type::ALLOWED_TARGET_MODAL,
+                    ],
+                    'enableQueryParameter' => true,
+                ]
             ],
         ];
     }
@@ -140,23 +260,137 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             [
                 // Unknown key
                 [
-                    'unknownKey' => 23,
-                    'selectionMethod' => Type::SELECTION_BROWSE,
-                    'selectionRoot' => 42,
+                    'unknownKey' => Type::SELECTION_BROWSE,
+                    'selectionRoot' => null,
+                    'rootDefaultLocation' => true,
+                    'selectionContentTypes' => [],
+                    'allowedLinkType' => [
+                        Type::ALLOWED_LINK_TYPE_EXTERNAL,
+                        Type::ALLOWED_LINK_TYPE_INTERNAL,
+                    ],
+                    'allowedTargets' => [
+                        Type::ALLOWED_TARGET_LINK,
+                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                        Type::ALLOWED_TARGET_IN_PLACE,
+                        Type::ALLOWED_TARGET_MODAL,
+                    ],
+                    'enableQueryParameter' => false,
                 ],
             ],
             [
                 // Invalid selectionMethod
                 [
-                    'selectionMethod' => 2342,
-                    'selectionRoot' => 42,
+                    'selectionMethod' => 'invalid',
+                    'selectionRoot' => null,
+                    'rootDefaultLocation' => true,
+                    'selectionContentTypes' => [],
+                    'allowedLinkType' => [
+                        Type::ALLOWED_LINK_TYPE_EXTERNAL,
+                        Type::ALLOWED_LINK_TYPE_INTERNAL,
+                    ],
+                    'allowedTargets' => [
+                        Type::ALLOWED_TARGET_LINK,
+                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                        Type::ALLOWED_TARGET_IN_PLACE,
+                        Type::ALLOWED_TARGET_MODAL,
+                    ],
+                    'enableQueryParameter' => false,
                 ],
             ],
             [
                 // Invalid selectionRoot
                 [
-                    'selectionMethod' => Type::SELECTION_DROPDOWN,
+                    'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => [],
+                    'rootDefaultLocation' => true,
+                    'selectionContentTypes' => [],
+                    'allowedLinkType' => [
+                        Type::ALLOWED_LINK_TYPE_EXTERNAL,
+                        Type::ALLOWED_LINK_TYPE_INTERNAL,
+                    ],
+                    'allowedTargets' => [
+                        Type::ALLOWED_TARGET_LINK,
+                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                        Type::ALLOWED_TARGET_IN_PLACE,
+                        Type::ALLOWED_TARGET_MODAL,
+                    ],
+                    'enableQueryParameter' => false,
+                ],
+            ],
+            [
+                // Invalid rootDefaultLocation
+                [
+                    'selectionMethod' => Type::SELECTION_BROWSE,
+                    'selectionRoot' => null,
+                    'rootDefaultLocation' => 'string',
+                    'selectionContentTypes' => [],
+                    'allowedLinkType' => [
+                        Type::ALLOWED_LINK_TYPE_EXTERNAL,
+                        Type::ALLOWED_LINK_TYPE_INTERNAL,
+                    ],
+                    'allowedTargets' => [
+                        Type::ALLOWED_TARGET_LINK,
+                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                        Type::ALLOWED_TARGET_IN_PLACE,
+                        Type::ALLOWED_TARGET_MODAL,
+                    ],
+                    'enableQueryParameter' => false,
+                ],
+            ],
+            [
+                // Invalid selectionContentTypes
+                [
+                    'selectionMethod' => Type::SELECTION_BROWSE,
+                    'selectionRoot' => null,
+                    'rootDefaultLocation' => true,
+                    'selectionContentTypes' => 'string',
+                    'allowedLinkType' => [
+                        Type::ALLOWED_LINK_TYPE_EXTERNAL,
+                        Type::ALLOWED_LINK_TYPE_INTERNAL,
+                    ],
+                    'allowedTargets' => [
+                        Type::ALLOWED_TARGET_LINK,
+                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                        Type::ALLOWED_TARGET_IN_PLACE,
+                        Type::ALLOWED_TARGET_MODAL,
+                    ],
+                    'enableQueryParameter' => false,
+                ],
+            ],
+            [
+                // Invalid allowedLinkType
+                [
+                    'selectionMethod' => Type::SELECTION_BROWSE,
+                    'selectionRoot' => null,
+                    'rootDefaultLocation' => true,
+                    'selectionContentTypes' => [],
+                    'allowedLinkType' => [
+                        'invalid'
+                    ],
+                    'allowedTargets' => [
+                        Type::ALLOWED_TARGET_LINK,
+                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                        Type::ALLOWED_TARGET_IN_PLACE,
+                        Type::ALLOWED_TARGET_MODAL,
+                    ],
+                    'enableQueryParameter' => false,
+                ],
+            ],
+            [
+                // Invalid allowedTargets
+                [
+                    'selectionMethod' => Type::SELECTION_BROWSE,
+                    'selectionRoot' => null,
+                    'rootDefaultLocation' => true,
+                    'selectionContentTypes' => [],
+                    'allowedLinkType' => [
+                        Type::ALLOWED_LINK_TYPE_EXTERNAL,
+                        Type::ALLOWED_LINK_TYPE_INTERNAL,
+                    ],
+                    'allowedTargets' => [
+                        'invalid'
+                    ],
+                    'enableQueryParameter' => false,
                 ],
             ],
         ];
@@ -176,40 +410,30 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         );
     }
 
-    public function testValidateNotExistingContentRelation(): void
-    {
-        $destinationContentId = 'invalid';
+    /**
+     * @dataProvider provideDataForToPersistenceValue
+     */
+    public function testToPersistenceValue(
+        Value $value,
+        FieldValue $expected
+    ): void {
+        $ft = $this->createFieldTypeUnderTest();
+        $fieldValue = $ft->toPersistenceValue($value);
 
-        $this->targetContentValidator
-            ->expects(self::once())
-            ->method('validate')
-            ->with((int) $destinationContentId)
-            ->willReturn($this->generateValidationError($destinationContentId));
-
-        $validationErrors = $this->doValidate([], new Value($destinationContentId));
-
-        self::assertIsArray($validationErrors);
-        self::assertEquals([$this->generateValidationError($destinationContentId)], $validationErrors);
+        self::assertEquals($fieldValue, $expected);
     }
 
-    public function testValidateInvalidContentType(): void
-    {
-        $destinationContentId = 12;
-        $allowedContentTypes = ['article', 'folder'];
+    /**
+     * @dataProvider provideDataForFromPersistenceValue
+     */
+    public function testFromPersistenceValue(
+        FieldValue $value,
+        Value $expected
+    ): void {
+        $ft = $this->createFieldTypeUnderTest();
+        $fieldType = $ft->fromPersistenceValue($value);
 
-        $this->targetContentValidator
-            ->expects(self::once())
-            ->method('validate')
-            ->with($destinationContentId, $allowedContentTypes)
-            ->willReturn($this->generateContentTypeValidationError('test'));
-
-        $validationErrors = $this->doValidate(
-            ['fieldSettings' => ['selectionContentTypes' => $allowedContentTypes]],
-            new Value($destinationContentId),
-        );
-
-        self::assertIsArray($validationErrors);
-        self::assertEquals([$this->generateContentTypeValidationError('test')], $validationErrors);
+        self::assertEquals($fieldType, $expected);
     }
 
     /**
@@ -242,6 +466,102 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             'destination_content_id_de_DE' => [
                 new Value(self::DESTINATION_CONTENT_ID), 'Name_de_DE', [], 'de_DE',
             ],
+            'string_name' => [
+                new Value('test', 'label'), 'label', [], 'de_DE',
+            ]
+        ];
+    }
+
+    public function testIsSearchable(): void
+    {
+        $ft = $this->createFieldTypeUnderTest();
+
+        self::assertTrue($ft->isSearchable());
+    }
+
+    public function provideDataForFromPersistenceValue(): array
+    {
+        return [
+            'null_data' => [
+              new FieldValue(['data' => null]),
+              $this->getEmptyValueExpectation()
+            ],
+            'external_type' => [
+                new FieldValue([
+                    'data' =>
+                        [
+                            'type' => 'external',
+                            'id' => 'test',
+                            'label' => 'label',
+                            'target' => Type::ALLOWED_TARGET_LINK,
+                            'suffix' => null
+                        ],
+                    'externalData' => 'test'
+                ]),
+                new Value('test', 'label', Type::ALLOWED_TARGET_LINK)
+            ],
+            'internal_type' => [
+                new FieldValue([
+                    'data' =>
+                        [
+                            'type' => 'internal',
+                            'id' => 12,
+                            'label' => 'label',
+                            'target' => Type::ALLOWED_TARGET_MODAL,
+                            'suffix' => null
+                        ],
+                    'externalData' => null
+                ]),
+                new Value(12, 'label', Type::ALLOWED_TARGET_MODAL)
+            ]
+        ];
+    }
+
+    public function provideDataForToPersistenceValue(): array
+    {
+        return [
+            'string_reference_value' => [
+                new Value('test'),
+                new FieldValue(
+                    [
+                        'data' => [
+                            'id' => null,
+                            'label' => null,
+                            'type' => 'external',
+                            'target' => Type::ALLOWED_TARGET_LINK,
+                            'suffix' => null,
+                        ],
+                        'externalData' => 'test',
+                        'sortKey' => 'test',
+                    ]
+                )
+            ],
+            'int_reference_value' => [
+                new Value(15, 'label', Type::ALLOWED_TARGET_LINK),
+                new FieldValue(
+                    [
+                        'data' => [
+                            'id' => 15,
+                            'label' => 'label',
+                            'type' => 'internal',
+                            'target' => Type::ALLOWED_TARGET_LINK,
+                            'suffix' => null,
+                        ],
+                        'externalData' => null,
+                        'sortKey' => '15',
+                    ]
+                )
+            ],
+            'boolean_reference_value' => [
+                new Value(false),
+                new FieldValue(
+                    [
+                        'data' => [],
+                        'externalData' => null,
+                        'sortKey' => null,
+                    ]
+                )
+            ],
         ];
     }
 
@@ -255,84 +575,15 @@ class EnhancedLinkTypeTest extends FieldTypeTest
     public function provideInvalidDataForValidate(): array
     {
         return [
-            [[], new Value('invalid'), []],
+            [[], new Value(true), []],
+            [[], new Value(), []],
         ];
     }
 
-    protected function createFieldTypeUnderTest(): Type
-    {
-        $fieldType = new Type(
-            $this->contentHandler,
-            $this->targetContentValidator,
-        );
-        $fieldType->setTransformationProcessor($this->getTransformationProcessorMock());
-
-        return $fieldType;
-    }
-
-    /**
-     * Returns the validator configuration schema expected from the field type.
-     *
-     * @return array
-     */
-    protected function getValidatorConfigurationSchemaExpectation(): array
-    {
-        return [];
-    }
-
-    protected function getSettingsSchemaExpectation(): array
-    {
-        return [
-            'selectionMethod' => [
-                'type' => 'int',
-                'default' => Type::SELECTION_BROWSE,
-            ],
-            'selectionRoot' => [
-                'type' => 'string',
-                'default' => null,
-            ],
-            'rootDefaultLocation' => [
-                'type' => 'bool',
-                'default' => false,
-            ],
-            'selectionContentTypes' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-        ];
-    }
-
-    protected function getEmptyValueExpectation(): Value
-    {
-        return new Value();
-    }
 
     protected function provideFieldTypeIdentifier(): string
     {
         return 'ngenhancedlink';
     }
-
-    private function generateValidationError(string $contentId): ValidationError
-    {
-        return new ValidationError(
-            'Content with identifier %contentId% is not a valid relation target',
-            null,
-            [
-                '%contentId%' => $contentId,
-            ],
-            'targetContentId',
-        );
-    }
-
-    private function generateContentTypeValidationError(string $contentTypeIdentifier): ValidationError
-    {
-        return new ValidationError(
-            'Content Type %contentTypeIdentifier% is not a valid relation target',
-            null,
-            [
-                '%contentTypeIdentifier%' => $contentTypeIdentifier,
-            ],
-            'targetContentId',
-        );
-    }
+    
 }
