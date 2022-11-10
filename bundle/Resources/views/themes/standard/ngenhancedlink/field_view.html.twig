@@ -4,7 +4,7 @@
 
 {% block ngenhancedlink_field %}
     {% apply spaceless %}
-        {% if not ibexa_field_is_empty( content, field ) and parameters.available %}
+        {% if not ibexa_field_is_empty( content, field ) %}
             <h1>THIS IS (DEFAULT) TEMPLATE FOR FRONTEND VIEW</h1>
             <div {{ block( 'field_attributes' ) }}>
                 {% if field.value.isInternal%}
