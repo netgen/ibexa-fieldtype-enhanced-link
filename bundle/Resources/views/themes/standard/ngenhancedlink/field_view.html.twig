@@ -7,16 +7,21 @@
         {% if not ibexa_field_is_empty( content, field ) and parameters.available %}
             <h1>THIS IS (DEFAULT) TEMPLATE FOR FRONTEND VIEW</h1>
             <div {{ block( 'field_attributes' ) }}>
-                {{ render(
-                    controller(
-                        "ibexa_content::viewAction",
-                        {
-                            'contentId': field.value.destinationContentId,
-                            'viewType': 'text_linked',
-                            'layout': false
-                        }
-                    )
-                ) }}
+                {% if field.value.isInternal%}
+                    {{ render(
+                        controller(
+                            "ibexa_content::viewAction",
+                            {
+                                'contentId': field.value.reference,
+                                'viewType': 'text_linked',
+                                'layout': false
+                            }
+                        )
+                    ) }}
+                {% endif%}
+                {% if field.value.isExternal %}
+                    <a href="{{ field.value.reference }}" {{ block( 'field_attributes' ) }}>{{ field.value.label ? field.value.label : field.value.reference }}</a>
+                {% endif %}
             </div>
         {% endif %}
     {% endapply %}
