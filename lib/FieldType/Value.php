@@ -11,8 +11,6 @@ use function is_string;
 
 class Value extends BaseValue
 {
-    public const DEFAULT_TARGET = 'link';
-
     public $reference;
     public ?string $label;
     public string $target;
@@ -25,7 +23,7 @@ class Value extends BaseValue
      * @param mixed|null $reference
      * @param mixed $target
      */
-    public function __construct($reference = null, ?string $label = null, $target = self::DEFAULT_TARGET, ?string $suffix = null)
+    public function __construct($reference = null, ?string $label = null, $target = Type::ALLOWED_TARGET_LINK, ?string $suffix = null)
     {
         $this->reference = $reference;
         $this->label = $label;
