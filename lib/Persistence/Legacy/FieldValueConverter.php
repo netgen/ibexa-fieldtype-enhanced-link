@@ -85,22 +85,25 @@ class FieldValueConverter implements Converter
         $settingsData = json_decode($storageDef->dataText5, true, 512, JSON_THROW_ON_ERROR);
 
         $fieldSettings = &$fieldDef->fieldTypeConstraints->fieldSettings;
-        if (array_key_exists('selectionMethod', $fieldSettings)) {
+        if (array_key_exists('selectionMethod', $settingsData)) {
             $fieldSettings['selectionMethod'] = $settingsData['selectionMethod'];
         }
-        if (array_key_exists('selectionRoot', $fieldSettings)) {
+        if (array_key_exists('selectionRoot', $settingsData)) {
             $fieldSettings['selectionRoot'] = $settingsData['selectionRoot'];
         }
-        if (array_key_exists('rootDefaultLocation', $fieldSettings)) {
+        if (array_key_exists('rootDefaultLocation', $settingsData)) {
             $fieldSettings['rootDefaultLocation'] = $settingsData['rootDefaultLocation'];
         }
-        if (array_key_exists('allowedTargets', $fieldSettings)) {
+        if (array_key_exists('selectionContentTypes', $settingsData)) {
             $fieldSettings['selectionContentTypes'] = $settingsData['selectionContentTypes'];
         }
-        if (array_key_exists('allowedLinkType', $fieldSettings)) {
+        if (array_key_exists('allowedTargets', $settingsData)) {
+            $fieldSettings['allowedTargets'] = $settingsData['allowedTargets'];
+        }
+        if (array_key_exists('allowedLinkType', $settingsData)) {
             $fieldSettings['allowedLinkType'] = $settingsData['allowedLinkType'];
         }
-        if (array_key_exists('enableQueryParameter', $fieldSettings)) {
+        if (array_key_exists('enableQueryParameter', $settingsData)) {
             $fieldSettings['enableQueryParameter'] = $settingsData['enableQueryParameter'];
         }
     }

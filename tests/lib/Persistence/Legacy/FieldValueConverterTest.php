@@ -163,6 +163,46 @@ class FieldValueConverterTest extends TestCase
         self::assertEquals($expectedFieldDefinition, $actualFieldDefinition);
     }
 
+    public function testToFieldDefinitionWithIncompleteFieldSettings()
+    {
+        $storageFieldDefinition = new StorageFieldDefinition();
+        $storageFieldDefinition->dataText5 =
+            <<< 'DATATEXT'
+            {
+                "selectionMethod": 1,
+                "rootDefaultLocation": true,
+                "selectionContentTypes": [
+                    "article",
+                    "blog_post"
+                ],
+                "allowedLinkType": [
+                    "external"
+                ],
+                "enableQueryParameter": true
+            }
+            DATATEXT;
+
+        $expectedFieldDefinition = new PersistenceFieldDefinition();
+        $expectedFieldDefinition->fieldTypeConstraints = new FieldTypeConstraints(
+            [
+                'fieldSettings' => [
+                    'selectionMethod' => Type::SELECTION_DROPDOWN,
+                    'selectionRoot' => null,
+                    'selectionContentTypes' => ['article', 'blog_post'],
+                    'rootDefaultLocation' => true,
+                    'allowedLinkType' => [Type::ALLOWED_LINK_TYPE_EXTERNAL],
+                    'allowedTargets' => [Type::ALLOWED_TARGET_LINK, Type::ALLOWED_TARGET_LINK_IN_NEW_TAB, Type::ALLOWED_TARGET_IN_PLACE, Type::ALLOWED_TARGET_MODAL],
+                    'enableQueryParameter' => true,
+                ],
+            ],
+        );
+
+        $actualFieldDefinition = new PersistenceFieldDefinition();
+        $this->converter->toFieldDefinition($storageFieldDefinition, $actualFieldDefinition);
+
+        self::assertEquals($expectedFieldDefinition, $actualFieldDefinition);
+    }
+
     public function testToFieldDefinitionWithInvalidDataText5Format()
     {
         $this->expectException(\JsonException::class);
