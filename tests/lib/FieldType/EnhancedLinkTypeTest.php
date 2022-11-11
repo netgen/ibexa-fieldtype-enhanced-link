@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Unit\FieldType;
 
+use eZ\Bundle\EzPublishCoreBundle\Features\Context\UserContext;
 use Http\Discovery\Exception\NotFoundException;
 use Ibexa\Contracts\Core\Exception\InvalidArgumentType;
 use Ibexa\Contracts\Core\FieldType\Value as SPIValue;
@@ -479,6 +480,29 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         self::assertTrue($ft->isSearchable());
     }
 
+    public function testInvalidTargetValidationError(): void
+    {
+        $fieldDefinition = $this->getFieldDefinitionMock(['allowedTargets' => [Type::ALLOWED_TARGET_LINK, Type::ALLOWED_TARGET_MODAL]]);
+        $fieldType = $this->createFieldTypeUnderTest();
+        $validationErrors = $fieldType->validate($fieldDefinition, new Value('test', '', Type::ALLOWED_TARGET_LINK_IN_NEW_TAB));
+
+        self::assertIsArray($validationErrors);
+        self::assertEquals([$this->generateInvalidTargetValidationError(Type::ALLOWED_TARGET_LINK_IN_NEW_TAB)] , $validationErrors);
+    }
+
+    public function testInvalidValueStructureValidationError(): void
+    {
+        $fieldType = $this->createFieldTypeUnderTest();
+
+        try {
+            $fieldType->acceptValue(new Value(true));
+        } catch (\Ibexa\Core\Base\Exceptions\InvalidArgumentType $e) {
+            $result = true;
+        }
+
+        self::assertTrue($result);
+    }
+
     public function provideDataForFromPersistenceValue(): array
     {
         return [
@@ -585,5 +609,16 @@ class EnhancedLinkTypeTest extends FieldTypeTest
     {
         return 'ngenhancedlink';
     }
-    
+
+    private function generateInvalidTargetValidationError(string $target): ValidationError
+    {
+        return new ValidationError(
+            'Target %target% is not a valid target',
+            null,
+           [
+                '%target%' => $target
+           ],
+            'allowedTargets',
+        );
+    }
 }
