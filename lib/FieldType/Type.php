@@ -17,6 +17,7 @@ use Ibexa\Core\FieldType\ValidationError;
 use Ibexa\Core\FieldType\Value as BaseValue;
 
 use function array_intersect;
+use function array_key_exists;
 use function count;
 use function in_array;
 use function is_array;
@@ -210,10 +211,10 @@ class Type extends FieldType
     public function getName(SPIValue $value, FieldDefinition $fieldDefinition, string $languageCode): string
     {
         /** @var Value $value */
-        if (is_string($value->reference)) {
+        if ($value->isExternal()) {
             return (string) $value->label;
         }
-        if (is_int($value->reference)) {
+        if ($value->isInternal()) {
             try {
                 $contentInfo = $this->handler->loadContentInfo($value->reference);
                 $versionInfo = $this->handler->loadVersionInfo($value->reference, $contentInfo->currentVersionNo);
@@ -322,7 +323,7 @@ class Type extends FieldType
     public function toPersistenceValue(SPIValue $value): FieldValue
     {
         /** @var Value $value */
-        if (is_string($value->reference)) {
+        if ($value->isExternal()) {
             return new FieldValue(
                 [
                     'data' => [
@@ -338,7 +339,7 @@ class Type extends FieldType
             );
         }
 
-        if (is_int($value->reference)) {
+        if ($value->isInternal()) {
             return new FieldValue(
                 [
                     'data' => [
@@ -374,24 +375,31 @@ class Type extends FieldType
      */
     public function fromPersistenceValue(FieldValue $fieldValue): Value
     {
-        if ($fieldValue->data === null || !isset($fieldValue->data['id']) || ($fieldValue->data['type'] === 'external' && $fieldValue->externalData === null)) {
-            return $this->getEmptyValue();
-        }
-        if ($fieldValue->data['type'] === 'external') {
-            return new Value(
-                $fieldValue->externalData,
-                $fieldValue->data['label'],
-                $fieldValue->data['target'],
-                $fieldValue->data['suffix'],
-            );
+        if (is_array($fieldValue->data) && array_key_exists('type', $fieldValue->data)) {
+            $labelData = $fieldValue->data['label'] ?? null;
+            $suffixData = $fieldValue->data['suffix'] ?? null;
+            $targetData = $fieldValue->data['target'] ?? self::ALLOWED_TARGET_LINK;
+
+            if ($fieldValue->data['type'] === 'internal' && array_key_exists('id', $fieldValue->data) && is_int($fieldValue->data['id'])) {
+                return new Value(
+                    $fieldValue->data['id'],
+                    $labelData,
+                    $targetData,
+                    $suffixData,
+                );
+            }
+
+            if ($fieldValue->data['type'] === 'external' && is_string($fieldValue->externalData)) {
+                return new Value(
+                    $fieldValue->externalData,
+                    $labelData,
+                    $targetData,
+                    $suffixData,
+                );
+            }
         }
 
-        return new Value(
-            $fieldValue->data['id'],
-            $fieldValue->data['label'],
-            $fieldValue->data['target'],
-            $fieldValue->data['suffix'],
-        );
+        return $this->getEmptyValue();
     }
 
     /**
@@ -418,7 +426,7 @@ class Type extends FieldType
      */
     protected function checkValueStructure(BaseValue $value): void
     {
-        if (isset($value->reference) && !is_int($value->reference) && !is_string($value->reference)) {
+        if (!$value->isInternal() && !$value->isExternal()) {
             throw new InvalidArgumentType(
                 '$value->reference',
                 'int|string',
