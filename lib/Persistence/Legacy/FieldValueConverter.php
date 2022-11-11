@@ -11,6 +11,7 @@ use Ibexa\Core\Persistence\Legacy\Content\StorageFieldDefinition;
 use Ibexa\Core\Persistence\Legacy\Content\StorageFieldValue;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 
+use function array_key_exists;
 use function json_decode;
 use function json_encode;
 
@@ -42,7 +43,7 @@ class FieldValueConverter implements Converter
         } else {
             $fieldValue->data = null;
         }
-        $fieldValue->sortKey = (string) $value->sortKeyString;
+        $fieldValue->sortKey = $value->sortKeyString;
     }
 
     /**
@@ -81,16 +82,27 @@ class FieldValueConverter implements Converter
         if (empty($storageDef->dataText5)) {
             return;
         }
-        $decodedJson = json_decode($storageDef->dataText5, true, 512, JSON_THROW_ON_ERROR);
+        $settingsData = json_decode($storageDef->dataText5, true, 512, JSON_THROW_ON_ERROR);
 
         $fieldSettings = &$fieldDef->fieldTypeConstraints->fieldSettings;
-        $fieldSettings['selectionMethod'] = $decodedJson['selectionMethod'];
-        $fieldSettings['selectionRoot'] = $decodedJson['selectionRoot'];
-        $fieldSettings['rootDefaultLocation'] = $decodedJson['rootDefaultLocation'];
-        $fieldSettings['selectionContentTypes'] = $decodedJson['selectionContentTypes'];
-        $fieldSettings['allowedTargets'] = $decodedJson['allowedTargets'];
-        $fieldSettings['allowedLinkType'] = $decodedJson['allowedLinkType'];
-        $fieldSettings['enableQueryParameter'] = $decodedJson['enableQueryParameter'];
+        if (array_key_exists('selectionMethod', $fieldSettings)) {
+            $fieldSettings['selectionMethod'] = $settingsData['selectionMethod'];
+        }
+        if (array_key_exists('selectionRoot', $fieldSettings)) {
+            $fieldSettings['selectionRoot'] = $settingsData['selectionRoot'];
+        }
+        if (array_key_exists('rootDefaultLocation', $fieldSettings)) {
+            $fieldSettings['rootDefaultLocation'] = $settingsData['rootDefaultLocation'];
+        }
+        if (array_key_exists('allowedTargets', $fieldSettings)) {
+            $fieldSettings['selectionContentTypes'] = $settingsData['selectionContentTypes'];
+        }
+        if (array_key_exists('allowedLinkType', $fieldSettings)) {
+            $fieldSettings['allowedLinkType'] = $settingsData['allowedLinkType'];
+        }
+        if (array_key_exists('enableQueryParameter', $fieldSettings)) {
+            $fieldSettings['enableQueryParameter'] = $settingsData['enableQueryParameter'];
+        }
     }
 
     public function getIndexColumn(): string
