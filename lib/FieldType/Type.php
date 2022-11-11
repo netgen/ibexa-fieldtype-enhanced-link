@@ -395,13 +395,9 @@ class Type extends FieldType
     }
 
     /**
-     * Inspects given $inputValue and potentially converts it into a dedicated value object.
-     *
      * @param int|string|\Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo|Value $inputValue
-     *
-     * @return Value
      */
-    protected function createValueFromInput($inputValue): Value
+    protected function createValueFromInput($inputValue)
     {
         if ($inputValue instanceof ContentInfo) {
             return new Value($inputValue->id);
