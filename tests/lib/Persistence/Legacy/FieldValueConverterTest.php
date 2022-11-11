@@ -27,9 +27,6 @@ class FieldValueConverterTest extends TestCase
         $this->converter = new FieldValueConverter();
     }
 
-    /**
-     * @group fieldType
-     */
     public function testToStorageFieldDefinition()
     {
         $fieldDefinition = new PersistenceFieldDefinition(
@@ -51,61 +48,66 @@ class FieldValueConverterTest extends TestCase
         );
 
         $expectedStorageFieldDefinition = new StorageFieldDefinition();
-        $expectedStorageFieldDefinition->dataText5 = '{
-    "selectionMethod": 1,
-    "selectionRoot": 12345,
-    "rootDefaultLocation": true,
-    "selectionContentTypes": [
-        "article",
-        "blog_post"
-    ],
-    "allowedLinkType": [
-        "external",
-        "internal"
-    ],
-    "allowedTargets": [
-        "link",
-        "link_new_tab",
-        "in_place",
-        "modal"
-    ],
-    "enableQueryParameter": false
-}';
+        $expectedStorageFieldDefinition->dataText5 =
+            <<<'DATATEXT'
+            {
+                "selectionMethod": 1,
+                "selectionRoot": 12345,
+                "rootDefaultLocation": true,
+                "selectionContentTypes": [
+                    "article",
+                    "blog_post"
+                ],
+                "allowedLinkType": [
+                    "external",
+                    "internal"
+                ],
+                "allowedTargets": [
+                    "link",
+                    "link_new_tab",
+                    "in_place",
+                    "modal"
+                ],
+                "enableQueryParameter": false
+            }
+            DATATEXT;
 
         $actualStorageFieldDefinition = new StorageFieldDefinition();
         $this->converter->toStorageFieldDefinition($fieldDefinition, $actualStorageFieldDefinition);
+
         self::assertEquals(
             $expectedStorageFieldDefinition,
             $actualStorageFieldDefinition,
         );
     }
 
-    /**
-     * @group fieldType
-     */
     public function testToFieldDefinition()
     {
         $storageFieldDefinition = new StorageFieldDefinition();
-        $storageFieldDefinition->dataText5 = '{
-    "selectionMethod": 1,
-    "selectionRoot": 12345,
-    "rootDefaultLocation": true,
-    "selectionContentTypes": [
-        "article",
-        "blog_post"
-    ],
-    "allowedLinkType": [
-        "external",
-        "internal"
-    ],
-    "allowedTargets": [
-        "link",
-        "link_new_tab",
-        "in_place",
-        "modal"
-    ],
-    "enableQueryParameter": false
-}';
+        $storageFieldDefinition->dataText5 =
+            <<< 'DATATEXT'
+            {
+                "selectionMethod": 1,
+                "selectionRoot": 12345,
+                "rootDefaultLocation": true,
+                "selectionContentTypes": [
+                    "article",
+                    "blog_post"
+                ],
+                "allowedLinkType": [
+                    "external",
+                    "internal"
+                ],
+                "allowedTargets": [
+                    "link",
+                    "link_new_tab",
+                    "in_place",
+                    "modal"
+                ],
+                "enableQueryParameter": false
+            }
+            DATATEXT;
+
         $expectedFieldDefinition = new PersistenceFieldDefinition();
         $expectedFieldDefinition->fieldTypeConstraints = new FieldTypeConstraints(
             [
@@ -120,20 +122,19 @@ class FieldValueConverterTest extends TestCase
                 ],
             ],
         );
+
         $actualFieldDefinition = new PersistenceFieldDefinition();
         $this->converter->toFieldDefinition($storageFieldDefinition, $actualFieldDefinition);
+
         self::assertEquals($expectedFieldDefinition, $actualFieldDefinition);
     }
 
-    /**
-     * @group fieldType
-     */
     public function testToFieldDefinitionWithDataText5Null()
     {
         $storageFieldDefinition = new StorageFieldDefinition();
         $storageFieldDefinition->dataText5 = null;
-        $expectedFieldDefinition = new PersistenceFieldDefinition();
 
+        $expectedFieldDefinition = new PersistenceFieldDefinition();
         $expectedFieldDefinition->fieldTypeConstraints = new FieldTypeConstraints(
             [
                 'fieldSettings' => [
@@ -155,37 +156,39 @@ class FieldValueConverterTest extends TestCase
                 ],
             ],
         );
+
         $actualFieldDefinition = new PersistenceFieldDefinition();
         $this->converter->toFieldDefinition($storageFieldDefinition, $actualFieldDefinition);
+
         self::assertEquals($expectedFieldDefinition, $actualFieldDefinition);
     }
 
-    /**
-     * @group fieldType
-     */
     public function testToFieldDefinitionWithInvalidDataText5Format()
     {
         $this->expectException(\JsonException::class);
+
         $storageFieldDefinition = new StorageFieldDefinition();
         $storageFieldDefinition->dataText5 = 'String that is not in a valid json format';
+
         $fieldDefinition = new PersistenceFieldDefinition();
         $this->converter->toFieldDefinition($storageFieldDefinition, $fieldDefinition);
     }
 
-    /**
-     * @group fieldType
-     */
     public function testToFieldValue()
     {
         $storageFieldValue = new StorageFieldValue();
-        $storageFieldValue->dataText = '{
-    "id": 1,
-    "label": "Enhanced link",
-    "type": "internal",
-    "target": "link",
-    "suffix": "start"
-}';
+        $storageFieldValue->dataText =
+            <<< 'DATATEXT'
+            {
+                "id": 1,
+                "label": "Enhanced link",
+                "type": "internal",
+                "target": "link",
+                "suffix": "start"
+            }
+            DATATEXT;
         $storageFieldValue->sortKeyString = 'reference';
+
         $expectedFieldValue = new FieldValue();
         $expectedFieldValue->data = [
             'id' => 1,
@@ -195,42 +198,40 @@ class FieldValueConverterTest extends TestCase
             'suffix' => 'start',
         ];
         $expectedFieldValue->sortKey = 'reference';
+
         $actualFieldValue = new FieldValue();
         $this->converter->toFieldValue($storageFieldValue, $actualFieldValue);
+
         self::assertEquals($expectedFieldValue, $actualFieldValue);
     }
 
-    /**
-     * @group fieldType
-     */
     public function testToFieldValueWithDataTextNull()
     {
         $storageFieldValue = new StorageFieldValue();
         $storageFieldValue->dataText = null;
         $storageFieldValue->sortKeyString = 'reference';
+
         $expectedFieldValue = new FieldValue();
         $expectedFieldValue->data = null;
         $expectedFieldValue->sortKey = 'reference';
+
         $actualFieldValue = new FieldValue();
         $this->converter->toFieldValue($storageFieldValue, $actualFieldValue);
+
         self::assertEquals($expectedFieldValue, $actualFieldValue);
     }
 
-    /**
-     * @group fieldType
-     */
     public function testToFieldValueWithInvalidDataTextFormat()
     {
         $this->expectException(\JsonException::class);
+
         $storageFieldValue = new StorageFieldValue();
         $storageFieldValue->dataText = 'String that is not in a valid json format';
+
         $fieldValue = new FieldValue();
         $this->converter->toFieldValue($storageFieldValue, $fieldValue);
     }
 
-    /**
-     * @group fieldType
-     */
     public function testToStorageValue()
     {
         $fieldValue = new FieldValue();
@@ -242,23 +243,26 @@ class FieldValueConverterTest extends TestCase
             'suffix' => 'start',
         ];
         $fieldValue->sortKey = 'reference';
+
         $expectedStorageFieldValue = new StorageFieldValue();
-        $expectedStorageFieldValue->dataText = '{
-    "id": 1,
-    "label": "Enhanced link",
-    "type": "internal",
-    "target": "link",
-    "suffix": "start"
-}';
+        $expectedStorageFieldValue->dataText =
+            <<< 'DATATEXT'
+            {
+                "id": 1,
+                "label": "Enhanced link",
+                "type": "internal",
+                "target": "link",
+                "suffix": "start"
+            }
+            DATATEXT;
         $expectedStorageFieldValue->sortKeyString = 'reference';
+
         $actualStorageFieldValue = new StorageFieldValue();
         $this->converter->toStorageValue($fieldValue, $actualStorageFieldValue);
+
         self::assertEquals($expectedStorageFieldValue, $actualStorageFieldValue);
     }
 
-    /**
-     * @group fieldType
-     */
     public function testToStorageValueWithIdNull()
     {
         $fieldValue = new FieldValue();
@@ -270,21 +274,23 @@ class FieldValueConverterTest extends TestCase
             'suffix' => 'start',
         ];
         $fieldValue->sortKey = 'reference';
+
         $expectedStorageFieldValue = new StorageFieldValue();
         $expectedStorageFieldValue->dataText = null;
         $expectedStorageFieldValue->sortKeyString = 'reference';
+
         $actualStorageFieldValue = new StorageFieldValue();
         $this->converter->toStorageValue($fieldValue, $actualStorageFieldValue);
+
         self::assertEquals($expectedStorageFieldValue, $actualStorageFieldValue);
     }
 
-    /**
-     * @group fieldType
-     */
     public function testGetIndexColumn()
     {
         $expectedIndexColumn = 'sort_key_string';
+
         $actualIndexColumn = $this->converter->getIndexColumn();
+
         self::assertEquals($expectedIndexColumn, $actualIndexColumn);
     }
 }
