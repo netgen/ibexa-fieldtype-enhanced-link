@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Unit\FieldType;
 
-use eZ\Bundle\EzPublishCoreBundle\Features\Context\UserContext;
-use Http\Discovery\Exception\NotFoundException;
-use Ibexa\Contracts\Core\Exception\InvalidArgumentType;
 use Ibexa\Contracts\Core\FieldType\Value as SPIValue;
 use Ibexa\Contracts\Core\Persistence\Content\Handler as SPIContentHandler;
 use Ibexa\Contracts\Core\Persistence\Content\VersionInfo;
+use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException as ApiNotFoundException;
 use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\Relation;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
-use Ibexa\Contracts\Core\Repository\Values\ValueObject;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentException;
+use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
+use Ibexa\Core\Base\Exceptions\NotFoundException;
 use Ibexa\Core\FieldType\ValidationError;
-use Ibexa\Core\Repository\Validator\TargetContentValidatorInterface;
 use Ibexa\Tests\Core\FieldType\FieldTypeTest;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\TargetContentValidator;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
@@ -30,6 +28,7 @@ use Ibexa\Contracts\Core\Persistence\Content\FieldValue;
 class EnhancedLinkTypeTest extends FieldTypeTest
 {
     private const DESTINATION_CONTENT_ID = 14;
+    private const NON_EXISTENT_CONTENT_ID = 123;
 
     private $contentHandler;
 
@@ -57,10 +56,22 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             ]);
 
         $this->contentHandler = $this->createMock(SPIContentHandler::class);
+
         $this->contentHandler
             ->method('loadContentInfo')
-            ->with(self::DESTINATION_CONTENT_ID)
-            ->willReturn($destinationContentInfo);
+            ->with(
+                $this->logicalOr(
+                    $this->equalTo(self::NON_EXISTENT_CONTENT_ID),
+                    $this->equalTo(self::DESTINATION_CONTENT_ID)
+                )
+            )
+            ->willReturnCallback(function ($contentId) use ($destinationContentInfo){
+                if ($contentId === self::DESTINATION_CONTENT_ID) {
+                    return $destinationContentInfo;
+                }
+
+                throw new NotFoundException('Content', self::NON_EXISTENT_CONTENT_ID);
+            });
 
         $this->contentHandler
             ->method('loadVersionInfo')
@@ -402,12 +413,12 @@ class EnhancedLinkTypeTest extends FieldTypeTest
      */
     public function testGetRelations(): void
     {
-        $ft = $this->createFieldTypeUnderTest();
+        $type = $this->createFieldTypeUnderTest();
         self::assertEquals(
             [
                 Relation::FIELD => [70],
             ],
-            $ft->getRelations($ft->acceptValue(70)),
+            $type->getRelations($type->acceptValue(70)),
         );
     }
 
@@ -418,8 +429,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         Value $value,
         FieldValue $expected
     ): void {
-        $ft = $this->createFieldTypeUnderTest();
-        $fieldValue = $ft->toPersistenceValue($value);
+        $type = $this->createFieldTypeUnderTest();
+        $fieldValue = $type->toPersistenceValue($value);
 
         self::assertEquals($fieldValue, $expected);
     }
@@ -428,11 +439,11 @@ class EnhancedLinkTypeTest extends FieldTypeTest
      * @dataProvider provideDataForFromPersistenceValue
      */
     public function testFromPersistenceValue(
-        FieldValue $value,
+        FieldValue $persistenceValue,
         Value $expected
     ): void {
-        $ft = $this->createFieldTypeUnderTest();
-        $fieldType = $ft->fromPersistenceValue($value);
+        $type = $this->createFieldTypeUnderTest();
+        $fieldType = $type->fromPersistenceValue($persistenceValue);
 
         self::assertEquals($fieldType, $expected);
     }
@@ -469,17 +480,23 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             ],
             'string_name' => [
                 new Value('test', 'label'), 'label', [], 'de_DE',
+            ],
+            'destination_content_id_non_existent' => [
+                new Value(self::NON_EXISTENT_CONTENT_ID), '', [], 'de_DE',
             ]
         ];
     }
 
     public function testIsSearchable(): void
     {
-        $ft = $this->createFieldTypeUnderTest();
+        $type = $this->createFieldTypeUnderTest();
 
-        self::assertTrue($ft->isSearchable());
+        self::assertTrue($type->isSearchable());
     }
 
+    /**
+     * @group targetValidation
+     */
     public function testInvalidTargetValidationError(): void
     {
         $fieldDefinition = $this->getFieldDefinitionMock(['allowedTargets' => [Type::ALLOWED_TARGET_LINK, Type::ALLOWED_TARGET_MODAL]]);
@@ -496,7 +513,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
 
         try {
             $fieldType->acceptValue(new Value(true));
-        } catch (\Ibexa\Core\Base\Exceptions\InvalidArgumentType $e) {
+        } catch (InvalidArgumentType $e) {
             $result = true;
         }
 
@@ -592,7 +609,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
     public function provideValidDataForValidate(): array
     {
         return [
-            [[], new Value(5)],
+            [[], new Value(self::DESTINATION_CONTENT_ID)],
         ];
     }
 
