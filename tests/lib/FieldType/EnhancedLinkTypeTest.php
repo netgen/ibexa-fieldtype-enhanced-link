@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Unit\FieldType;
 
 use Ibexa\Contracts\Core\FieldType\Value as SPIValue;
+use Ibexa\Contracts\Core\Persistence\Content\FieldValue;
 use Ibexa\Contracts\Core\Persistence\Content\Handler as SPIContentHandler;
 use Ibexa\Contracts\Core\Persistence\Content\VersionInfo;
-use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException as ApiNotFoundException;
 use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\Relation;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
@@ -19,8 +19,6 @@ use Ibexa\Tests\Core\FieldType\FieldTypeTest;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\TargetContentValidator;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
-use function PHPUnit\Framework\stringContains;
-use Ibexa\Contracts\Core\Persistence\Content\FieldValue;
 
 /**
  * @group type
@@ -60,12 +58,12 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         $this->contentHandler
             ->method('loadContentInfo')
             ->with(
-                $this->logicalOr(
-                    $this->equalTo(self::NON_EXISTENT_CONTENT_ID),
-                    $this->equalTo(self::DESTINATION_CONTENT_ID)
-                )
+                self::logicalOr(
+                    self::equalTo(self::NON_EXISTENT_CONTENT_ID),
+                    self::equalTo(self::DESTINATION_CONTENT_ID),
+                ),
             )
-            ->willReturnCallback(function ($contentId) use ($destinationContentInfo){
+            ->willReturnCallback(static function ($contentId) use ($destinationContentInfo) {
                 if ($contentId === self::DESTINATION_CONTENT_ID) {
                     return $destinationContentInfo;
                 }
@@ -79,74 +77,6 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             ->willReturn($versionInfo);
 
         $this->targetContentValidator = $this->createMock(TargetContentValidator::class);
-    }
-
-    protected function createFieldTypeUnderTest(): Type
-    {
-        $fieldType = new Type(
-            $this->contentHandler,
-            $this->targetContentValidator
-        );
-        $fieldType->setTransformationProcessor($this->getTransformationProcessorMock());
-
-        return $fieldType;
-    }
-
-    /**
-     * Returns the validator configuration schema expected from the field type.
-     *
-     * @return array
-     */
-    protected function getValidatorConfigurationSchemaExpectation(): array
-    {
-        return [];
-    }
-
-    protected function getSettingsSchemaExpectation(): array
-    {
-        return [
-            'selectionMethod' => [
-                'type' => 'int',
-                'default' => Type::SELECTION_BROWSE,
-            ],
-            'selectionRoot' => [
-                'type' => 'string',
-                'default' => null,
-            ],
-            'rootDefaultLocation' => [
-                'type' => 'bool',
-                'default' => true,
-            ],
-            'selectionContentTypes' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-            'allowedLinkType' => [
-                'type' => 'array',
-                'default' => [
-                    Type::ALLOWED_LINK_TYPE_EXTERNAL,
-                    Type::ALLOWED_LINK_TYPE_INTERNAL,
-                ],
-            ],
-            'allowedTargets' => [
-                'type' => 'array',
-                'default' => [
-                    Type::ALLOWED_TARGET_LINK,
-                    Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                    Type::ALLOWED_TARGET_IN_PLACE,
-                    Type::ALLOWED_TARGET_MODAL,
-                ],
-            ],
-            'enableQueryParameter' => [
-                'type' => 'bool',
-                'default' => false,
-            ],
-        ];
-    }
-
-    protected function getEmptyValueExpectation(): Value
-    {
-        return new Value();
     }
 
     public function provideInvalidInputForAcceptValue(): array
@@ -186,7 +116,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'reference' => 23,
                     'label' => 'test',
                     'target' => 'link',
-                    'suffix' => null
+                    'suffix' => null,
                 ],
             ],
             [
@@ -194,7 +124,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'reference' => null,
                     'label' => null,
-                    'target' => Value::DEFAULT_TARGET,
+                    'target' => Type::ALLOWED_TARGET_LINK,
                     'suffix' => null,
                 ],
             ],
@@ -209,7 +139,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'reference' => 23,
                     'label' => 'test',
                     'target' => 'link',
-                    'suffix' => null
+                    'suffix' => null,
                 ],
                 new Value(23, 'test', 'link', null),
             ],
@@ -217,7 +147,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'reference' => null,
                     'label' => null,
-                    'target' => Value::DEFAULT_TARGET,
+                    'target' => Type::ALLOWED_TARGET_LINK,
                     'suffix' => null,
                 ],
                 new Value(),
@@ -245,7 +175,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::ALLOWED_TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
-                ]
+                ],
             ],
             [
                 [
@@ -261,7 +191,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::ALLOWED_TARGET_MODAL,
                     ],
                     'enableQueryParameter' => true,
-                ]
+                ],
             ],
         ];
     }
@@ -377,7 +307,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'rootDefaultLocation' => true,
                     'selectionContentTypes' => [],
                     'allowedLinkType' => [
-                        'invalid'
+                        'invalid',
                     ],
                     'allowedTargets' => [
                         Type::ALLOWED_TARGET_LINK,
@@ -400,7 +330,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::ALLOWED_LINK_TYPE_INTERNAL,
                     ],
                     'allowedTargets' => [
-                        'invalid'
+                        'invalid',
                     ],
                     'enableQueryParameter' => false,
                 ],
@@ -483,7 +413,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             ],
             'destination_content_id_non_existent' => [
                 new Value(self::NON_EXISTENT_CONTENT_ID), '', [], 'de_DE',
-            ]
+            ],
         ];
     }
 
@@ -504,7 +434,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         $validationErrors = $fieldType->validate($fieldDefinition, new Value('test', '', Type::ALLOWED_TARGET_LINK_IN_NEW_TAB));
 
         self::assertIsArray($validationErrors);
-        self::assertEquals([$this->generateInvalidTargetValidationError(Type::ALLOWED_TARGET_LINK_IN_NEW_TAB)] , $validationErrors);
+        self::assertEquals([$this->generateInvalidTargetValidationError(Type::ALLOWED_TARGET_LINK_IN_NEW_TAB)], $validationErrors);
     }
 
     public function testInvalidValueStructureValidationError(): void
@@ -524,37 +454,101 @@ class EnhancedLinkTypeTest extends FieldTypeTest
     {
         return [
             'null_data' => [
-              new FieldValue(['data' => null]),
-              $this->getEmptyValueExpectation()
+                new FieldValue(['data' => null]),
+                $this->getEmptyValueExpectation(),
             ],
             'external_type' => [
                 new FieldValue([
-                    'data' =>
-                        [
-                            'type' => 'external',
-                            'id' => 'test',
-                            'label' => 'label',
-                            'target' => Type::ALLOWED_TARGET_LINK,
-                            'suffix' => null
-                        ],
-                    'externalData' => 'test'
+                    'data' => [
+                        'type' => 'external',
+                        'id' => 'test',
+                        'label' => 'label',
+                        'target' => Type::ALLOWED_TARGET_LINK,
+                        'suffix' => null,
+                    ],
+                    'externalData' => 'test',
                 ]),
-                new Value('test', 'label', Type::ALLOWED_TARGET_LINK)
+                new Value('test', 'label', Type::ALLOWED_TARGET_LINK),
             ],
             'internal_type' => [
                 new FieldValue([
-                    'data' =>
-                        [
-                            'type' => 'internal',
-                            'id' => 12,
-                            'label' => 'label',
-                            'target' => Type::ALLOWED_TARGET_MODAL,
-                            'suffix' => null
-                        ],
-                    'externalData' => null
+                    'data' => [
+                        'type' => 'internal',
+                        'id' => 12,
+                        'label' => 'label',
+                        'target' => Type::ALLOWED_TARGET_MODAL,
+                        'suffix' => null,
+                    ],
+                    'externalData' => null,
                 ]),
-                new Value(12, 'label', Type::ALLOWED_TARGET_MODAL)
-            ]
+                new Value(12, 'label', Type::ALLOWED_TARGET_MODAL),
+            ],
+            'no_type_key' => [
+                new FieldValue([
+                    'data' => [
+                        'id' => 12,
+                        'label' => 'label',
+                        'target' => Type::ALLOWED_TARGET_MODAL,
+                        'suffix' => null,
+                    ],
+                    'externalData' => null,
+                ]),
+                $this->getEmptyValueExpectation(),
+            ],
+            'data_not_array' => [
+                new FieldValue([
+                    'data' => 'not an array',
+                ]),
+                $this->getEmptyValueExpectation(),
+            ],
+            'external_type_without_string_external_data' => [
+                new FieldValue([
+                    'data' => [
+                        'type' => 'external',
+                        'id' => 'test',
+                        'label' => 'label',
+                        'target' => Type::ALLOWED_TARGET_LINK,
+                        'suffix' => null,
+                    ],
+                    'externalData' => null,
+                ]),
+                $this->getEmptyValueExpectation(),
+            ],
+            'internal_type_without_data_id' => [
+                new FieldValue([
+                    'data' => [
+                        'type' => 'internal',
+                        'label' => 'label',
+                        'target' => Type::ALLOWED_TARGET_MODAL,
+                        'suffix' => null,
+                    ],
+                    'externalData' => null,
+                ]),
+                $this->getEmptyValueExpectation(),
+            ],
+            'internal_type_without_int_data_id' => [
+                new FieldValue([
+                    'data' => [
+                        'type' => null,
+                        'id' => 12,
+                        'label' => 'label',
+                        'target' => Type::ALLOWED_TARGET_MODAL,
+                        'suffix' => null,
+                    ],
+                    'externalData' => null,
+                ]),
+                $this->getEmptyValueExpectation(),
+            ],
+            'missing_fields' => [
+                new FieldValue([
+                    'data' => [
+                        'id' => 12,
+                        'type' => 'internal',
+                    ],
+                    'externalData' => null,
+                ]),
+                new Value(12, null, Type::ALLOWED_TARGET_LINK, null),
+            ],
         ];
     }
 
@@ -574,8 +568,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         ],
                         'externalData' => 'test',
                         'sortKey' => 'test',
-                    ]
-                )
+                    ],
+                ),
             ],
             'int_reference_value' => [
                 new Value(15, 'label', Type::ALLOWED_TARGET_LINK),
@@ -590,8 +584,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         ],
                         'externalData' => null,
                         'sortKey' => '15',
-                    ]
-                )
+                    ],
+                ),
             ],
             'boolean_reference_value' => [
                 new Value(false),
@@ -600,8 +594,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         'data' => [],
                         'externalData' => null,
                         'sortKey' => null,
-                    ]
-                )
+                    ],
+                ),
             ],
         ];
     }
@@ -621,6 +615,73 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         ];
     }
 
+    protected function createFieldTypeUnderTest(): Type
+    {
+        $fieldType = new Type(
+            $this->contentHandler,
+            $this->targetContentValidator,
+        );
+        $fieldType->setTransformationProcessor($this->getTransformationProcessorMock());
+
+        return $fieldType;
+    }
+
+    /**
+     * Returns the validator configuration schema expected from the field type.
+     *
+     * @return array
+     */
+    protected function getValidatorConfigurationSchemaExpectation(): array
+    {
+        return [];
+    }
+
+    protected function getSettingsSchemaExpectation(): array
+    {
+        return [
+            'selectionMethod' => [
+                'type' => 'int',
+                'default' => Type::SELECTION_BROWSE,
+            ],
+            'selectionRoot' => [
+                'type' => 'string',
+                'default' => null,
+            ],
+            'rootDefaultLocation' => [
+                'type' => 'bool',
+                'default' => true,
+            ],
+            'selectionContentTypes' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'allowedLinkType' => [
+                'type' => 'array',
+                'default' => [
+                    Type::ALLOWED_LINK_TYPE_EXTERNAL,
+                    Type::ALLOWED_LINK_TYPE_INTERNAL,
+                ],
+            ],
+            'allowedTargets' => [
+                'type' => 'array',
+                'default' => [
+                    Type::ALLOWED_TARGET_LINK,
+                    Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                    Type::ALLOWED_TARGET_IN_PLACE,
+                    Type::ALLOWED_TARGET_MODAL,
+                ],
+            ],
+            'enableQueryParameter' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
+        ];
+    }
+
+    protected function getEmptyValueExpectation(): Value
+    {
+        return new Value();
+    }
 
     protected function provideFieldTypeIdentifier(): string
     {
@@ -632,9 +693,9 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         return new ValidationError(
             'Target %target% is not a valid target',
             null,
-           [
-                '%target%' => $target
-           ],
+            [
+                '%target%' => $target,
+            ],
             'allowedTargets',
         );
     }
