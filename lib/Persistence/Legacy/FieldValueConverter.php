@@ -64,6 +64,7 @@ class FieldValueConverter implements Converter
         $fieldDef->fieldTypeConstraints->fieldSettings = [
             'selectionMethod' => Type::SELECTION_BROWSE,
             'selectionRoot' => null,
+            'rootDefaultLocation' => false,
             'selectionContentTypes' => [],
             'allowedTargets' => [
                 Type::ALLOWED_TARGET_LINK,
@@ -86,6 +87,9 @@ class FieldValueConverter implements Converter
         }
         if (array_key_exists('selectionRoot', $settingsData)) {
             $fieldSettings['selectionRoot'] = $settingsData['selectionRoot'];
+        }
+        if (array_key_exists('rootDefaultLocation', $settingsData)) {
+            $fieldSettings['rootDefaultLocation'] = $settingsData['rootDefaultLocation'];
         }
         if (array_key_exists('selectionContentTypes', $settingsData)) {
             $fieldSettings['selectionContentTypes'] = $settingsData['selectionContentTypes'];

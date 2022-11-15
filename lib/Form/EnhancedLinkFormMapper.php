@@ -36,6 +36,11 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
                 'property_path' => 'fieldSettings[selectionRoot]',
                 'label' => /* @Desc("Starting Location") */ 'field_definition.ngenhancedlink.selection_root',
             ])
+            ->add('rootDefaultLocation', CheckboxType::class, [
+                'required' => false,
+                'label' => /* @Desc("Root Default Location") */ 'field_definition.ngenhancedlink.root_default_location',
+                'property_path' => 'fieldSettings[rootDefaultLocation]',
+            ])
             ->add('selectionContentTypes', ChoiceType::class, [
                 'choices' => $this->getContentTypesHash(),
                 'expanded' => false,

@@ -162,6 +162,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => null,
+                    'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
                     'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
                     'allowedTargets' => [
@@ -177,6 +178,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => null,
+                    'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
                     'allowedLinkType' => Type::ALLOWED_LINK_TYPE_EXTERNAL,
                     'allowedTargets' => [
@@ -197,6 +199,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'unknownKey' => Type::SELECTION_BROWSE,
                     'selectionRoot' => null,
+                    'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
                     'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
                     'allowedTargets' => [
@@ -213,6 +216,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'selectionMethod' => 'invalid',
                     'selectionRoot' => null,
+                    'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
                     'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
                     'allowedTargets' => [
@@ -229,6 +233,24 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => [],
+                    'rootDefaultLocation' => false,
+                    'selectionContentTypes' => [],
+                    'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
+                    'allowedTargets' => [
+                        Type::ALLOWED_TARGET_LINK,
+                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                        Type::ALLOWED_TARGET_IN_PLACE,
+                        Type::ALLOWED_TARGET_MODAL,
+                    ],
+                    'enableQueryParameter' => false,
+                ],
+            ],
+            [
+                // Invalid rootDefaultLocation
+                [
+                    'selectionMethod' => Type::SELECTION_BROWSE,
+                    'selectionRoot' => null,
+                    'rootDefaultLocation' => 'invalid',
                     'selectionContentTypes' => [],
                     'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
                     'allowedTargets' => [
@@ -245,6 +267,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => null,
+                    'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
                     'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
                     'allowedTargets' => [
@@ -253,7 +276,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::ALLOWED_TARGET_IN_PLACE,
                         Type::ALLOWED_TARGET_MODAL,
                     ],
-                    'enableQueryParameter' => 123,
+                    'enableQueryParameter' => 'invalid',
                 ],
             ],
             [
@@ -261,6 +284,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => null,
+                    'rootDefaultLocation' => false,
                     'selectionContentTypes' => 'string',
                     'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
                     'allowedTargets' => [
@@ -277,6 +301,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => null,
+                    'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
                     'allowedLinkType' => 'invalid',
                     'allowedTargets' => [
@@ -293,6 +318,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => null,
+                    'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
                     'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
                     'allowedTargets' => [
@@ -621,6 +647,10 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             'selectionRoot' => [
                 'type' => 'string',
                 'default' => null,
+            ],
+            'rootDefaultLocation' => [
+                'type' => 'bool',
+                'default' => false,
             ],
             'selectionContentTypes' => [
                 'type' => 'array',

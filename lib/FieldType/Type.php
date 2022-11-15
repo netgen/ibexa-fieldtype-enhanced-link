@@ -46,6 +46,10 @@ class Type extends FieldType
             'type' => 'string',
             'default' => null,
         ],
+        'rootDefaultLocation' => [
+            'type' => 'bool',
+            'default' => false,
+        ],
         'selectionContentTypes' => [
             'type' => 'array',
             'default' => [],
@@ -129,6 +133,7 @@ class Type extends FieldType
 
                     break;
 
+                case 'rootDefaultLocation':
                 case 'enableQueryParameter':
                     if (!is_bool($value)) {
                         $validationErrors[] = new ValidationError(
