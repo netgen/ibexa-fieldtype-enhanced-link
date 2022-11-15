@@ -31,6 +31,7 @@ class Type extends FieldType
     public const SELECTION_DROPDOWN = 1;
     public const ALLOWED_LINK_TYPE_EXTERNAL = 'external';
     public const ALLOWED_LINK_TYPE_INTERNAL = 'internal';
+    public const ALLOWED_LINK_TYPE_ALL = 'all';
     public const ALLOWED_TARGET_LINK = 'link';
     public const ALLOWED_TARGET_IN_PLACE = 'in_place';
     public const ALLOWED_TARGET_MODAL = 'modal';
@@ -45,20 +46,13 @@ class Type extends FieldType
             'type' => 'string',
             'default' => null,
         ],
-        'rootDefaultLocation' => [
-            'type' => 'bool',
-            'default' => true,
-        ],
         'selectionContentTypes' => [
             'type' => 'array',
             'default' => [],
         ],
         'allowedLinkType' => [
-            'type' => 'array',
-            'default' => [
-                self::ALLOWED_LINK_TYPE_EXTERNAL,
-                self::ALLOWED_LINK_TYPE_INTERNAL,
-            ],
+            'type' => 'choice',
+            'default' => self::ALLOWED_LINK_TYPE_ALL,
         ],
         'allowedTargets' => [
             'type' => 'array',
@@ -136,10 +130,9 @@ class Type extends FieldType
                     break;
 
                 case 'enableQueryParameter':
-                case 'rootDefaultLocation':
-                    if (!is_bool($value) && $value !== null) {
+                    if (!is_bool($value)) {
                         $validationErrors[] = new ValidationError(
-                            "Setting '%setting%' value must be of either null or bool",
+                            "Setting '%setting%' value must be of boolean type",
                             null,
                             [
                                 '%setting%' => $name,
@@ -165,14 +158,15 @@ class Type extends FieldType
                     break;
 
                 case 'allowedLinkType':
-                    if (!is_array($value) || count(array_intersect($value, [self::ALLOWED_LINK_TYPE_INTERNAL, self::ALLOWED_LINK_TYPE_EXTERNAL])) === 0) {
+                    if (!in_array($value, [self::ALLOWED_LINK_TYPE_INTERNAL, self::ALLOWED_LINK_TYPE_EXTERNAL, self::ALLOWED_LINK_TYPE_ALL], true)) {
                         $validationErrors[] = new ValidationError(
-                            "Setting '%setting%' value must be %external% and/or %internal%",
+                            "Setting '%setting%' value must be %external%, %internal% or %all%",
                             null,
                             [
                                 '%setting%' => $name,
                                 '%external%' => self::ALLOWED_LINK_TYPE_EXTERNAL,
                                 '%internal%' => self::ALLOWED_LINK_TYPE_INTERNAL,
+                                '%all%' => self::ALLOWED_LINK_TYPE_ALL,
                             ],
                             "[{$name}]",
                         );
@@ -248,6 +242,18 @@ class Type extends FieldType
                     '%target%' => $value->target,
                 ],
                 'allowedTargets',
+            );
+        }
+
+        $allowedLinkType = $fieldDefinition->getFieldSettings()['allowedLinkType'] ?? '';
+        if (($allowedLinkType === self::ALLOWED_LINK_TYPE_EXTERNAL && !$value->isExternal()) || ($allowedLinkType === self::ALLOWED_LINK_TYPE_INTERNAL && !$value->isInternal())) {
+            $validationErrors[] = new ValidationError(
+                'Link type is not allowed. Must be of type %type%',
+                null,
+                [
+                    '%type%' => $allowedLinkType,
+                ],
+                'allowedLinkType',
             );
         }
 
