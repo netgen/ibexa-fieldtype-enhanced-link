@@ -22,9 +22,9 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
         $fieldDefinitionForm
             ->add('allowedLinkType', ChoiceType::class, [
                 'choices' => [
-                    'Internal' => Type::ALLOWED_LINK_TYPE_INTERNAL,
-                    'External' => Type::ALLOWED_LINK_TYPE_EXTERNAL,
-                    'All' => Type::ALLOWED_LINK_TYPE_ALL,
+                    'field_definition.ngenhacnedlink.allowed_link_type.' . Type::ALLOWED_LINK_TYPE_INTERNAL => Type::ALLOWED_LINK_TYPE_INTERNAL,
+                    'field_definition.ngenhacnedlink.allowed_link_type.' . Type::ALLOWED_LINK_TYPE_EXTERNAL => Type::ALLOWED_LINK_TYPE_EXTERNAL,
+                    'field_definition.ngenhacnedlink.allowed_link_type.' . Type::ALLOWED_LINK_TYPE_ALL => Type::ALLOWED_LINK_TYPE_ALL,
                 ],
                 'property_path' => 'fieldSettings[allowedLinkType]',
                 'label' => /* @Desc("Allowed link type") */ 'field_definition.ngenhancedlink.selection_allowed_link_type',
@@ -56,7 +56,12 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
                 'property_path' => 'fieldSettings[enableQueryParameter]',
             ])
             ->add('allowedTargets', ChoiceType::class, [
-                'choices' => ['Link' => Type::ALLOWED_TARGET_LINK, 'Link in new tab' => Type::ALLOWED_TARGET_LINK_IN_NEW_TAB, 'Embed / in_place' => Type::ALLOWED_TARGET_IN_PLACE, 'Modal' => Type::ALLOWED_TARGET_MODAL],
+                'choices' => [
+                    'field_definition.ngenhacnedlink.allowed_target.' . Type::ALLOWED_TARGET_LINK => Type::ALLOWED_TARGET_LINK,
+                    'field_definition.ngenhacnedlink.allowed_target.' . Type::ALLOWED_TARGET_LINK_IN_NEW_TAB => Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
+                    'field_definition.ngenhacnedlink.allowed_target.' . Type::ALLOWED_TARGET_IN_PLACE => Type::ALLOWED_TARGET_IN_PLACE,
+                    'field_definition.ngenhacnedlink.allowed_target.' . Type::ALLOWED_TARGET_MODAL => Type::ALLOWED_TARGET_MODAL,
+                ],
                 'property_path' => 'fieldSettings[allowedTargets]',
                 'label' => /* @Desc("Allowed Targets") */ 'field_definition.ngenhancedlink.selection_allowed_targets',
                 'multiple' => true,
