@@ -13,7 +13,7 @@ use function in_array;
 /**
  * Validator for checking existence of content and its content type.
  */
-class TargetContentValidator
+class InternalLinkValidator
 {
     /** @var \Ibexa\Contracts\Core\Persistence\Content\Handler */
     private $contentHandler;

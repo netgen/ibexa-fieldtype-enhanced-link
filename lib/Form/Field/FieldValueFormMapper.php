@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Netgen\IbexaFieldTypeEnhancedLink\ContentForms\FieldType\Mapper;
+namespace Netgen\IbexaFieldTypeEnhancedLink\Form\Field;
 
 use Ibexa\ContentForms\FieldType\Mapper\AbstractRelationFormMapper;
 use Ibexa\Contracts\ContentForms\Data\Content\FieldData;
-use Netgen\IbexaFieldTypeEnhancedLink\ContentForms\Form\Type\FieldType\EnhancedLinkFieldType;
 use Symfony\Component\Form\FormInterface;
 
-class EnhancedLinkFormMapper extends AbstractRelationFormMapper
+class FieldValueFormMapper extends AbstractRelationFormMapper
 {
     public function mapFieldValueForm(FormInterface $fieldForm, FieldData $data): void
     {
@@ -22,7 +21,7 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
                 $formConfig->getFormFactory()->createBuilder()
                     ->create(
                         'value',
-                        EnhancedLinkFieldType::class,
+                        FieldValueType::class,
                         [
                             'required' => $fieldDefinition->isRequired,
                             'label' => $fieldDefinition->getName(),

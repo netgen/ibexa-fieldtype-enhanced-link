@@ -10,7 +10,7 @@ use Ibexa\Contracts\Core\Persistence\Content\Field;
 use Ibexa\Contracts\Core\Persistence\Content\VersionInfo;
 use Psr\Log\LoggerInterface;
 
-class EnhancedLinkStorage extends GatewayBasedStorage
+class ExternalLinkStorage extends GatewayBasedStorage
 {
     /** @var \Psr\Log\LoggerInterface */
     protected $logger;
