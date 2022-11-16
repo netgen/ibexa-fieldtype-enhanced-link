@@ -58,13 +58,20 @@ class Type extends FieldType
             'type' => 'choice',
             'default' => self::LINK_TYPE_ALL,
         ],
-        'allowedTargets' => [
+        'allowedTargetsInternal' => [
             'type' => 'array',
             'default' => [
                 self::TARGET_LINK,
                 self::TARGET_LINK_IN_NEW_TAB,
                 self::TARGET_EMBED,
                 self::TARGET_MODAL,
+            ],
+        ],
+        'allowedTargetsExternal' => [
+            'type' => 'array',
+            'default' => [
+                self::TARGET_LINK,
+                self::TARGET_LINK_IN_NEW_TAB,
             ],
         ],
         'enableQueryParameter' => [
@@ -179,7 +186,7 @@ class Type extends FieldType
 
                     break;
 
-                case 'allowedTargets':
+                case 'allowedTargetsInternal':
                     if (!is_array($value) || count(array_intersect($value, [self::TARGET_LINK, self::TARGET_LINK_IN_NEW_TAB, self::TARGET_EMBED, self::TARGET_MODAL])) === 0) {
                         $validationErrors[] = new ValidationError(
                             "Setting '%setting%' value must be one or either %link%, %link_in_new_tab%, %in_place% and/or %modal%",
@@ -190,6 +197,22 @@ class Type extends FieldType
                                 '%link_in_new_tab%' => self::TARGET_LINK_IN_NEW_TAB,
                                 '%in_place%' => self::TARGET_EMBED,
                                 '%modal%' => self::TARGET_MODAL,
+                            ],
+                            "[{$name}]",
+                        );
+                    }
+
+                    break;
+
+                case 'allowedTargetsExternal':
+                    if (!is_array($value) || count(array_intersect($value, [self::TARGET_LINK, self::TARGET_LINK_IN_NEW_TAB])) === 0) {
+                        $validationErrors[] = new ValidationError(
+                            "Setting '%setting%' value must be one or either %link%, %link_in_new_tab%",
+                            null,
+                            [
+                                '%setting%' => $name,
+                                '%link%' => self::TARGET_LINK,
+                                '%link_in_new_tab%' => self::TARGET_LINK_IN_NEW_TAB,
                             ],
                             "[{$name}]",
                         );
@@ -238,18 +261,6 @@ class Type extends FieldType
             return $validationErrors;
         }
 
-        $allowedTargets = $fieldDefinition->getFieldSettings()['allowedTargets'] ?? [];
-        if (!empty($allowedTargets) && !in_array($value->target, $allowedTargets, true)) {
-            $validationErrors[] = new ValidationError(
-                'Target %target% is not a valid target',
-                null,
-                [
-                    '%target%' => $value->target,
-                ],
-                'allowedTargets',
-            );
-        }
-
         $allowedLinkType = $fieldDefinition->getFieldSettings()['allowedLinkType'] ?? '';
         if (($allowedLinkType === self::LINK_TYPE_EXTERNAL && !$value->isExternal()) || ($allowedLinkType === self::LINK_TYPE_INTERNAL && !$value->isInternal())) {
             $validationErrors[] = new ValidationError(
@@ -260,6 +271,34 @@ class Type extends FieldType
                 ],
                 'allowedLinkType',
             );
+        }
+
+        if ($value->isInternal()) {
+            $allowedTargetsInternal = $fieldDefinition->getFieldSettings()['allowedTargetsInternal'] ?? [];
+            if (!empty($allowedTargetsInternal) && !in_array($value->target, $allowedTargetsInternal, true)) {
+                $validationErrors[] = new ValidationError(
+                    'Target %target% is not a valid target',
+                    null,
+                    [
+                        '%target%' => $value->target,
+                    ],
+                    'allowedTargetsInternal',
+                );
+            }
+        }
+
+        if ($value->isExternal()) {
+            $allowedTargetsExternal = $fieldDefinition->getFieldSettings()['allowedTargetsExternal'] ?? [];
+            if (!empty($allowedTargetsExternal) && !in_array($value->target, $allowedTargetsExternal, true)) {
+                $validationErrors[] = new ValidationError(
+                    'Target %target% is not a valid target',
+                    null,
+                    [
+                        '%target%' => $value->target,
+                    ],
+                    'allowedTargetsExternal',
+                );
+            }
         }
 
         $allowedContentTypes = $fieldDefinition->getFieldSettings()['selectionContentTypes'] ?? [];

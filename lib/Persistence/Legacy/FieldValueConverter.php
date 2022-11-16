@@ -66,11 +66,15 @@ class FieldValueConverter implements Converter
             'selectionRoot' => null,
             'rootDefaultLocation' => false,
             'selectionContentTypes' => [],
-            'allowedTargets' => [
+            'allowedTargetsInternal' => [
                 Type::TARGET_LINK,
                 Type::TARGET_LINK_IN_NEW_TAB,
                 Type::TARGET_EMBED,
                 Type::TARGET_MODAL,
+            ],
+            'allowedTargetsExternal' => [
+                Type::TARGET_LINK,
+                Type::TARGET_LINK_IN_NEW_TAB,
             ],
             'allowedLinkType' => Type::LINK_TYPE_ALL,
             'enableQueryParameter' => false,
@@ -94,8 +98,11 @@ class FieldValueConverter implements Converter
         if (array_key_exists('selectionContentTypes', $settingsData)) {
             $fieldSettings['selectionContentTypes'] = $settingsData['selectionContentTypes'];
         }
-        if (array_key_exists('allowedTargets', $settingsData)) {
-            $fieldSettings['allowedTargets'] = $settingsData['allowedTargets'];
+        if (array_key_exists('allowedTargetsInternal', $settingsData)) {
+            $fieldSettings['allowedTargetsInternal'] = $settingsData['allowedTargetsInternal'];
+        }
+        if (array_key_exists('allowedTargetsExternal', $settingsData)) {
+            $fieldSettings['allowedTargetsExternal'] = $settingsData['allowedTargetsExternal'];
         }
         if (array_key_exists('allowedLinkType', $settingsData)) {
             $fieldSettings['allowedLinkType'] = $settingsData['allowedLinkType'];

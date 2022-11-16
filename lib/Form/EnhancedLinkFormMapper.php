@@ -55,15 +55,25 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
                 'label' => /* @Desc("Enable query parameter") */ 'field_definition.ngenhancedlink.enable_query_parameter',
                 'property_path' => 'fieldSettings[enableQueryParameter]',
             ])
-            ->add('allowedTargets', ChoiceType::class, [
+            ->add('allowedTargetsInternal', ChoiceType::class, [
                 'choices' => [
                     'field_definition.ngenhacnedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
                     'field_definition.ngenhacnedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
                     'field_definition.ngenhacnedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
                     'field_definition.ngenhacnedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
                 ],
-                'property_path' => 'fieldSettings[allowedTargets]',
-                'label' => /* @Desc("Allowed Targets") */ 'field_definition.ngenhancedlink.selection_allowed_targets',
+                'property_path' => 'fieldSettings[allowedTargetsInternal]',
+                'label' => /* @Desc("Allowed Targets Internal") */ 'field_definition.ngenhancedlink.selection_allowed_targets.internal',
+                'multiple' => true,
+                'expanded' => true,
+            ])
+            ->add('allowedTargetsExternal', ChoiceType::class, [
+                'choices' => [
+                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
+                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
+                ],
+                'property_path' => 'fieldSettings[allowedTargetsExternal]',
+                'label' => /* @Desc("Allowed Targets External") */ 'field_definition.ngenhancedlink.selection_allowed_targets.external',
                 'multiple' => true,
                 'expanded' => true,
             ]);

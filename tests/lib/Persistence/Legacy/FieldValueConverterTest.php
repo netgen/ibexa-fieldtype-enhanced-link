@@ -39,7 +39,8 @@ class FieldValueConverterTest extends TestCase
                             'rootDefaultLocation' => false,
                             'selectionContentTypes' => ['article', 'blog_post'],
                             'allowedLinkType' => Type::LINK_TYPE_ALL,
-                            'allowedTargets' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                            'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                            'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                             'enableQueryParameter' => false,
                         ],
                     ],
@@ -59,11 +60,15 @@ class FieldValueConverterTest extends TestCase
                     "blog_post"
                 ],
                 "allowedLinkType": "all",
-                "allowedTargets": [
+                "allowedTargetsInternal": [
                     "link",
                     "link_new_tab",
                     "embed",
                     "modal"
+                ],
+                "allowedTargetsExternal": [
+                    "link",
+                    "link_new_tab"
                 ],
                 "enableQueryParameter": false
             }
@@ -92,11 +97,15 @@ class FieldValueConverterTest extends TestCase
                     "blog_post"
                 ],
                 "allowedLinkType": "all",
-                "allowedTargets": [
+                "allowedTargetsInternal": [
                     "link",
                     "link_new_tab",
                     "embed",
                     "modal"
+                ],
+                "allowedTargetsExternal": [
+                    "link",
+                    "link_new_tab"
                 ],
                 "enableQueryParameter": false
             }
@@ -111,7 +120,8 @@ class FieldValueConverterTest extends TestCase
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => ['article', 'blog_post'],
                     'allowedLinkType' => Type::LINK_TYPE_ALL,
-                    'allowedTargets' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                    'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                    'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                     'enableQueryParameter' => false,
                 ],
             ],
@@ -136,12 +146,13 @@ class FieldValueConverterTest extends TestCase
                     'selectionRoot' => null,
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
-                    'allowedTargets' => [
+                    'allowedTargetsInternal' => [
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
                     ],
+                    'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                     'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'enableQueryParameter' => false,
                 ],
@@ -180,7 +191,8 @@ class FieldValueConverterTest extends TestCase
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => ['article', 'blog_post'],
                     'allowedLinkType' => Type::LINK_TYPE_EXTERNAL,
-                    'allowedTargets' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                    'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                    'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                     'enableQueryParameter' => true,
                 ],
             ],

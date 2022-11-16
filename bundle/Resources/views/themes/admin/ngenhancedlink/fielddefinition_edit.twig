@@ -9,7 +9,8 @@
         {{- form_row(form.rootDefaultLocation, { disabled: is_translation }) -}}
         {{- form_row(form.selectionContentTypes, { disabled: is_translation }) -}}
         {{- form_row(form.enableQueryParameter, { disabled: is_translation }) -}}
-        {{- form_row(form.allowedTargets, { disabled: is_translation }) -}}
+        {{- form_row(form.allowedTargetsInternal, { disabled: is_translation }) -}}
+        {{- form_row(form.allowedTargetsExternal, { disabled: is_translation }) -}}
     </div>
 {% endblock %}
 
