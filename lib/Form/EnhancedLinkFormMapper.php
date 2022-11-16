@@ -22,9 +22,9 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
         $fieldDefinitionForm
             ->add('allowedLinkType', ChoiceType::class, [
                 'choices' => [
-                    'field_definition.ngenhacnedlink.link_type.' . Type::LINK_TYPE_INTERNAL => Type::LINK_TYPE_INTERNAL,
-                    'field_definition.ngenhacnedlink.link_type.' . Type::LINK_TYPE_EXTERNAL => Type::LINK_TYPE_EXTERNAL,
-                    'field_definition.ngenhacnedlink.link_type.' . Type::LINK_TYPE_ALL => Type::LINK_TYPE_ALL,
+                    'field_definition.ngenhancedlink.link_type.' . Type::LINK_TYPE_INTERNAL => Type::LINK_TYPE_INTERNAL,
+                    'field_definition.ngenhancedlink.link_type.' . Type::LINK_TYPE_EXTERNAL => Type::LINK_TYPE_EXTERNAL,
+                    'field_definition.ngenhancedlink.link_type.' . Type::LINK_TYPE_ALL => Type::LINK_TYPE_ALL,
                 ],
                 'property_path' => 'fieldSettings[allowedLinkType]',
                 'label' => /* @Desc("Allowed link type") */ 'field_definition.ngenhancedlink.selection_allowed_link_type',
@@ -57,10 +57,10 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
             ])
             ->add('allowedTargetsInternal', ChoiceType::class, [
                 'choices' => [
-                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
-                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
-                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
-                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
+                    'field_definition.ngenhancedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
+                    'field_definition.ngenhancedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
+                    'field_definition.ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
+                    'field_definition.ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
                 ],
                 'property_path' => 'fieldSettings[allowedTargetsInternal]',
                 'label' => /* @Desc("Allowed Targets Internal") */ 'field_definition.ngenhancedlink.selection_allowed_targets.internal',
@@ -69,10 +69,10 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
             ])
             ->add('allowedTargetsExternal', ChoiceType::class, [
                 'choices' => [
-                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
-                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
-                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
-                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
+                    'field_definition.ngenhancedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
+                    'field_definition.ngenhancedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
+                    'field_definition.ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
+                    'field_definition.ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
                 ],
                 'property_path' => 'fieldSettings[allowedTargetsExternal]',
                 'label' => /* @Desc("Allowed Targets External") */ 'field_definition.ngenhancedlink.selection_allowed_targets.external',
