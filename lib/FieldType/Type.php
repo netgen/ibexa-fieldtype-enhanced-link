@@ -29,12 +29,13 @@ class Type extends FieldType
 {
     public const SELECTION_BROWSE = 0;
     public const SELECTION_DROPDOWN = 1;
-    public const ALLOWED_LINK_TYPE_EXTERNAL = 'external';
-    public const ALLOWED_LINK_TYPE_INTERNAL = 'internal';
-    public const ALLOWED_TARGET_LINK = 'link';
-    public const ALLOWED_TARGET_IN_PLACE = 'in_place';
-    public const ALLOWED_TARGET_MODAL = 'modal';
-    public const ALLOWED_TARGET_LINK_IN_NEW_TAB = 'link_new_tab';
+    public const LINK_TYPE_EXTERNAL = 'external';
+    public const LINK_TYPE_INTERNAL = 'internal';
+    public const LINK_TYPE_ALL = 'all';
+    public const TARGET_LINK = 'link';
+    public const TARGET_EMBED = 'embed';
+    public const TARGET_MODAL = 'modal';
+    public const TARGET_LINK_IN_NEW_TAB = 'link_new_tab';
 
     protected $settingsSchema = [
         'selectionMethod' => [
@@ -47,26 +48,30 @@ class Type extends FieldType
         ],
         'rootDefaultLocation' => [
             'type' => 'bool',
-            'default' => true,
+            'default' => false,
         ],
         'selectionContentTypes' => [
             'type' => 'array',
             'default' => [],
         ],
         'allowedLinkType' => [
+            'type' => 'choice',
+            'default' => self::LINK_TYPE_ALL,
+        ],
+        'allowedTargetsInternal' => [
             'type' => 'array',
             'default' => [
-                self::ALLOWED_LINK_TYPE_EXTERNAL,
-                self::ALLOWED_LINK_TYPE_INTERNAL,
+                self::TARGET_LINK,
+                self::TARGET_LINK_IN_NEW_TAB,
+                self::TARGET_EMBED,
+                self::TARGET_MODAL,
             ],
         ],
-        'allowedTargets' => [
+        'allowedTargetsExternal' => [
             'type' => 'array',
             'default' => [
-                self::ALLOWED_TARGET_LINK,
-                self::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                self::ALLOWED_TARGET_IN_PLACE,
-                self::ALLOWED_TARGET_MODAL,
+                self::TARGET_LINK,
+                self::TARGET_LINK_IN_NEW_TAB,
             ],
         ],
         'enableQueryParameter' => [
@@ -135,11 +140,11 @@ class Type extends FieldType
 
                     break;
 
-                case 'enableQueryParameter':
                 case 'rootDefaultLocation':
-                    if (!is_bool($value) && $value !== null) {
+                case 'enableQueryParameter':
+                    if (!is_bool($value)) {
                         $validationErrors[] = new ValidationError(
-                            "Setting '%setting%' value must be of either null or bool",
+                            "Setting '%setting%' value must be of boolean type",
                             null,
                             [
                                 '%setting%' => $name,
@@ -165,14 +170,15 @@ class Type extends FieldType
                     break;
 
                 case 'allowedLinkType':
-                    if (!is_array($value) || count(array_intersect($value, [self::ALLOWED_LINK_TYPE_INTERNAL, self::ALLOWED_LINK_TYPE_EXTERNAL])) === 0) {
+                    if (!in_array($value, [self::LINK_TYPE_INTERNAL, self::LINK_TYPE_EXTERNAL, self::LINK_TYPE_ALL], true)) {
                         $validationErrors[] = new ValidationError(
-                            "Setting '%setting%' value must be %external% and/or %internal%",
+                            "Setting '%setting%' value must be %external%, %internal% or %all%",
                             null,
                             [
                                 '%setting%' => $name,
-                                '%external%' => self::ALLOWED_LINK_TYPE_EXTERNAL,
-                                '%internal%' => self::ALLOWED_LINK_TYPE_INTERNAL,
+                                '%external%' => self::LINK_TYPE_EXTERNAL,
+                                '%internal%' => self::LINK_TYPE_INTERNAL,
+                                '%all%' => self::LINK_TYPE_ALL,
                             ],
                             "[{$name}]",
                         );
@@ -180,17 +186,18 @@ class Type extends FieldType
 
                     break;
 
-                case 'allowedTargets':
-                    if (!is_array($value) || count(array_intersect($value, [self::ALLOWED_TARGET_LINK, self::ALLOWED_TARGET_LINK_IN_NEW_TAB, self::ALLOWED_TARGET_IN_PLACE, self::ALLOWED_TARGET_MODAL])) === 0) {
+                case 'allowedTargetsExternal':
+                case 'allowedTargetsInternal':
+                    if (!is_array($value) || count(array_intersect($value, [self::TARGET_LINK, self::TARGET_LINK_IN_NEW_TAB, self::TARGET_EMBED, self::TARGET_MODAL])) === 0) {
                         $validationErrors[] = new ValidationError(
                             "Setting '%setting%' value must be one or either %link%, %link_in_new_tab%, %in_place% and/or %modal%",
                             null,
                             [
                                 '%setting%' => $name,
-                                '%link%' => self::ALLOWED_TARGET_LINK,
-                                '%link_in_new_tab%' => self::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                                '%in_place%' => self::ALLOWED_TARGET_IN_PLACE,
-                                '%modal%' => self::ALLOWED_TARGET_MODAL,
+                                '%link%' => self::TARGET_LINK,
+                                '%link_in_new_tab%' => self::TARGET_LINK_IN_NEW_TAB,
+                                '%in_place%' => self::TARGET_EMBED,
+                                '%modal%' => self::TARGET_MODAL,
                             ],
                             "[{$name}]",
                         );
@@ -239,16 +246,44 @@ class Type extends FieldType
             return $validationErrors;
         }
 
-        $allowedTargets = $fieldDefinition->getFieldSettings()['allowedTargets'] ?? [];
-        if (!empty($allowedTargets) && !in_array($value->target, $allowedTargets, true)) {
+        $allowedLinkType = $fieldDefinition->getFieldSettings()['allowedLinkType'] ?? '';
+        if (($allowedLinkType === self::LINK_TYPE_EXTERNAL && !$value->isExternal()) || ($allowedLinkType === self::LINK_TYPE_INTERNAL && !$value->isInternal())) {
             $validationErrors[] = new ValidationError(
-                'Target %target% is not a valid target',
+                'Link type is not allowed. Must be of type %type%',
                 null,
                 [
-                    '%target%' => $value->target,
+                    '%type%' => $allowedLinkType,
                 ],
-                'allowedTargets',
+                'allowedLinkType',
             );
+        }
+
+        if ($value->isInternal()) {
+            $allowedTargetsInternal = $fieldDefinition->getFieldSettings()['allowedTargetsInternal'] ?? [];
+            if (!empty($allowedTargetsInternal) && !in_array($value->target, $allowedTargetsInternal, true)) {
+                $validationErrors[] = new ValidationError(
+                    'Target %target% is not a valid target',
+                    null,
+                    [
+                        '%target%' => $value->target,
+                    ],
+                    'allowedTargetsInternal',
+                );
+            }
+        }
+
+        if ($value->isExternal()) {
+            $allowedTargetsExternal = $fieldDefinition->getFieldSettings()['allowedTargetsExternal'] ?? [];
+            if (!empty($allowedTargetsExternal) && !in_array($value->target, $allowedTargetsExternal, true)) {
+                $validationErrors[] = new ValidationError(
+                    'Target %target% is not a valid target',
+                    null,
+                    [
+                        '%target%' => $value->target,
+                    ],
+                    'allowedTargetsExternal',
+                );
+            }
         }
 
         $allowedContentTypes = $fieldDefinition->getFieldSettings()['selectionContentTypes'] ?? [];
@@ -378,7 +413,7 @@ class Type extends FieldType
         if (is_array($fieldValue->data) && array_key_exists('type', $fieldValue->data)) {
             $labelData = $fieldValue->data['label'] ?? null;
             $suffixData = $fieldValue->data['suffix'] ?? null;
-            $targetData = $fieldValue->data['target'] ?? self::ALLOWED_TARGET_LINK;
+            $targetData = $fieldValue->data['target'] ?? self::TARGET_LINK;
 
             if ($fieldValue->data['type'] === 'internal' && array_key_exists('id', $fieldValue->data) && is_int($fieldValue->data['id'])) {
                 return new Value(

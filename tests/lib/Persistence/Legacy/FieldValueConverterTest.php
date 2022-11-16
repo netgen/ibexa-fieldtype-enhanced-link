@@ -36,10 +36,11 @@ class FieldValueConverterTest extends TestCase
                         'fieldSettings' => [
                             'selectionMethod' => Type::SELECTION_DROPDOWN,
                             'selectionRoot' => 12345,
-                            'rootDefaultLocation' => true,
+                            'rootDefaultLocation' => false,
                             'selectionContentTypes' => ['article', 'blog_post'],
-                            'allowedLinkType' => [Type::ALLOWED_LINK_TYPE_EXTERNAL, Type::ALLOWED_LINK_TYPE_INTERNAL],
-                            'allowedTargets' => [Type::ALLOWED_TARGET_LINK, Type::ALLOWED_TARGET_LINK_IN_NEW_TAB, Type::ALLOWED_TARGET_IN_PLACE, Type::ALLOWED_TARGET_MODAL],
+                            'allowedLinkType' => Type::LINK_TYPE_ALL,
+                            'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                            'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                             'enableQueryParameter' => false,
                         ],
                     ],
@@ -53,20 +54,21 @@ class FieldValueConverterTest extends TestCase
             {
                 "selectionMethod": 1,
                 "selectionRoot": 12345,
-                "rootDefaultLocation": true,
+                "rootDefaultLocation": false,
                 "selectionContentTypes": [
                     "article",
                     "blog_post"
                 ],
-                "allowedLinkType": [
-                    "external",
-                    "internal"
-                ],
-                "allowedTargets": [
+                "allowedLinkType": "all",
+                "allowedTargetsInternal": [
                     "link",
                     "link_new_tab",
-                    "in_place",
+                    "embed",
                     "modal"
+                ],
+                "allowedTargetsExternal": [
+                    "link",
+                    "link_new_tab"
                 ],
                 "enableQueryParameter": false
             }
@@ -89,20 +91,21 @@ class FieldValueConverterTest extends TestCase
             {
                 "selectionMethod": 1,
                 "selectionRoot": 12345,
-                "rootDefaultLocation": true,
+                "rootDefaultLocation": false,
                 "selectionContentTypes": [
                     "article",
                     "blog_post"
                 ],
-                "allowedLinkType": [
-                    "external",
-                    "internal"
-                ],
-                "allowedTargets": [
+                "allowedLinkType": "all",
+                "allowedTargetsInternal": [
                     "link",
                     "link_new_tab",
-                    "in_place",
+                    "embed",
                     "modal"
+                ],
+                "allowedTargetsExternal": [
+                    "link",
+                    "link_new_tab"
                 ],
                 "enableQueryParameter": false
             }
@@ -114,10 +117,11 @@ class FieldValueConverterTest extends TestCase
                 'fieldSettings' => [
                     'selectionMethod' => Type::SELECTION_DROPDOWN,
                     'selectionRoot' => 12345,
+                    'rootDefaultLocation' => false,
                     'selectionContentTypes' => ['article', 'blog_post'],
-                    'rootDefaultLocation' => true,
-                    'allowedLinkType' => [Type::ALLOWED_LINK_TYPE_EXTERNAL, Type::ALLOWED_LINK_TYPE_INTERNAL],
-                    'allowedTargets' => [Type::ALLOWED_TARGET_LINK, Type::ALLOWED_TARGET_LINK_IN_NEW_TAB, Type::ALLOWED_TARGET_IN_PLACE, Type::ALLOWED_TARGET_MODAL],
+                    'allowedLinkType' => Type::LINK_TYPE_ALL,
+                    'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                    'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                     'enableQueryParameter' => false,
                 ],
             ],
@@ -140,18 +144,16 @@ class FieldValueConverterTest extends TestCase
                 'fieldSettings' => [
                     'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => null,
-                    'rootDefaultLocation' => true,
+                    'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
-                    'allowedTargets' => [
-                        Type::ALLOWED_TARGET_LINK,
-                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                        Type::ALLOWED_TARGET_IN_PLACE,
-                        Type::ALLOWED_TARGET_MODAL,
+                    'allowedTargetsInternal' => [
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_EMBED,
+                        Type::TARGET_MODAL,
                     ],
-                    'allowedLinkType' => [
-                        Type::ALLOWED_LINK_TYPE_EXTERNAL,
-                        Type::ALLOWED_LINK_TYPE_INTERNAL,
-                    ],
+                    'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
+                    'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'enableQueryParameter' => false,
                 ],
             ],
@@ -170,14 +172,12 @@ class FieldValueConverterTest extends TestCase
             <<< 'DATATEXT'
             {
                 "selectionMethod": 1,
-                "rootDefaultLocation": true,
+                "rootDefaultLocation": false,
                 "selectionContentTypes": [
                     "article",
                     "blog_post"
                 ],
-                "allowedLinkType": [
-                    "external"
-                ],
+                "allowedLinkType": "external",
                 "enableQueryParameter": true
             }
             DATATEXT;
@@ -188,10 +188,11 @@ class FieldValueConverterTest extends TestCase
                 'fieldSettings' => [
                     'selectionMethod' => Type::SELECTION_DROPDOWN,
                     'selectionRoot' => null,
+                    'rootDefaultLocation' => false,
                     'selectionContentTypes' => ['article', 'blog_post'],
-                    'rootDefaultLocation' => true,
-                    'allowedLinkType' => [Type::ALLOWED_LINK_TYPE_EXTERNAL],
-                    'allowedTargets' => [Type::ALLOWED_TARGET_LINK, Type::ALLOWED_TARGET_LINK_IN_NEW_TAB, Type::ALLOWED_TARGET_IN_PLACE, Type::ALLOWED_TARGET_MODAL],
+                    'allowedLinkType' => Type::LINK_TYPE_EXTERNAL,
+                    'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                    'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                     'enableQueryParameter' => true,
                 ],
             ],

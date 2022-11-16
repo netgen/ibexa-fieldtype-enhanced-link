@@ -3,8 +3,14 @@
     {% form_theme form.selectionRoot.location_type '@ibexadesign/content_type/relation_form_fields.html.twig' %}
     <h1>THIS IS TEMPLATE FOR FIELD DEFINITION EDIT</h1>
     <div class="ngenhancedlink-settings selection-root ibexa-default-location">
+        {{- form_row(form.allowedLinkType, { disabled: is_translation }) -}}
         {{- form_row(form.selectionRoot.location_type, { disabled: is_translation }) -}}
-        {{- form_row(form.rootDefaultLocation, { disabled: is_translation }) -}}
         {{- form_row(form.selectionRoot.location, { disabled: is_translation }) -}}
+        {{- form_row(form.rootDefaultLocation, { disabled: is_translation }) -}}
+        {{- form_row(form.selectionContentTypes, { disabled: is_translation }) -}}
+        {{- form_row(form.enableQueryParameter, { disabled: is_translation }) -}}
+        {{- form_row(form.allowedTargetsInternal, { disabled: is_translation }) -}}
+        {{- form_row(form.allowedTargetsExternal, { disabled: is_translation }) -}}
     </div>
 {% endblock %}
+

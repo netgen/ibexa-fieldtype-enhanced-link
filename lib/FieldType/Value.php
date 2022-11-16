@@ -23,7 +23,7 @@ class Value extends BaseValue
      * @param mixed|null $reference
      * @param mixed $target
      */
-    public function __construct($reference = null, ?string $label = null, $target = Type::ALLOWED_TARGET_LINK, ?string $suffix = null)
+    public function __construct($reference = null, ?string $label = null, $target = Type::TARGET_LINK, ?string $suffix = null)
     {
         $this->reference = $reference;
         $this->label = $label;

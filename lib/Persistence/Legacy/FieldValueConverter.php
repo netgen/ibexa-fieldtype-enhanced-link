@@ -64,18 +64,19 @@ class FieldValueConverter implements Converter
         $fieldDef->fieldTypeConstraints->fieldSettings = [
             'selectionMethod' => Type::SELECTION_BROWSE,
             'selectionRoot' => null,
-            'rootDefaultLocation' => true,
+            'rootDefaultLocation' => false,
             'selectionContentTypes' => [],
-            'allowedTargets' => [
-                Type::ALLOWED_TARGET_LINK,
-                Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                Type::ALLOWED_TARGET_IN_PLACE,
-                Type::ALLOWED_TARGET_MODAL,
+            'allowedTargetsInternal' => [
+                Type::TARGET_LINK,
+                Type::TARGET_LINK_IN_NEW_TAB,
+                Type::TARGET_EMBED,
+                Type::TARGET_MODAL,
             ],
-            'allowedLinkType' => [
-                Type::ALLOWED_LINK_TYPE_EXTERNAL,
-                Type::ALLOWED_LINK_TYPE_INTERNAL,
+            'allowedTargetsExternal' => [
+                Type::TARGET_LINK,
+                Type::TARGET_LINK_IN_NEW_TAB,
             ],
+            'allowedLinkType' => Type::LINK_TYPE_ALL,
             'enableQueryParameter' => false,
         ];
 
@@ -97,8 +98,11 @@ class FieldValueConverter implements Converter
         if (array_key_exists('selectionContentTypes', $settingsData)) {
             $fieldSettings['selectionContentTypes'] = $settingsData['selectionContentTypes'];
         }
-        if (array_key_exists('allowedTargets', $settingsData)) {
-            $fieldSettings['allowedTargets'] = $settingsData['allowedTargets'];
+        if (array_key_exists('allowedTargetsInternal', $settingsData)) {
+            $fieldSettings['allowedTargetsInternal'] = $settingsData['allowedTargetsInternal'];
+        }
+        if (array_key_exists('allowedTargetsExternal', $settingsData)) {
+            $fieldSettings['allowedTargetsExternal'] = $settingsData['allowedTargetsExternal'];
         }
         if (array_key_exists('allowedLinkType', $settingsData)) {
             $fieldSettings['allowedLinkType'] = $settingsData['allowedLinkType'];
