@@ -22,9 +22,9 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
         $fieldDefinitionForm
             ->add('allowedLinkType', ChoiceType::class, [
                 'choices' => [
-                    'field_definition.ngenhacnedlink.allowed_link_type.' . Type::ALLOWED_LINK_TYPE_INTERNAL => Type::ALLOWED_LINK_TYPE_INTERNAL,
-                    'field_definition.ngenhacnedlink.allowed_link_type.' . Type::ALLOWED_LINK_TYPE_EXTERNAL => Type::ALLOWED_LINK_TYPE_EXTERNAL,
-                    'field_definition.ngenhacnedlink.allowed_link_type.' . Type::ALLOWED_LINK_TYPE_ALL => Type::ALLOWED_LINK_TYPE_ALL,
+                    'field_definition.ngenhacnedlink.link_type.' . Type::LINK_TYPE_INTERNAL => Type::LINK_TYPE_INTERNAL,
+                    'field_definition.ngenhacnedlink.link_type.' . Type::LINK_TYPE_EXTERNAL => Type::LINK_TYPE_EXTERNAL,
+                    'field_definition.ngenhacnedlink.link_type.' . Type::LINK_TYPE_ALL => Type::LINK_TYPE_ALL,
                 ],
                 'property_path' => 'fieldSettings[allowedLinkType]',
                 'label' => /* @Desc("Allowed link type") */ 'field_definition.ngenhancedlink.selection_allowed_link_type',
@@ -57,10 +57,10 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
             ])
             ->add('allowedTargets', ChoiceType::class, [
                 'choices' => [
-                    'field_definition.ngenhacnedlink.allowed_target.' . Type::ALLOWED_TARGET_LINK => Type::ALLOWED_TARGET_LINK,
-                    'field_definition.ngenhacnedlink.allowed_target.' . Type::ALLOWED_TARGET_LINK_IN_NEW_TAB => Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                    'field_definition.ngenhacnedlink.allowed_target.' . Type::ALLOWED_TARGET_IN_PLACE => Type::ALLOWED_TARGET_IN_PLACE,
-                    'field_definition.ngenhacnedlink.allowed_target.' . Type::ALLOWED_TARGET_MODAL => Type::ALLOWED_TARGET_MODAL,
+                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
+                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
+                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_IN_PLACE => Type::TARGET_IN_PLACE,
+                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
                 ],
                 'property_path' => 'fieldSettings[allowedTargets]',
                 'label' => /* @Desc("Allowed Targets") */ 'field_definition.ngenhancedlink.selection_allowed_targets',

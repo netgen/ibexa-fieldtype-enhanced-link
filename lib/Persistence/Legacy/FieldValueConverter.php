@@ -67,12 +67,12 @@ class FieldValueConverter implements Converter
             'rootDefaultLocation' => false,
             'selectionContentTypes' => [],
             'allowedTargets' => [
-                Type::ALLOWED_TARGET_LINK,
-                Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                Type::ALLOWED_TARGET_IN_PLACE,
-                Type::ALLOWED_TARGET_MODAL,
+                Type::TARGET_LINK,
+                Type::TARGET_LINK_IN_NEW_TAB,
+                Type::TARGET_IN_PLACE,
+                Type::TARGET_MODAL,
             ],
-            'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
+            'allowedLinkType' => Type::LINK_TYPE_ALL,
             'enableQueryParameter' => false,
         ];
 

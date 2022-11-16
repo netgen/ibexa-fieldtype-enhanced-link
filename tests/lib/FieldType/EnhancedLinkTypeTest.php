@@ -124,7 +124,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'reference' => null,
                     'label' => null,
-                    'target' => Type::ALLOWED_TARGET_LINK,
+                    'target' => Type::TARGET_LINK,
                     'suffix' => null,
                 ],
             ],
@@ -147,7 +147,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'reference' => null,
                     'label' => null,
-                    'target' => Type::ALLOWED_TARGET_LINK,
+                    'target' => Type::TARGET_LINK,
                     'suffix' => null,
                 ],
                 new Value(),
@@ -164,12 +164,12 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'selectionRoot' => null,
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
-                    'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
+                    'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'allowedTargets' => [
-                        Type::ALLOWED_TARGET_LINK,
-                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                        Type::ALLOWED_TARGET_IN_PLACE,
-                        Type::ALLOWED_TARGET_MODAL,
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
                 ],
@@ -180,10 +180,10 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'selectionRoot' => null,
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
-                    'allowedLinkType' => Type::ALLOWED_LINK_TYPE_EXTERNAL,
+                    'allowedLinkType' => Type::LINK_TYPE_EXTERNAL,
                     'allowedTargets' => [
-                        Type::ALLOWED_TARGET_IN_PLACE,
-                        Type::ALLOWED_TARGET_MODAL,
+                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => true,
                 ],
@@ -201,12 +201,12 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'selectionRoot' => null,
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
-                    'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
+                    'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'allowedTargets' => [
-                        Type::ALLOWED_TARGET_LINK,
-                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                        Type::ALLOWED_TARGET_IN_PLACE,
-                        Type::ALLOWED_TARGET_MODAL,
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
                 ],
@@ -218,12 +218,12 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'selectionRoot' => null,
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
-                    'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
+                    'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'allowedTargets' => [
-                        Type::ALLOWED_TARGET_LINK,
-                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                        Type::ALLOWED_TARGET_IN_PLACE,
-                        Type::ALLOWED_TARGET_MODAL,
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
                 ],
@@ -235,12 +235,12 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'selectionRoot' => [],
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
-                    'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
+                    'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'allowedTargets' => [
-                        Type::ALLOWED_TARGET_LINK,
-                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                        Type::ALLOWED_TARGET_IN_PLACE,
-                        Type::ALLOWED_TARGET_MODAL,
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
                 ],
@@ -252,12 +252,12 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'selectionRoot' => null,
                     'rootDefaultLocation' => 'invalid',
                     'selectionContentTypes' => [],
-                    'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
+                    'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'allowedTargets' => [
-                        Type::ALLOWED_TARGET_LINK,
-                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                        Type::ALLOWED_TARGET_IN_PLACE,
-                        Type::ALLOWED_TARGET_MODAL,
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
                 ],
@@ -269,12 +269,12 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'selectionRoot' => null,
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
-                    'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
+                    'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'allowedTargets' => [
-                        Type::ALLOWED_TARGET_LINK,
-                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                        Type::ALLOWED_TARGET_IN_PLACE,
-                        Type::ALLOWED_TARGET_MODAL,
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => 'invalid',
                 ],
@@ -286,12 +286,12 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'selectionRoot' => null,
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => 'string',
-                    'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
+                    'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'allowedTargets' => [
-                        Type::ALLOWED_TARGET_LINK,
-                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                        Type::ALLOWED_TARGET_IN_PLACE,
-                        Type::ALLOWED_TARGET_MODAL,
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
                 ],
@@ -305,10 +305,10 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'selectionContentTypes' => [],
                     'allowedLinkType' => 'invalid',
                     'allowedTargets' => [
-                        Type::ALLOWED_TARGET_LINK,
-                        Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                        Type::ALLOWED_TARGET_IN_PLACE,
-                        Type::ALLOWED_TARGET_MODAL,
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
                 ],
@@ -320,7 +320,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'selectionRoot' => null,
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
-                    'allowedLinkType' => Type::ALLOWED_LINK_TYPE_ALL,
+                    'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'allowedTargets' => [
                         'invalid',
                     ],
@@ -421,21 +421,21 @@ class EnhancedLinkTypeTest extends FieldTypeTest
      */
     public function testInvalidTargetValidationError(): void
     {
-        $fieldDefinition = $this->getFieldDefinitionMock(['allowedTargets' => [Type::ALLOWED_TARGET_LINK, Type::ALLOWED_TARGET_MODAL]]);
+        $fieldDefinition = $this->getFieldDefinitionMock(['allowedTargets' => [Type::TARGET_LINK, Type::TARGET_MODAL]]);
         $fieldType = $this->createFieldTypeUnderTest();
-        $validationErrors = $fieldType->validate($fieldDefinition, new Value('test', '', Type::ALLOWED_TARGET_LINK_IN_NEW_TAB));
+        $validationErrors = $fieldType->validate($fieldDefinition, new Value('test', '', Type::TARGET_LINK_IN_NEW_TAB));
 
         self::assertIsArray($validationErrors);
-        self::assertEquals([$this->generateInvalidTargetValidationError(Type::ALLOWED_TARGET_LINK_IN_NEW_TAB)], $validationErrors);
+        self::assertEquals([$this->generateInvalidTargetValidationError(Type::TARGET_LINK_IN_NEW_TAB)], $validationErrors);
     }
 
     public function testDisallowedLinkTypeValidationError(): void
     {
-        $fieldDefinition = $this->getFieldDefinitionMock(['allowedLinkType' => Type::ALLOWED_LINK_TYPE_EXTERNAL]);
+        $fieldDefinition = $this->getFieldDefinitionMock(['allowedLinkType' => Type::LINK_TYPE_EXTERNAL]);
         $fieldType = $this->createFieldTypeUnderTest();
         $validationErrors = $fieldType->validate($fieldDefinition, new Value(1));
         self::assertIsArray($validationErrors);
-        self::assertEquals([$this->generateDisallowedLinkTypeValidationError(Type::ALLOWED_LINK_TYPE_EXTERNAL)], $validationErrors);
+        self::assertEquals([$this->generateDisallowedLinkTypeValidationError(Type::LINK_TYPE_EXTERNAL)], $validationErrors);
     }
 
     public function testInvalidValueStructureValidationError(): void
@@ -464,12 +464,12 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         'type' => 'external',
                         'id' => 'test',
                         'label' => 'label',
-                        'target' => Type::ALLOWED_TARGET_LINK,
+                        'target' => Type::TARGET_LINK,
                         'suffix' => null,
                     ],
                     'externalData' => 'test',
                 ]),
-                new Value('test', 'label', Type::ALLOWED_TARGET_LINK),
+                new Value('test', 'label', Type::TARGET_LINK),
             ],
             'internal_type' => [
                 new FieldValue([
@@ -477,19 +477,19 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         'type' => 'internal',
                         'id' => 12,
                         'label' => 'label',
-                        'target' => Type::ALLOWED_TARGET_MODAL,
+                        'target' => Type::TARGET_MODAL,
                         'suffix' => null,
                     ],
                     'externalData' => null,
                 ]),
-                new Value(12, 'label', Type::ALLOWED_TARGET_MODAL),
+                new Value(12, 'label', Type::TARGET_MODAL),
             ],
             'no_type_key' => [
                 new FieldValue([
                     'data' => [
                         'id' => 12,
                         'label' => 'label',
-                        'target' => Type::ALLOWED_TARGET_MODAL,
+                        'target' => Type::TARGET_MODAL,
                         'suffix' => null,
                     ],
                     'externalData' => null,
@@ -508,7 +508,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         'type' => 'external',
                         'id' => 'test',
                         'label' => 'label',
-                        'target' => Type::ALLOWED_TARGET_LINK,
+                        'target' => Type::TARGET_LINK,
                         'suffix' => null,
                     ],
                     'externalData' => null,
@@ -520,7 +520,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'data' => [
                         'type' => 'internal',
                         'label' => 'label',
-                        'target' => Type::ALLOWED_TARGET_MODAL,
+                        'target' => Type::TARGET_MODAL,
                         'suffix' => null,
                     ],
                     'externalData' => null,
@@ -533,7 +533,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         'type' => null,
                         'id' => 12,
                         'label' => 'label',
-                        'target' => Type::ALLOWED_TARGET_MODAL,
+                        'target' => Type::TARGET_MODAL,
                         'suffix' => null,
                     ],
                     'externalData' => null,
@@ -548,7 +548,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     ],
                     'externalData' => null,
                 ]),
-                new Value(12, null, Type::ALLOWED_TARGET_LINK, null),
+                new Value(12, null, Type::TARGET_LINK, null),
             ],
         ];
     }
@@ -564,7 +564,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                             'id' => null,
                             'label' => null,
                             'type' => 'external',
-                            'target' => Type::ALLOWED_TARGET_LINK,
+                            'target' => Type::TARGET_LINK,
                             'suffix' => null,
                         ],
                         'externalData' => 'test',
@@ -573,14 +573,14 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 ),
             ],
             'int_reference_value' => [
-                new Value(15, 'label', Type::ALLOWED_TARGET_LINK),
+                new Value(15, 'label', Type::TARGET_LINK),
                 new FieldValue(
                     [
                         'data' => [
                             'id' => 15,
                             'label' => 'label',
                             'type' => 'internal',
-                            'target' => Type::ALLOWED_TARGET_LINK,
+                            'target' => Type::TARGET_LINK,
                             'suffix' => null,
                         ],
                         'externalData' => null,
@@ -658,15 +658,15 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             ],
             'allowedLinkType' => [
                 'type' => 'choice',
-                'default' => Type::ALLOWED_LINK_TYPE_ALL,
+                'default' => Type::LINK_TYPE_ALL,
             ],
             'allowedTargets' => [
                 'type' => 'array',
                 'default' => [
-                    Type::ALLOWED_TARGET_LINK,
-                    Type::ALLOWED_TARGET_LINK_IN_NEW_TAB,
-                    Type::ALLOWED_TARGET_IN_PLACE,
-                    Type::ALLOWED_TARGET_MODAL,
+                    Type::TARGET_LINK,
+                    Type::TARGET_LINK_IN_NEW_TAB,
+                    Type::TARGET_IN_PLACE,
+                    Type::TARGET_MODAL,
                 ],
             ],
             'enableQueryParameter' => [
