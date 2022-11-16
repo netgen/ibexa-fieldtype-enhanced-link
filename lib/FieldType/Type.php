@@ -186,6 +186,7 @@ class Type extends FieldType
 
                     break;
 
+                case 'allowedTargetsExternal':
                 case 'allowedTargetsInternal':
                     if (!is_array($value) || count(array_intersect($value, [self::TARGET_LINK, self::TARGET_LINK_IN_NEW_TAB, self::TARGET_EMBED, self::TARGET_MODAL])) === 0) {
                         $validationErrors[] = new ValidationError(
@@ -197,22 +198,6 @@ class Type extends FieldType
                                 '%link_in_new_tab%' => self::TARGET_LINK_IN_NEW_TAB,
                                 '%in_place%' => self::TARGET_EMBED,
                                 '%modal%' => self::TARGET_MODAL,
-                            ],
-                            "[{$name}]",
-                        );
-                    }
-
-                    break;
-
-                case 'allowedTargetsExternal':
-                    if (!is_array($value) || count(array_intersect($value, [self::TARGET_LINK, self::TARGET_LINK_IN_NEW_TAB])) === 0) {
-                        $validationErrors[] = new ValidationError(
-                            "Setting '%setting%' value must be one or either %link%, %link_in_new_tab%",
-                            null,
-                            [
-                                '%setting%' => $name,
-                                '%link%' => self::TARGET_LINK,
-                                '%link_in_new_tab%' => self::TARGET_LINK_IN_NEW_TAB,
                             ],
                             "[{$name}]",
                         );
