@@ -69,7 +69,7 @@ class FieldValueConverter implements Converter
             'allowedTargets' => [
                 Type::TARGET_LINK,
                 Type::TARGET_LINK_IN_NEW_TAB,
-                Type::TARGET_IN_PLACE,
+                Type::TARGET_EMBED,
                 Type::TARGET_MODAL,
             ],
             'allowedLinkType' => Type::LINK_TYPE_ALL,

@@ -59,7 +59,7 @@ class EnhancedLinkFormMapper extends AbstractRelationFormMapper
                 'choices' => [
                     'field_definition.ngenhacnedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
                     'field_definition.ngenhacnedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
-                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_IN_PLACE => Type::TARGET_IN_PLACE,
+                    'field_definition.ngenhacnedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
                     'field_definition.ngenhacnedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
                 ],
                 'property_path' => 'fieldSettings[allowedTargets]',

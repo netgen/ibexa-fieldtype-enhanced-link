@@ -168,7 +168,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'allowedTargets' => [
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
-                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
@@ -182,7 +182,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'selectionContentTypes' => [],
                     'allowedLinkType' => Type::LINK_TYPE_EXTERNAL,
                     'allowedTargets' => [
-                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => true,
@@ -205,7 +205,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'allowedTargets' => [
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
-                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
@@ -222,7 +222,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'allowedTargets' => [
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
-                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
@@ -239,7 +239,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'allowedTargets' => [
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
-                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
@@ -256,7 +256,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'allowedTargets' => [
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
-                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
@@ -273,7 +273,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'allowedTargets' => [
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
-                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => 'invalid',
@@ -290,7 +290,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'allowedTargets' => [
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
-                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
@@ -307,7 +307,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'allowedTargets' => [
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
-                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
                     ],
                     'enableQueryParameter' => false,
@@ -665,7 +665,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 'default' => [
                     Type::TARGET_LINK,
                     Type::TARGET_LINK_IN_NEW_TAB,
-                    Type::TARGET_IN_PLACE,
+                    Type::TARGET_EMBED,
                     Type::TARGET_MODAL,
                 ],
             ],

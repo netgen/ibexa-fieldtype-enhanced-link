@@ -33,7 +33,7 @@ class Type extends FieldType
     public const LINK_TYPE_INTERNAL = 'internal';
     public const LINK_TYPE_ALL = 'all';
     public const TARGET_LINK = 'link';
-    public const TARGET_IN_PLACE = 'in_place';
+    public const TARGET_EMBED = 'embed';
     public const TARGET_MODAL = 'modal';
     public const TARGET_LINK_IN_NEW_TAB = 'link_new_tab';
 
@@ -63,7 +63,7 @@ class Type extends FieldType
             'default' => [
                 self::TARGET_LINK,
                 self::TARGET_LINK_IN_NEW_TAB,
-                self::TARGET_IN_PLACE,
+                self::TARGET_EMBED,
                 self::TARGET_MODAL,
             ],
         ],
@@ -180,7 +180,7 @@ class Type extends FieldType
                     break;
 
                 case 'allowedTargets':
-                    if (!is_array($value) || count(array_intersect($value, [self::TARGET_LINK, self::TARGET_LINK_IN_NEW_TAB, self::TARGET_IN_PLACE, self::TARGET_MODAL])) === 0) {
+                    if (!is_array($value) || count(array_intersect($value, [self::TARGET_LINK, self::TARGET_LINK_IN_NEW_TAB, self::TARGET_EMBED, self::TARGET_MODAL])) === 0) {
                         $validationErrors[] = new ValidationError(
                             "Setting '%setting%' value must be one or either %link%, %link_in_new_tab%, %in_place% and/or %modal%",
                             null,
@@ -188,7 +188,7 @@ class Type extends FieldType
                                 '%setting%' => $name,
                                 '%link%' => self::TARGET_LINK,
                                 '%link_in_new_tab%' => self::TARGET_LINK_IN_NEW_TAB,
-                                '%in_place%' => self::TARGET_IN_PLACE,
+                                '%in_place%' => self::TARGET_EMBED,
                                 '%modal%' => self::TARGET_MODAL,
                             ],
                             "[{$name}]",

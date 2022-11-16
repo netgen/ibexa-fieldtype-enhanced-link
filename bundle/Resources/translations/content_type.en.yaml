@@ -6,7 +6,7 @@ field_definition.ngenhancedlink.selection_allowed_link_type: "Allowed link types
 field_definition.ngenhancedlink.enable_query_parameter: "Link suffix"
 field_definition.ngenhacnedlink.target.link: "Link"
 field_definition.ngenhacnedlink.target.link_new_tab: "Link in new tab"
-field_definition.ngenhacnedlink.target.in_place: "Embed / in-place"
+field_definition.ngenhacnedlink.target.embed: "Embed"
 field_definition.ngenhacnedlink.target.modal: "Modal"
 field_definition.ngenhacnedlink.link_type.internal: "Internal"
 field_definition.ngenhacnedlink.link_type.external: "External"

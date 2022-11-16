@@ -39,7 +39,7 @@ class FieldValueConverterTest extends TestCase
                             'rootDefaultLocation' => false,
                             'selectionContentTypes' => ['article', 'blog_post'],
                             'allowedLinkType' => Type::LINK_TYPE_ALL,
-                            'allowedTargets' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_IN_PLACE, Type::TARGET_MODAL],
+                            'allowedTargets' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
                             'enableQueryParameter' => false,
                         ],
                     ],
@@ -62,7 +62,7 @@ class FieldValueConverterTest extends TestCase
                 "allowedTargets": [
                     "link",
                     "link_new_tab",
-                    "in_place",
+                    "embed",
                     "modal"
                 ],
                 "enableQueryParameter": false
@@ -95,7 +95,7 @@ class FieldValueConverterTest extends TestCase
                 "allowedTargets": [
                     "link",
                     "link_new_tab",
-                    "in_place",
+                    "embed",
                     "modal"
                 ],
                 "enableQueryParameter": false
@@ -111,7 +111,7 @@ class FieldValueConverterTest extends TestCase
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => ['article', 'blog_post'],
                     'allowedLinkType' => Type::LINK_TYPE_ALL,
-                    'allowedTargets' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_IN_PLACE, Type::TARGET_MODAL],
+                    'allowedTargets' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
                     'enableQueryParameter' => false,
                 ],
             ],
@@ -139,7 +139,7 @@ class FieldValueConverterTest extends TestCase
                     'allowedTargets' => [
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
-                        Type::TARGET_IN_PLACE,
+                        Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
                     ],
                     'allowedLinkType' => Type::LINK_TYPE_ALL,
@@ -180,7 +180,7 @@ class FieldValueConverterTest extends TestCase
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => ['article', 'blog_post'],
                     'allowedLinkType' => Type::LINK_TYPE_EXTERNAL,
-                    'allowedTargets' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_IN_PLACE, Type::TARGET_MODAL],
+                    'allowedTargets' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
                     'enableQueryParameter' => true,
                 ],
             ],
