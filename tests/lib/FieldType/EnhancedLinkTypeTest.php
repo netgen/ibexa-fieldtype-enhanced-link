@@ -16,7 +16,7 @@ use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
 use Ibexa\Core\Base\Exceptions\NotFoundException;
 use Ibexa\Core\FieldType\ValidationError;
 use Ibexa\Tests\Core\FieldType\FieldTypeTest;
-use Netgen\IbexaFieldTypeEnhancedLink\FieldType\TargetContentValidator;
+use Netgen\IbexaFieldTypeEnhancedLink\FieldType\InternalLinkValidator;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 
@@ -76,7 +76,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             ->with(self::DESTINATION_CONTENT_ID, $currentVersionNo)
             ->willReturn($versionInfo);
 
-        $this->targetContentValidator = $this->createMock(TargetContentValidator::class);
+        $this->targetContentValidator = $this->createMock(InternalLinkValidator::class);
     }
 
     public function provideInvalidInputForAcceptValue(): array

@@ -81,11 +81,11 @@ class Type extends FieldType
     ];
 
     private SPIContentHandler $handler;
-    private TargetContentValidator $targetContentValidator;
+    private InternalLinkValidator $targetContentValidator;
 
     public function __construct(
         SPIContentHandler $handler,
-        TargetContentValidator $targetContentValidator
+        InternalLinkValidator $targetContentValidator
     ) {
         $this->handler = $handler;
         $this->targetContentValidator = $targetContentValidator;

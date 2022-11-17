@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Netgen\IbexaFieldTypeEnhancedLink\ContentForms\FieldType\DataTransformer;
+namespace Netgen\IbexaFieldTypeEnhancedLink\Form\Field;
 
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 use Symfony\Component\Form\DataTransformerInterface;
 
 use function is_numeric;
 
-class EnhancedLinkValueTransformer implements DataTransformerInterface
+class FieldValueTransformer implements DataTransformerInterface
 {
     public function transform($value)
     {

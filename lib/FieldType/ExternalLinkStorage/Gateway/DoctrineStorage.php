@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage\Gateway;
+namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;

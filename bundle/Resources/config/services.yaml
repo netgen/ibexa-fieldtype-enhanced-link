@@ -7,7 +7,7 @@ services:
         public: true
         arguments:
             - '@Ibexa\Core\Persistence\Cache\ContentHandler'
-            - '@Netgen\IbexaFieldTypeEnhancedLink\FieldType\TargetContentValidator'
+            - '@Netgen\IbexaFieldTypeEnhancedLink\FieldType\InternalLinkValidator'
         tags:
             - { name: ibexa.field_type, alias: 'ngenhancedlink' }
 
@@ -15,7 +15,7 @@ services:
         tags:
             - { name: ibexa.field_type.storage.legacy.converter, alias: '%ng.fieldtype.enhanced_link.identifier%' }
 
-    Netgen\IbexaFieldTypeEnhancedLink\Form\EnhancedLinkFormMapper:
+    Netgen\IbexaFieldTypeEnhancedLink\Form\FieldDefinition\FormMapper:
         arguments:
             - '@ibexa.api.service.content_type'
             - '@ibexa.api.service.location'
@@ -27,14 +27,14 @@ services:
         tags:
             - { name: ibexa.field_type.indexable, alias: 'ngenhancedlink' }
 
-    Netgen\IbexaFieldTypeEnhancedLink\ContentForms\FieldType\Mapper\EnhancedLinkFormMapper:
+    Netgen\IbexaFieldTypeEnhancedLink\Form\Field\FieldValueFormMapper:
         arguments:
             - '@ibexa.api.service.content_type'
             - '@ibexa.api.service.location'
         tags:
             - { name: ibexa.admin_ui.field_type.form.mapper.value, fieldType: ngenhancedlink }
 
-    Netgen\IbexaFieldTypeEnhancedLink\ContentForms\Form\Type\FieldType\EnhancedLinkFieldType:
+    Netgen\IbexaFieldTypeEnhancedLink\Form\Field\FieldValueType:
         arguments:
             - '@ibexa.api.service.content'
             - '@ibexa.api.service.content_type'
@@ -46,19 +46,19 @@ services:
         public: true
         tags: ['kernel.event_subscriber']
 
-    Netgen\IbexaFieldTypeEnhancedLink\FieldType\TargetContentValidator:
+    Netgen\IbexaFieldTypeEnhancedLink\FieldType\InternalLinkValidator:
         arguments:
             $contentHandler: '@Ibexa\Contracts\Core\Persistence\Content\Handler'
             $contentTypeHandler: '@Ibexa\Contracts\Core\Persistence\Content\Type\Handler'
 
-    Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage\Gateway\DoctrineStorage:
-        class: Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage\Gateway\DoctrineStorage
+    Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway\DoctrineStorage:
+        class: Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway\DoctrineStorage
         arguments: [ '@ibexa.api.storage_engine.legacy.connection' ]
 
-    Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage:
-        class: Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage
+    Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage:
+        class: Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage
         arguments:
-            - '@Netgen\IbexaFieldTypeEnhancedLink\FieldType\EnhancedLinkStorage\Gateway\DoctrineStorage'
+            - '@Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway\DoctrineStorage'
             - "@?logger"
         tags:
             - { name: ibexa.field_type.storage.external.handler, alias: ngenhancedlink }

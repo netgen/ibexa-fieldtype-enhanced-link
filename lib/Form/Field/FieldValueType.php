@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Netgen\IbexaFieldTypeEnhancedLink\ContentForms\Form\Type\FieldType;
+namespace Netgen\IbexaFieldTypeEnhancedLink\Form\Field;
 
 use Ibexa\Contracts\Core\Repository\ContentService;
 use Ibexa\Contracts\Core\Repository\ContentTypeService;
 use Ibexa\Contracts\Core\Repository\Exceptions\UnauthorizedException;
 use Ibexa\Contracts\Core\Repository\Values\Content\Location;
-use Netgen\IbexaFieldTypeEnhancedLink\ContentForms\FieldType\DataTransformer\EnhancedLinkValueTransformer;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -17,7 +16,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EnhancedLinkFieldType extends AbstractType
+class FieldValueType extends AbstractType
 {
     private ContentService $contentService;
     private ContentTypeService $contentTypeService;
@@ -49,7 +48,7 @@ class EnhancedLinkFieldType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->addModelTransformer(new EnhancedLinkValueTransformer());
+        $builder->addModelTransformer(new FieldValueTransformer());
     }
 
     /**
