@@ -59,14 +59,63 @@
         container.querySelector('.ibexa-default-location__selected-path').innerHTML = '';
         pathSelector.classList.remove('ibexa-default-location__path-selector--filled');
     };
+
     const attachEvents = (container) => {
         const udwBtn = container.querySelector('.ibexa-btn--udw-relation-default-location');
-        const deleteBtn = container.querySelector(SELECTOR_RESET_STARTING_LOCATION_BTN);
-        const choices = container.querySelectorAll('input[type="radio"]');
-
         udwBtn.addEventListener('click', openUDW, false);
+
+        const deleteBtn = container.querySelector(SELECTOR_RESET_STARTING_LOCATION_BTN);
         deleteBtn?.addEventListener('click', resetStartingLocation, false);
+
+        const choices = container.querySelectorAll('input[type="radio"]');
         choices.forEach((choice) => choice.addEventListener('change', toggleDisabledState.bind(null, container), false));
+
+        const allowedLinkTypeChoices = container.querySelectorAll('.allowed-link-type input[type="radio"]');
+        allowedLinkTypeChoices.forEach((choice) => choice.addEventListener('change', handleAllowedLinkChange.bind(null, choice, container)));
+    };
+
+    const ALLOWED_LINK_TYPE_VALUE = {
+        all: 'all',
+        internal: 'internal',
+        external: 'external',
+    };
+    const OPTION_CONTAINER_QUERY_SELECTOR = {
+        internal: '.internal-options',
+        external: '.external-options',
+    };
+    const show = (element) => {
+        element.classList.remove('hidden');
+    };
+    const hide = (element) => {
+        element.classList.add('hidden');
+    };
+    const handleAllowedLinkChange = (choice, container) => {
+        if (!choice.checked) {
+            return;
+        }
+
+        const internalOptions = container.querySelector(OPTION_CONTAINER_QUERY_SELECTOR.internal);
+        const externalOptions = container.querySelector(OPTION_CONTAINER_QUERY_SELECTOR.external);
+
+        switch (choice.value) {
+            case ALLOWED_LINK_TYPE_VALUE.all:
+                show(internalOptions);
+                show(externalOptions);
+                break;
+
+            case ALLOWED_LINK_TYPE_VALUE.internal:
+                show(internalOptions);
+                hide(externalOptions);
+                break;
+                
+            case ALLOWED_LINK_TYPE_VALUE.external:
+                hide(internalOptions);
+                show(externalOptions);
+                break;
+
+            default:
+                break;
+        }
     };
     const toggleDisabledState = (container) => {
         const locationBtn = container.querySelector('.ibexa-btn--udw-relation-default-location');
