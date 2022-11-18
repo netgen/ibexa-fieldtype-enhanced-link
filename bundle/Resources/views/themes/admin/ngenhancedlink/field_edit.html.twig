@@ -8,12 +8,13 @@
 	{% set limit = 1 %}
 	{% set default_location = form.vars.default_location ? form.vars.default_location.id : null %}
 	{% set allowed_content_type_identifiers = form.parent.vars.value.fieldDefinition.fieldSettings.selectionContentTypes %}
+	{% set allowed_link_type = form.parent.vars.value.fieldDefinition.fieldSettings.allowedLinkType %}
 	{% set helper = 'ezobjectrelation.helper'|trans|desc('Stores a Relation to a Content item.') %}
 	{% set is_translation = is_translation ?? false %}
 
-	<div class="link-type-options">
+	<div class="link-type-options hidden" data-allowed-link-type="{{ allowed_link_type }}">
 		{{- form_row(form.link_type, { disabled: is_translation }) -}}
-        <br />
+		<br/>
 	</div>
 	<div class="internal-link-form hidden">
 		{{ block('netgeninternalrelation_base_widget') }}

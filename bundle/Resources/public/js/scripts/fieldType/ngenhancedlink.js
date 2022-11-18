@@ -275,36 +275,37 @@
 
         /** LINK TYPES */
         const typeOptionsWrapper = fieldContainer.querySelector('.link-type-options');
+        const allowedLinkType = fieldContainer.querySelector('.link-type-options').dataset.allowedLinkType;
         const linkTypeOptionsInputs = typeOptionsWrapper.querySelectorAll('.form-check input[type="radio"]');
-        const internalLinkFormBody = fieldContainer.querySelector('.internal-link-form');
-        const externalLinkFormBody = fieldContainer.querySelector('.external-link-form');
 
         const otherValue = {
             internal: 'external',
             external: 'internal'
         };
-        const handleLinkTypeChange = (option, container) => {
-            if (!option.checked) {
-                container.querySelector(`.${option.value}-link-form`).classList.add('hidden');
-                return;
-            }
+        if (allowedLinkType === 'all') {
+            typeOptionsWrapper.classList.remove('hidden');
 
-            container.querySelector(`.${option.value}-link-form`).classList.remove('hidden');
-            container.querySelector(`.${otherValue[option.value]}-link-form`).classList.add('hidden');
-        };
-        linkTypeOptionsInputs.forEach(linkTypeOption => {
-            const parent = linkTypeOption.parentElement;
-            const type = linkTypeOption.value;
+            const handleLinkTypeChange = (option, container) => {
+                if (!option.checked) {
+                    return;
+                }
+    
+                container.querySelector(`.${option.value}-link-form`).classList.remove('hidden');
+                container.querySelector(`.${otherValue[option.value]}-link-form`).classList.add('hidden');
+            };
 
-            if (type === 'internal') {
-                parent.appendChild(internalLinkFormBody);
-            } else if (type === 'external') {
-                parent.appendChild(externalLinkFormBody);
-            }
+            linkTypeOptionsInputs.forEach(linkTypeOption => {
+                const parent = linkTypeOption.parentElement;
+                const type = linkTypeOption.value;
+                parent.appendChild(fieldContainer.querySelector(`.${type}-link-form`));
 
-            linkTypeOption.addEventListener('change', handleLinkTypeChange.bind(null, linkTypeOption, typeOptionsWrapper));
-        });
-        linkTypeOptionsInputs.forEach(option => handleLinkTypeChange(option, typeOptionsWrapper));
+                linkTypeOption.addEventListener('change', handleLinkTypeChange.bind(null, linkTypeOption, typeOptionsWrapper));
+            });
+            linkTypeOptionsInputs.forEach(option => handleLinkTypeChange(option, typeOptionsWrapper));
+        } else {
+            fieldContainer.querySelector(`.${allowedLinkType}-link-form`).classList.remove('hidden');
+            typeOptionsWrapper.querySelector(`.form-check input[type="radio"][value="${allowedLinkType}"]`).checked = true;
+        }
         /** LINK TYPES */
         
         updateAddBtnState();
