@@ -273,6 +273,40 @@
         let selectedItems = [...fieldContainer.querySelectorAll(SELECTOR_ROW)].map((row) => parseInt(row.dataset.contentId, 10));
         let selectedItemsMap = selectedItems.reduce((total, item) => ({ ...total, [item]: item }), {});
 
+        /** LINK TYPES */
+        const typeOptionsWrapper = fieldContainer.querySelector('.link-type-options');
+        const linkTypeOptionsInputs = typeOptionsWrapper.querySelectorAll('.form-check input[type="radio"]');
+        const internalLinkFormBody = fieldContainer.querySelector('.internal-link-form');
+        const externalLinkFormBody = fieldContainer.querySelector('.external-link-form');
+
+        const otherValue = {
+            internal: 'external',
+            external: 'internal'
+        };
+        const handleLinkTypeChange = (option, container) => {
+            if (!option.checked) {
+                container.querySelector(`.${option.value}-link-form`).classList.add('hidden');
+                return;
+            }
+
+            container.querySelector(`.${option.value}-link-form`).classList.remove('hidden');
+            container.querySelector(`.${otherValue[option.value]}-link-form`).classList.add('hidden');
+        };
+        linkTypeOptionsInputs.forEach(linkTypeOption => {
+            const parent = linkTypeOption.parentElement;
+            const type = linkTypeOption.value;
+
+            if (type === 'internal') {
+                parent.appendChild(internalLinkFormBody);
+            } else if (type === 'external') {
+                parent.appendChild(externalLinkFormBody);
+            }
+
+            linkTypeOption.addEventListener('change', handleLinkTypeChange.bind(null, linkTypeOption, typeOptionsWrapper));
+        });
+        linkTypeOptionsInputs.forEach(option => handleLinkTypeChange(option, typeOptionsWrapper));
+        /** LINK TYPES */
+        
         updateAddBtnState();
         attachRowsEventHandlers();
 

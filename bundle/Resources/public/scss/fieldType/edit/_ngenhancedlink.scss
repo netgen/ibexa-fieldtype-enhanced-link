@@ -29,6 +29,10 @@ $ibexa-color-dark-400: #71767c;
 }
 
 .ibexa-field-edit--ngenhancedlink {
+    .hidden {
+        display: none;
+    }
+
     &.is-invalid {
         .ibexa-data-source {
             @include area-invalid();
@@ -43,6 +47,11 @@ $ibexa-color-dark-400: #71767c;
         border: calculateRem(1px) solid $ibexa-color-dark-200;
         border-radius: $ibexa-border-radius;
         padding: calculateRem(24px);
+    }
+
+    .link-type-options .ibexa-data-source__input {
+        display: table;
+        width: 100%;
     }
 
     .ibexa-relations {
