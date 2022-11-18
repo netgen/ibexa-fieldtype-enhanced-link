@@ -143,7 +143,6 @@
     const handleAllowedTargetsChange = (option, allOptions) => {
         let checkedCounter = 0;
         allOptions.forEach(option => {
-            console.log({option});
             if (option.checked) {
                 checkedCounter += 1;
             }
