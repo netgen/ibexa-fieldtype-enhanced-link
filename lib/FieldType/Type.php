@@ -348,7 +348,7 @@ class Type extends FieldType
     {
         /** @var Value $fieldValue */
         $relations = [];
-        if ($fieldValue->reference !== null) {
+        if ($fieldValue->isInternal()) {
             $relations[Relation::FIELD] = [$fieldValue->reference];
         }
 
