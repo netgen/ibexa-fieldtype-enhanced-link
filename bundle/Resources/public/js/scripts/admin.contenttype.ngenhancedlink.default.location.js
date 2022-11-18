@@ -70,9 +70,21 @@
         const choices = container.querySelectorAll('input[type="radio"]');
         choices.forEach((choice) => choice.addEventListener('change', toggleDisabledState.bind(null, container), false));
 
-        const allowedLinkTypeChoices = container.querySelectorAll('.allowed-link-type input[type="radio"]');
-        allowedLinkTypeChoices.forEach((choice) => choice.addEventListener('change', handleAllowedLinkChange.bind(null, choice, container)));
+        setupAllowedLinkTypeChangeHandling(container);
+
     };
+
+    const setupAllowedLinkTypeChangeHandling = (container) => {
+        const allowedLinkTypeChoices = container.querySelectorAll('.allowed-link-type input[type="radio"]');
+        allowedLinkTypeChoices.forEach((choice) => {
+            choice.addEventListener('change', handleAllowedLinkChange.bind(null, choice, container))
+            if (choice.checked) {
+                handleAllowedLinkChange(choice, container);
+            }
+        });
+    };
+
+    
 
     const ALLOWED_LINK_TYPE_VALUE = {
         all: 'all',
