@@ -42,8 +42,8 @@ services:
         tags:
             - { name: 'form.type' }
 
-    Netgen\IbexaFieldTypeEnhancedLinkBundle\EventListener\UniversalDiscovery\Event\Subscriber\:
-        resource: "../../../bundle/EventListener/UniversalDiscovery/Event/Subscriber/*"
+    Netgen\IbexaFieldTypeEnhancedLinkBundle\EventListener\UniversalDiscovery\:
+        resource: "../../../bundle/EventListener/UniversalDiscovery/*"
         public: true
         tags: ['kernel.event_subscriber']
 
