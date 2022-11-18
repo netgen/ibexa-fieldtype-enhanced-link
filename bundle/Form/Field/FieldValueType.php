@@ -81,7 +81,7 @@ class FieldValueType extends AbstractType
                 'suffix',
                 TextType::class,
                 [
-                    'label' => $options['enable_query_parameter'] ? /* @Desc("Text") */ 'field_edit.ngenhancedlink.suffix' : $options['enable_query_parameter'],
+                    'label' => $options['enable_query_parameter'] ? /* @Desc("Text") */ 'field_edit.ngenhancedlink.suffix' : false,
                     'required' => false,
                     'attr' => ['hidden' => !$options['enable_query_parameter']],
                     'disabled' => !$options['enable_query_parameter'],
