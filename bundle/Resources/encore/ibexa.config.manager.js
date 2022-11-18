@@ -18,10 +18,10 @@ module.exports = (ibexaConfig, ibexaConfigManager) => {
         entryName: 'ibexa-admin-ui-content-edit-parts-css',
         newItems: [path.resolve(__dirname, '../public/scss/fieldType/edit/_ngenhancedlink.scss')],
     });
-    //
-    // ibexaConfigManager.add({
-    //     ibexaConfig,
-    //     entryName: 'ibexa-admin-ui-layout-css',
-    //     newItems: [path.resolve(__dirname, '../public/scss/matrix-content-type.scss')],
-    // });
+    
+    ibexaConfigManager.add({
+        ibexaConfig,
+        entryName: 'ibexa-admin-ui-layout-css',
+        newItems: [path.resolve(__dirname, '../public/scss/fieldType/definition/_ngenhancedlink.scss')],
+    });
 };
