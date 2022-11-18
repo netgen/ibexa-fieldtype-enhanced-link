@@ -1,1 +1,13 @@
 ezobjectrelation.helper: "Stores a Relation to a Content item."
+field_edit.ngenhancedlink.link_type.internal: 'Internal'
+field_edit.ngenhancedlink.link_type.external: 'External'
+field_edit.ngenhancedlink.link_type: 'Link type'
+field_edit.ngenhancedlink.internal_id: 'Internal link id'
+field_edit.ngenhancedlink.suffix: 'Suffix'
+field_edit.ngenhancedlink.label: 'Label'
+field_edit.ngenhancedlink.target: 'Target'
+field_edit.ngenhancedlink.target.link: 'Link'
+field_edit.ngenhancedlink.url: 'Url'
+field_edit.ngenhancedlink.target.link_new_tab: 'Link in new tab'
+field_edit.ngenhancedlink.target.embed: 'Embed'
+field_edit.ngenhancedlink.target.modal: 'Modal'

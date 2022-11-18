@@ -1,7 +1,7 @@
 (function (global, doc, ibexa, React, ReactDOM, Translator) {
     const CLASS_FIELD_SINGLE = 'ibexa-field-edit--ngenhancedlink';
     const SELECTOR_FIELD = '.ibexa-field-edit--ngenhancedlink';
-    const SELECTOR_INPUT = '.ibexa-data-source__input';
+    const SELECTOR_INPUT = '.internal_link_id';
     const SELECTOR_BTN_ADD = '.ibexa-relations__table-action--create';
     const SELECTOR_ROW = '.ibexa-relations__item';
     const EVENT_CUSTOM = 'validateInput';
