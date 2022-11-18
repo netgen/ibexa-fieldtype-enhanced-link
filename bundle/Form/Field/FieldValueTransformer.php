@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netgen\IbexaFieldTypeEnhancedLink\Form\Field;
+namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\Field;
 
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 use Symfony\Component\Form\DataTransformerInterface;

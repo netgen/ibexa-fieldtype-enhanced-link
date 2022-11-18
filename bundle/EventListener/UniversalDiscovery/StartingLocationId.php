@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Netgen\IbexaFieldTypeEnhancedLink\AdminUi\UniversalDiscovery\Event\Subscriber;
+namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\EventListener\UniversalDiscovery;
 
 use Ibexa\AdminUi\UniversalDiscovery\Event\ConfigResolveEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class EnhancedLinkStartingLocationId implements EventSubscriberInterface
+class StartingLocationId implements EventSubscriberInterface
 {
     /**
      * @return array

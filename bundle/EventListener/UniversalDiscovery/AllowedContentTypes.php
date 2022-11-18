@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netgen\IbexaFieldTypeEnhancedLink\AdminUi\UniversalDiscovery\Event\Subscriber;
+namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\EventListener\UniversalDiscovery;
 
 use Ibexa\AdminUi\UniversalDiscovery\Event\ConfigResolveEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -11,7 +11,7 @@ use function array_intersect;
 use function array_values;
 use function in_array;
 
-class EnhancedLinkAllowedContentTypes implements EventSubscriberInterface
+class AllowedContentTypes implements EventSubscriberInterface
 {
     /**
      * @return array
