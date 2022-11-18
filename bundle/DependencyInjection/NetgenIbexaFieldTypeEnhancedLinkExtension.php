@@ -30,19 +30,11 @@ class NetgenIbexaFieldTypeEnhancedLinkExtension extends Extension implements Pre
         $loader->load('services.yaml');
     }
 
-    /**
-     * Allow an extension to prepend the extension configurations.
-     *
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-     */
     public function prepend(ContainerBuilder $container): void
     {
         $this->prependKernelSettings($container);
     }
 
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-     */
     public function prependKernelSettings(ContainerBuilder $container): void
     {
         $configFile = __DIR__ . '/../Resources/config/kernel.yaml';
