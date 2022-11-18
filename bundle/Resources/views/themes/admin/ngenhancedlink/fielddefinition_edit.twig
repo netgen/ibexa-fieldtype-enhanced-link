@@ -15,13 +15,13 @@
 			{{- form_row(form.rootDefaultLocation, { disabled: is_translation }) -}}
 			{{- form_row(form.selectionContentTypes, { disabled: is_translation }) -}}
 			{{- form_row(form.enableQueryParameter, { disabled: is_translation }) -}}
-			{{- form_row(form.allowedTargetsInternal, { disabled: is_translation }) -}}
+			{{- form_row(form.allowedTargetsInternal, { disabled: is_translation, attr: { class: 'allowed-targets-internal' } }) -}}
 		</div>
 		<div class="external-options">
 		    <hr>
 			<h3>External link options</h3>
 			<hr>
-			{{- form_row(form.allowedTargetsExternal, { disabled: is_translation }) -}}
+			{{- form_row(form.allowedTargetsExternal, { disabled: is_translation, attr: { class: 'allowed-targets-external' } }) -}}
 		</div>
 	</div>
 	<hr>

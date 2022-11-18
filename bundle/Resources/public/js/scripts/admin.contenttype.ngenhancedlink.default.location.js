@@ -60,6 +60,10 @@
         pathSelector.classList.remove('ibexa-default-location__path-selector--filled');
     };
 
+    const ALLOWED_TARGETS_QUERY_SELECTOR = {
+        internal: '.allowed-targets-internal',
+        external: '.allowed-targets-external',
+    };
     const attachEvents = (container) => {
         const udwBtn = container.querySelector('.ibexa-btn--udw-relation-default-location');
         udwBtn.addEventListener('click', openUDW, false);
@@ -72,6 +76,8 @@
 
         setupAllowedLinkTypeChangeHandling(container);
 
+        addAllowedTargetsEventHandler(ALLOWED_TARGETS_QUERY_SELECTOR.internal, container);
+        addAllowedTargetsEventHandler(ALLOWED_TARGETS_QUERY_SELECTOR.external, container);
     };
 
     const setupAllowedLinkTypeChangeHandling = (container) => {
@@ -84,7 +90,11 @@
         });
     };
 
-    
+    const addAllowedTargetsEventHandler = (querySelector, container) => {
+        container = container.querySelector(querySelector);
+        const options = container.querySelectorAll('input[type="checkbox"]');
+        options.forEach(option => option.addEventListener('change', handleAllowedTargetsChange.bind(null, option, options)));
+    };
 
     const ALLOWED_LINK_TYPE_VALUE = {
         all: 'all',
@@ -129,6 +139,21 @@
                 break;
         }
     };
+
+    const handleAllowedTargetsChange = (option, allOptions) => {
+        let checkedCounter = 0;
+        allOptions.forEach(option => {
+            console.log({option});
+            if (option.checked) {
+                checkedCounter += 1;
+            }
+        });
+
+        if (!option.checked && checkedCounter === 0) {
+            option.checked = true;
+        }
+    };
+    
     const toggleDisabledState = (container) => {
         const locationBtn = container.querySelector('.ibexa-btn--udw-relation-default-location');
         const deleteBtn = container.querySelector(SELECTOR_RESET_STARTING_LOCATION_BTN);
