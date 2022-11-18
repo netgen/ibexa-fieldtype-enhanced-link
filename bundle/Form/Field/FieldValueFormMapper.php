@@ -30,6 +30,7 @@ class FieldValueFormMapper extends AbstractRelationFormMapper
                                 $fieldForm->getConfig()->getOption('location'),
                             ),
                             'root_default_location' => $fieldSettings['rootDefaultLocation'] ?? false,
+                            'enable_query_parameter' => $fieldSettings['enableQueryParameter'] ?? false,
                         ],
                     )
                     ->setAutoInitialize(false)

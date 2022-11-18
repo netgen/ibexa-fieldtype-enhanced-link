@@ -36,8 +36,7 @@ class FieldValueType extends AbstractType
         ContentService $contentService,
         ContentTypeService $contentTypeService,
         FieldTypeService $fieldTypeService
-    )
-    {
+    ) {
         $this->contentService = $contentService;
         $this->contentTypeService = $contentTypeService;
         $this->fieldTypeService = $fieldTypeService;
@@ -82,8 +81,10 @@ class FieldValueType extends AbstractType
                 'suffix',
                 TextType::class,
                 [
-                    'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.suffix',
+                    'label' => $options['enable_query_parameter'] ? /* @Desc("Text") */ 'field_edit.ngenhancedlink.suffix' : $options['enable_query_parameter'],
                     'required' => false,
+                    'attr' => ['hidden' => !$options['enable_query_parameter']],
+                    'disabled' => !$options['enable_query_parameter'],
                 ],
             )
             ->add(
@@ -188,9 +189,11 @@ class FieldValueType extends AbstractType
             'default_location' => null,
             'root_default_location' => null,
             'location' => null,
+            'enable_query_parameter' => null,
         ]);
         $resolver->setAllowedTypes('default_location', ['null', Location::class]);
         $resolver->setAllowedTypes('root_default_location', ['null', 'bool']);
+        $resolver->setAllowedTypes('enable_query_parameter', ['null', 'bool']);
         $resolver->setAllowedTypes('location', ['null', Location::class]);
     }
 }
