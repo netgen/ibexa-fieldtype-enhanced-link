@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netgen\IbexaFieldTypeEnhancedLink\Form\Field;
+namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\Field;
 
 use Ibexa\ContentForms\FieldType\Mapper\AbstractRelationFormMapper;
 use Ibexa\Contracts\ContentForms\Data\Content\FieldData;

@@ -15,7 +15,7 @@ services:
         tags:
             - { name: ibexa.field_type.storage.legacy.converter, alias: '%ng.fieldtype.enhanced_link.identifier%' }
 
-    Netgen\IbexaFieldTypeEnhancedLink\Form\FieldDefinition\FormMapper:
+    Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\FieldDefinition\FormMapper:
         arguments:
             - '@ibexa.api.service.content_type'
             - '@ibexa.api.service.location'
@@ -27,14 +27,14 @@ services:
         tags:
             - { name: ibexa.field_type.indexable, alias: 'ngenhancedlink' }
 
-    Netgen\IbexaFieldTypeEnhancedLink\Form\Field\FieldValueFormMapper:
+    Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\Field\FieldValueFormMapper:
         arguments:
             - '@ibexa.api.service.content_type'
             - '@ibexa.api.service.location'
         tags:
             - { name: ibexa.admin_ui.field_type.form.mapper.value, fieldType: ngenhancedlink }
 
-    Netgen\IbexaFieldTypeEnhancedLink\Form\Field\FieldValueType:
+    Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\Field\FieldValueType:
         arguments:
             - '@ibexa.api.service.content'
             - '@ibexa.api.service.content_type'
@@ -42,8 +42,8 @@ services:
         tags:
             - { name: 'form.type' }
 
-    Netgen\IbexaFieldTypeEnhancedLink\AdminUi\UniversalDiscovery\Event\Subscriber\:
-        resource: "../../../lib/AdminUi/UniversalDiscovery/Event/Subscriber/*"
+    Netgen\IbexaFieldTypeEnhancedLinkBundle\EventListener\UniversalDiscovery\Event\Subscriber\:
+        resource: "../../../bundle/EventListener/UniversalDiscovery/Event/Subscriber/*"
         public: true
         tags: ['kernel.event_subscriber']
 
