@@ -55,21 +55,21 @@ class Value extends BaseValue
 
     public function isTargetModal(): bool
     {
-        return $this->target == Type::TARGET_MODAL;
+        return $this->target === Type::TARGET_MODAL;
     }
 
     public function isTargetInPlace(): bool
     {
-        return $this->target == Type::TARGET_EMBED;
+        return $this->target === Type::TARGET_EMBED;
     }
 
     public function isTargetLink(): bool
     {
-        return $this->target == Type::TARGET_LINK;
+        return $this->target === Type::TARGET_LINK;
     }
 
     public function isTargetLinkInNewTab(): bool
     {
-        return $this->target == Type::TARGET_LINK_IN_NEW_TAB;
+        return $this->target === Type::TARGET_LINK_IN_NEW_TAB;
     }
 }
