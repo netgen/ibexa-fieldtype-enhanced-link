@@ -9,7 +9,6 @@ use Ibexa\Contracts\Core\Persistence\Content\Type\FieldDefinition;
 use Ibexa\Core\Persistence\Legacy\Content\FieldValue\Converter;
 use Ibexa\Core\Persistence\Legacy\Content\StorageFieldDefinition;
 use Ibexa\Core\Persistence\Legacy\Content\StorageFieldValue;
-use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 
 use function array_key_exists;
 use function json_decode;
@@ -61,25 +60,6 @@ class FieldValueConverter implements Converter
      */
     public function toFieldDefinition(StorageFieldDefinition $storageDef, FieldDefinition $fieldDef): void
     {
-        $fieldDef->fieldTypeConstraints->fieldSettings = [
-            'selectionMethod' => Type::SELECTION_BROWSE,
-            'selectionRoot' => null,
-            'rootDefaultLocation' => false,
-            'selectionContentTypes' => [],
-            'allowedTargetsInternal' => [
-                Type::TARGET_LINK,
-                Type::TARGET_LINK_IN_NEW_TAB,
-                Type::TARGET_EMBED,
-                Type::TARGET_MODAL,
-            ],
-            'allowedTargetsExternal' => [
-                Type::TARGET_LINK,
-                Type::TARGET_LINK_IN_NEW_TAB,
-            ],
-            'allowedLinkType' => Type::LINK_TYPE_ALL,
-            'enableQueryParameter' => false,
-        ];
-
         if (empty($storageDef->dataText5)) {
             return;
         }
