@@ -30,7 +30,7 @@ class FieldValueTransformer implements DataTransformerInterface
         if (!$value instanceof Value) {
             return null;
         }
-        if ($value->isExternal()) {
+        if ($value->isTypeExternal()) {
             return [
                 'url' => $value->reference,
                 'label_external' => $value->label,
@@ -38,7 +38,7 @@ class FieldValueTransformer implements DataTransformerInterface
                 'link_type' => 'external',
             ];
         }
-        if ($value->isInternal()) {
+        if ($value->isTypeInternal()) {
             return [
                 'suffix' => $value->suffix,
                 'label_internal' => $value->label,

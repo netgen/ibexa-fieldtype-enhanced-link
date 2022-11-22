@@ -43,12 +43,12 @@ class Value extends BaseValue
         return '';
     }
 
-    public function isExternal(): bool
+    public function isTypeExternal(): bool
     {
         return is_string($this->reference);
     }
 
-    public function isInternal(): bool
+    public function isTypeInternal(): bool
     {
         return is_int($this->reference);
     }
