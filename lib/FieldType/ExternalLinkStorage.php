@@ -76,7 +76,7 @@ class ExternalLinkStorage extends GatewayBasedStorage
         }
 
         $id = $field->value->data['id'];
-        if (empty($id) || $field->value->data['type'] !== 'external') {
+        if (empty($id) || $field->value->data['type'] !== Type::LINK_TYPE_EXTERNAL) {
             // $field->value->externalData = null;
 
             return;

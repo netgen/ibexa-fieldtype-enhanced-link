@@ -364,7 +364,7 @@ class Type extends FieldType
                     'data' => [
                         'id' => null,
                         'label' => $value->label,
-                        'type' => 'external',
+                        'type' => self::LINK_TYPE_EXTERNAL,
                         'target' => $value->target,
                         'suffix' => $value->suffix,
                     ],
@@ -380,7 +380,7 @@ class Type extends FieldType
                     'data' => [
                         'id' => $value->reference,
                         'label' => $value->label,
-                        'type' => 'internal',
+                        'type' => self::LINK_TYPE_INTERNAL,
                         'target' => $value->target,
                         'suffix' => $value->suffix,
                     ],
@@ -415,7 +415,7 @@ class Type extends FieldType
             $suffixData = $fieldValue->data['suffix'] ?? null;
             $targetData = $fieldValue->data['target'] ?? self::TARGET_LINK;
 
-            if ($fieldValue->data['type'] === 'internal' && array_key_exists('id', $fieldValue->data) && is_int($fieldValue->data['id'])) {
+            if ($fieldValue->data['type'] === self::LINK_TYPE_INTERNAL && array_key_exists('id', $fieldValue->data) && is_int($fieldValue->data['id'])) {
                 return new Value(
                     $fieldValue->data['id'],
                     $labelData,
@@ -424,7 +424,7 @@ class Type extends FieldType
                 );
             }
 
-            if ($fieldValue->data['type'] === 'external' && is_string($fieldValue->externalData)) {
+            if ($fieldValue->data['type'] === self::LINK_TYPE_EXTERNAL && is_string($fieldValue->externalData)) {
                 return new Value(
                     $fieldValue->externalData,
                     $labelData,

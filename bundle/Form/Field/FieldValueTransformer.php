@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\Field;
 
+use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 use Symfony\Component\Form\DataTransformerInterface;
 
@@ -35,7 +36,7 @@ class FieldValueTransformer implements DataTransformerInterface
                 'url' => $value->reference,
                 'label_external' => $value->label,
                 'target_external' => $value->target,
-                'link_type' => 'external',
+                'link_type' => Type::LINK_TYPE_EXTERNAL,
             ];
         }
         if ($value->isTypeInternal()) {
@@ -44,7 +45,7 @@ class FieldValueTransformer implements DataTransformerInterface
                 'label_internal' => $value->label,
                 'target_internal' => $value->target,
                 'id' => $value->reference,
-                'link_type' => 'internal',
+                'link_type' => Type::LINK_TYPE_INTERNAL,
             ];
         }
 
@@ -54,12 +55,12 @@ class FieldValueTransformer implements DataTransformerInterface
     public function reverseTransform($value): ?Value
     {
         if (is_array($value) && array_key_exists('link_type', $value)) {
-            if ($value['link_type'] === 'internal') {
+            if ($value['link_type'] === Type::LINK_TYPE_INTERNAL) {
                 if (isset($value['id'], $value['target_internal'])) {
                     return new Value($value['id'], $value['label_internal'], $value['target_internal'], $value['suffix']);
                 }
             }
-            if ($value['link_type'] === 'external') {
+            if ($value['link_type'] === Type::LINK_TYPE_EXTERNAL) {
                 if (isset($value['url'], $value['target_internal'])) {
                     return new Value($value['url'], $value['label_external'], $value['target_external']);
                 }
