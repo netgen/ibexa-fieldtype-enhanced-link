@@ -160,47 +160,27 @@ class FieldValueConverterTest extends TestCase
         );
 
         $actualFieldDefinition = new PersistenceFieldDefinition();
-        $this->converter->toFieldDefinition($storageFieldDefinition, $actualFieldDefinition);
-
-        self::assertEquals($expectedFieldDefinition, $actualFieldDefinition);
-    }
-
-    public function testToFieldDefinitionWithIncompleteFieldSettings()
-    {
-        $storageFieldDefinition = new StorageFieldDefinition();
-        $storageFieldDefinition->dataText5 =
-            <<< 'DATATEXT'
-            {
-                "selectionMethod": 1,
-                "rootDefaultLocation": false,
-                "selectionContentTypes": [
-                    "article",
-                    "blog_post"
-                ],
-                "allowedLinkType": "external",
-                "enableQueryParameter": true
-            }
-            DATATEXT;
-
-        $expectedFieldDefinition = new PersistenceFieldDefinition();
-        $expectedFieldDefinition->fieldTypeConstraints = new FieldTypeConstraints(
+        $actualFieldDefinition->fieldTypeConstraints = new FieldTypeConstraints(
             [
                 'fieldSettings' => [
-                    'selectionMethod' => Type::SELECTION_DROPDOWN,
+                    'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => null,
                     'rootDefaultLocation' => false,
-                    'selectionContentTypes' => ['article', 'blog_post'],
-                    'allowedLinkType' => Type::LINK_TYPE_EXTERNAL,
-                    'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                    'selectionContentTypes' => [],
+                    'allowedTargetsInternal' => [
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_EMBED,
+                        Type::TARGET_MODAL,
+                    ],
                     'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
-                    'enableQueryParameter' => true,
+                    'allowedLinkType' => Type::LINK_TYPE_ALL,
+                    'enableQueryParameter' => false,
                 ],
             ],
         );
 
-        $actualFieldDefinition = new PersistenceFieldDefinition();
         $this->converter->toFieldDefinition($storageFieldDefinition, $actualFieldDefinition);
-
         self::assertEquals($expectedFieldDefinition, $actualFieldDefinition);
     }
 
