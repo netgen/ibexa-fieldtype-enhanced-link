@@ -11,7 +11,10 @@ use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
 use Ibexa\Core\Repository\Values\Content\Relation;
 use Ibexa\Tests\Integration\Core\Repository\FieldType\BaseIntegrationTest;
 use Ibexa\Tests\Integration\Core\Repository\FieldType\RelationSearchBaseIntegrationTestTrait;
+use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
+
+use function PHPUnit\Framework\assertEquals;
 
 /**
  * Integration test for use field type.
@@ -73,17 +76,41 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         return [
             'selectionMethod' => [
                 'type' => 'int',
-                'default' => 0,
+                'default' => Type::SELECTION_BROWSE,
             ],
             'selectionRoot' => [
                 'type' => 'string',
                 'default' => null,
             ],
+            'rootDefaultLocation' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
             'selectionContentTypes' => [
                 'type' => 'array',
                 'default' => [],
             ],
-            'rootDefaultLocation' => [
+            'allowedLinkType' => [
+                'type' => 'choice',
+                'default' => Type::LINK_TYPE_ALL,
+            ],
+            'allowedTargetsInternal' => [
+                'type' => 'array',
+                'default' => [
+                    Type::TARGET_LINK,
+                    Type::TARGET_LINK_IN_NEW_TAB,
+                    Type::TARGET_EMBED,
+                    Type::TARGET_MODAL,
+                ],
+            ],
+            'allowedTargetsExternal' => [
+                'type' => 'array',
+                'default' => [
+                    Type::TARGET_LINK,
+                    Type::TARGET_LINK_IN_NEW_TAB,
+                ],
+            ],
+            'enableQueryParameter' => [
                 'type' => 'bool',
                 'default' => false,
             ],
@@ -97,23 +124,23 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
 
     /**
      * Get a valid $fieldSettings value.
-     *
-     * @todo Implement correctly
      */
     public function getValidFieldSettings(): array
     {
         return [
-            'selectionMethod' => 0,
+            'selectionMethod' => Type::SELECTION_BROWSE,
             'selectionRoot' => 1,
-            'selectionContentTypes' => [],
             'rootDefaultLocation' => false,
+            'selectionContentTypes' => [],
+            'allowedLinkType' => Type::LINK_TYPE_ALL,
+            'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+            'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
+            'enableQueryParameter' => false,
         ];
     }
 
     /**
      * Get a valid $validatorConfiguration.
-     *
-     * @todo Implement correctly
      */
     public function getValidValidatorConfiguration(): array
     {
@@ -122,8 +149,6 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
 
     /**
      * Get $fieldSettings value not accepted by the field type.
-     *
-     * @todo Implement correctly
      */
     public function getInvalidFieldSettings(): array
     {
@@ -137,8 +162,6 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
 
     /**
      * Get $validatorConfiguration not accepted by the field type.
-     *
-     * @todo Implement correctly
      */
     public function getInvalidValidatorConfiguration(): array
     {
@@ -150,7 +173,26 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
      */
     public function getValidCreationFieldData(): Value
     {
-        return new Value(4);
+        return new Value(4, 'label', Type::TARGET_LINK, 'suffix');
+    }
+
+    /**
+     * Get initial field data for valid object creation.
+     */
+    public function getValidExternalCreationFieldData(): Value
+    {
+        return new Value('https://www.google.com/', 'label', Type::TARGET_LINK);
+    }
+
+    /**
+     * @depends testLoadContentTypeField
+     */
+    public function testCreateExternalContent()
+    {
+        $content = $this->createContent($this->getValidExternalCreationFieldData());
+        self::assertNotNull($content->id);
+
+        return $content;
     }
 
     public function getFieldName(): string
@@ -166,7 +208,10 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         );
 
         $expectedData = [
-            'destinationContentId' => 4,
+            'reference' => 4,
+            'label' => 'label',
+            'target' => Type::TARGET_LINK,
+            'suffix' => 'suffix',
         ];
         $this->assertPropertiesCorrect(
             $expectedData,
@@ -184,9 +229,23 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         ];
     }
 
+    public function testUpdateExternalField()
+    {
+        $updatedContent = $this->updateContent($this->getValidUpdateExternalFieldData());
+        self::assertNotNull($updatedContent->id);
+        assertEquals($updatedContent->getField('data')->value->reference, 'https://www.youtube.com/');
+
+        return $updatedContent;
+    }
+
     public function getValidUpdateFieldData(): Value
     {
-        return new Value(49);
+        return new Value(49, 'label', Type::TARGET_LINK, 'suffix');
+    }
+
+    public function getValidUpdateExternalFieldData(): Value
+    {
+        return new Value('https://www.youtube.com/', 'label', Type::TARGET_LINK);
     }
 
     public function assertUpdatedFieldDataLoadedCorrect(Field $field): void
@@ -194,12 +253,37 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         self::assertInstanceOf(Value::class, $field->value);
 
         $expectedData = [
-            'destinationContentId' => 49,
+            'reference' => 49,
+            'label' => 'label',
+            'target' => Type::TARGET_LINK,
+            'suffix' => 'suffix',
         ];
         $this->assertPropertiesCorrect(
             $expectedData,
             $field->value,
         );
+    }
+
+    /**
+     * @dataProvider provideFieldSettings
+     *
+     * @param mixed $settings
+     * @param mixed $expectedSettings
+     *
+     * @return \Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType
+     */
+    public function testCreateContentTypes($settings, $expectedSettings)
+    {
+        $contentType = $this->createContentType(
+            $settings,
+            $this->getValidValidatorConfiguration(),
+            $this->getValidContentTypeConfiguration(),
+            $this->getValidFieldConfiguration(),
+        );
+        self::assertNotNull($contentType->id);
+        self::assertEquals($expectedSettings, $contentType->fieldDefinitions[1]->fieldSettings);
+
+        return $contentType;
     }
 
     public function provideInvalidUpdateFieldData(): array
@@ -215,7 +299,10 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         );
 
         $expectedData = [
-            'destinationContentId' => 4,
+            'reference' => 4,
+            'label' => 'label',
+            'target' => Type::TARGET_LINK,
+            'suffix' => 'suffix',
         ];
 
         $this->assertPropertiesCorrect(
@@ -224,13 +311,52 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         );
     }
 
+    public function provideFieldSettings(): array
+    {
+        return [
+            'empty_settings' => [
+                [],
+                [
+                    'selectionMethod' => Type::SELECTION_BROWSE,
+                    'selectionRoot' => null,
+                    'rootDefaultLocation' => false,
+                    'selectionContentTypes' => [],
+                    'allowedLinkType' => Type::LINK_TYPE_ALL,
+                    'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                    'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
+                    'enableQueryParameter' => false,
+                ],
+            ],
+            'incomplete_settings' => [
+                [
+                    'selectionMethod' => Type::SELECTION_BROWSE,
+                    'allowedLinkType' => Type::LINK_TYPE_INTERNAL,
+                    'enableQueryParameter' => true,
+                ],
+                [
+                    'selectionMethod' => Type::SELECTION_BROWSE,
+                    'selectionRoot' => null,
+                    'rootDefaultLocation' => false,
+                    'selectionContentTypes' => [],
+                    'allowedLinkType' => Type::LINK_TYPE_INTERNAL,
+                    'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                    'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
+                    'enableQueryParameter' => true,
+                ],
+            ],
+        ];
+    }
+
     public function provideToHashData(): array
     {
         return [
             [
-                new Value(4),
+                new Value(4, 'label', Type::TARGET_LINK, 'suffix'),
                 [
-                    'destinationContentId' => 4,
+                    'reference' => 4,
+                    'label' => 'label',
+                    'target' => Type::TARGET_LINK,
+                    'suffix' => 'suffix',
                 ],
             ],
         ];
@@ -240,8 +366,13 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
     {
         return [
             [
-                ['destinationContentId' => 4],
-                new Value(4),
+                [
+                    'reference' => 4,
+                    'label' => 'label',
+                    'target' => Type::TARGET_LINK,
+                    'suffix' => 'suffix',
+                ],
+                new Value(4, 'label', Type::TARGET_LINK, 'suffix'),
             ],
         ];
     }
