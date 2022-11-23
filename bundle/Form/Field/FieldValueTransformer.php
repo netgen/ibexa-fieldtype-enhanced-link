@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\Field;
 
+use Ibexa\Contracts\Core\Repository\FieldType;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -13,15 +14,12 @@ use function is_array;
 
 class FieldValueTransformer implements DataTransformerInterface
 {
-    /**
-     * @var \Ibexa\Contracts\Core\Repository\FieldType
-     */
-    private $fieldType;
+    private FieldType $fieldType;
 
     /**
-     * @param \Ibexa\Contracts\Core\Repository\FieldType $fieldType
+     * @param FieldType $fieldType
      */
-    public function __construct(\Ibexa\Contracts\Core\Repository\FieldType $fieldType)
+    public function __construct(FieldType $fieldType)
     {
         $this->fieldType = $fieldType;
     }

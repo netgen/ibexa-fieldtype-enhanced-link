@@ -15,11 +15,9 @@ use function in_array;
  */
 class InternalLinkValidator
 {
-    /** @var \Ibexa\Contracts\Core\Persistence\Content\Handler */
-    private $contentHandler;
+    private Content\Handler $contentHandler;
 
-    /** @var \Ibexa\Contracts\Core\Persistence\Content\Type\Handler */
-    private $contentTypeHandler;
+    private Content\Type\Handler $contentTypeHandler;
 
     public function __construct(
         Content\Handler $contentHandler,

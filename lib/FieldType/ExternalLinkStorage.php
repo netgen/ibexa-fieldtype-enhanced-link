@@ -13,10 +13,9 @@ use Psr\Log\NullLogger;
 
 class ExternalLinkStorage extends GatewayBasedStorage
 {
-    /** @var \Psr\Log\LoggerInterface */
-    protected $logger;
+    protected LoggerInterface $logger;
 
-    /** @var \Ibexa\Core\FieldType\Url\UrlStorage\Gateway */
+    /** @var \Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway */
     protected $gateway;
 
     /**

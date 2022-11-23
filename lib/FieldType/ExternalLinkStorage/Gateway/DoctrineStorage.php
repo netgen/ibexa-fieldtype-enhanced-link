@@ -6,8 +6,8 @@ namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gatewa
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Ibexa\Core\FieldType\Url\UrlStorage\Gateway;
 use Ibexa\Core\Persistence\Legacy\URL\Gateway\DoctrineDatabase;
+use Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway;
 use PDO;
 
 use function md5;
@@ -18,8 +18,7 @@ class DoctrineStorage extends Gateway
     public const URL_TABLE = DoctrineDatabase::URL_TABLE;
     public const URL_LINK_TABLE = DoctrineDatabase::URL_LINK_TABLE;
 
-    /** @var \Doctrine\DBAL\Connection */
-    protected $connection;
+    protected Connection $connection;
 
     public function __construct(Connection $connection)
     {
