@@ -214,8 +214,8 @@ class FieldValueConverterTest extends TestCase
         $expectedFieldValue->data = [
             'id' => 1,
             'label' => 'Enhanced link',
-            'type' => 'internal',
-            'target' => 'link',
+            'type' => Type::LINK_TYPE_INTERNAL,
+            'target' => Type::TARGET_LINK,
             'suffix' => 'start',
         ];
         $expectedFieldValue->sortKey = 'reference';
@@ -259,8 +259,8 @@ class FieldValueConverterTest extends TestCase
         $fieldValue->data = [
             'id' => 1,
             'label' => 'Enhanced link',
-            'type' => 'internal',
-            'target' => 'link',
+            'type' => Type::LINK_TYPE_INTERNAL,
+            'target' => Type::TARGET_LINK,
             'suffix' => 'start',
         ];
         $fieldValue->sortKey = 'reference';
@@ -290,8 +290,8 @@ class FieldValueConverterTest extends TestCase
         $fieldValue->data = [
             'id' => null,
             'label' => 'Enhanced link',
-            'type' => 'external',
-            'target' => 'link',
+            'type' => Type::LINK_TYPE_EXTERNAL,
+            'target' => Type::TARGET_LINK,
             'suffix' => 'start',
         ];
         $fieldValue->sortKey = 'reference';

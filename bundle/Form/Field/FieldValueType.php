@@ -154,7 +154,7 @@ class FieldValueType extends AbstractType
         /** @var \Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value $data */
         $data = $form->getData();
 
-        if (!$data instanceof Value || null === $data->reference || $data->isExternal()) {
+        if (!$data instanceof Value || null === $data->reference || $data->isTypeExternal()) {
             return;
         }
 

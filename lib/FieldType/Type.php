@@ -218,10 +218,10 @@ class Type extends FieldType
     public function getName(SPIValue $value, FieldDefinition $fieldDefinition, string $languageCode): string
     {
         /** @var Value $value */
-        if ($value->isExternal()) {
+        if ($value->isTypeExternal()) {
             return (string) $value->label;
         }
-        if ($value->isInternal()) {
+        if ($value->isTypeInternal()) {
             try {
                 $contentInfo = $this->handler->loadContentInfo($value->reference);
                 $versionInfo = $this->handler->loadVersionInfo($value->reference, $contentInfo->currentVersionNo);
@@ -247,7 +247,7 @@ class Type extends FieldType
         }
 
         $allowedLinkType = $fieldDefinition->getFieldSettings()['allowedLinkType'] ?? '';
-        if (($allowedLinkType === self::LINK_TYPE_EXTERNAL && !$value->isExternal()) || ($allowedLinkType === self::LINK_TYPE_INTERNAL && !$value->isInternal())) {
+        if (($allowedLinkType === self::LINK_TYPE_EXTERNAL && !$value->isTypeExternal()) || ($allowedLinkType === self::LINK_TYPE_INTERNAL && !$value->isTypeInternal())) {
             $validationErrors[] = new ValidationError(
                 'Link type is not allowed. Must be of type %type%',
                 null,
@@ -258,7 +258,7 @@ class Type extends FieldType
             );
         }
 
-        if ($value->isInternal()) {
+        if ($value->isTypeInternal()) {
             $allowedTargetsInternal = $fieldDefinition->getFieldSettings()['allowedTargetsInternal'] ?? [];
             if (!empty($allowedTargetsInternal) && !in_array($value->target, $allowedTargetsInternal, true)) {
                 $validationErrors[] = new ValidationError(
@@ -272,7 +272,7 @@ class Type extends FieldType
             }
         }
 
-        if ($value->isExternal()) {
+        if ($value->isTypeExternal()) {
             $allowedTargetsExternal = $fieldDefinition->getFieldSettings()['allowedTargetsExternal'] ?? [];
             if (!empty($allowedTargetsExternal) && !in_array($value->target, $allowedTargetsExternal, true)) {
                 $validationErrors[] = new ValidationError(
@@ -348,7 +348,7 @@ class Type extends FieldType
     {
         /** @var Value $fieldValue */
         $relations = [];
-        if ($fieldValue->isInternal()) {
+        if ($fieldValue->isTypeInternal()) {
             $relations[Relation::FIELD] = [$fieldValue->reference];
         }
 
@@ -358,13 +358,13 @@ class Type extends FieldType
     public function toPersistenceValue(SPIValue $value): FieldValue
     {
         /** @var Value $value */
-        if ($value->isExternal()) {
+        if ($value->isTypeExternal()) {
             return new FieldValue(
                 [
                     'data' => [
                         'id' => null,
                         'label' => $value->label,
-                        'type' => 'external',
+                        'type' => self::LINK_TYPE_EXTERNAL,
                         'target' => $value->target,
                         'suffix' => $value->suffix,
                     ],
@@ -374,13 +374,13 @@ class Type extends FieldType
             );
         }
 
-        if ($value->isInternal()) {
+        if ($value->isTypeInternal()) {
             return new FieldValue(
                 [
                     'data' => [
                         'id' => $value->reference,
                         'label' => $value->label,
-                        'type' => 'internal',
+                        'type' => self::LINK_TYPE_INTERNAL,
                         'target' => $value->target,
                         'suffix' => $value->suffix,
                     ],
@@ -415,7 +415,7 @@ class Type extends FieldType
             $suffixData = $fieldValue->data['suffix'] ?? null;
             $targetData = $fieldValue->data['target'] ?? self::TARGET_LINK;
 
-            if ($fieldValue->data['type'] === 'internal' && array_key_exists('id', $fieldValue->data) && is_int($fieldValue->data['id'])) {
+            if ($fieldValue->data['type'] === self::LINK_TYPE_INTERNAL && array_key_exists('id', $fieldValue->data) && is_int($fieldValue->data['id'])) {
                 return new Value(
                     $fieldValue->data['id'],
                     $labelData,
@@ -424,7 +424,7 @@ class Type extends FieldType
                 );
             }
 
-            if ($fieldValue->data['type'] === 'external' && is_string($fieldValue->externalData)) {
+            if ($fieldValue->data['type'] === self::LINK_TYPE_EXTERNAL && is_string($fieldValue->externalData)) {
                 return new Value(
                     $fieldValue->externalData,
                     $labelData,
@@ -461,7 +461,7 @@ class Type extends FieldType
      */
     protected function checkValueStructure(BaseValue $value): void
     {
-        if (!$value->isInternal() && !$value->isExternal()) {
+        if (!$value->isTypeInternal() && !$value->isTypeExternal()) {
             throw new InvalidArgumentType(
                 '$value->reference',
                 'int|string',

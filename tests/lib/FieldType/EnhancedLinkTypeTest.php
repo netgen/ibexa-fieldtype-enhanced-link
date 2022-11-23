@@ -111,11 +111,11 @@ class EnhancedLinkTypeTest extends FieldTypeTest
     {
         return [
             [
-                new Value(23, 'test', 'link', null),
+                new Value(23, 'test', Type::TARGET_LINK, null),
                 [
                     'reference' => 23,
                     'label' => 'test',
-                    'target' => 'link',
+                    'target' => Type::TARGET_LINK,
                     'suffix' => null,
                 ],
             ],
@@ -138,10 +138,10 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 [
                     'reference' => 23,
                     'label' => 'test',
-                    'target' => 'link',
+                    'target' => Type::TARGET_LINK,
                     'suffix' => null,
                 ],
-                new Value(23, 'test', 'link', null),
+                new Value(23, 'test', Type::TARGET_LINK, null),
             ],
             [
                 [
@@ -535,7 +535,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             'external_type' => [
                 new FieldValue([
                     'data' => [
-                        'type' => 'external',
+                        'type' => Type::LINK_TYPE_EXTERNAL,
                         'id' => 'test',
                         'label' => 'label',
                         'target' => Type::TARGET_LINK,
@@ -548,7 +548,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             'internal_type' => [
                 new FieldValue([
                     'data' => [
-                        'type' => 'internal',
+                        'type' => Type::LINK_TYPE_INTERNAL,
                         'id' => 12,
                         'label' => 'label',
                         'target' => Type::TARGET_MODAL,
@@ -579,7 +579,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             'external_type_without_string_external_data' => [
                 new FieldValue([
                     'data' => [
-                        'type' => 'external',
+                        'type' => Type::LINK_TYPE_EXTERNAL,
                         'id' => 'test',
                         'label' => 'label',
                         'target' => Type::TARGET_LINK,
@@ -592,7 +592,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             'internal_type_without_data_id' => [
                 new FieldValue([
                     'data' => [
-                        'type' => 'internal',
+                        'type' => Type::LINK_TYPE_INTERNAL,
                         'label' => 'label',
                         'target' => Type::TARGET_MODAL,
                         'suffix' => null,
@@ -618,7 +618,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 new FieldValue([
                     'data' => [
                         'id' => 12,
-                        'type' => 'internal',
+                        'type' => Type::LINK_TYPE_INTERNAL,
                     ],
                     'externalData' => null,
                 ]),
@@ -637,7 +637,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         'data' => [
                             'id' => null,
                             'label' => null,
-                            'type' => 'external',
+                            'type' => Type::LINK_TYPE_EXTERNAL,
                             'target' => Type::TARGET_LINK,
                             'suffix' => null,
                         ],
@@ -653,7 +653,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         'data' => [
                             'id' => 15,
                             'label' => 'label',
-                            'type' => 'internal',
+                            'type' => Type::LINK_TYPE_INTERNAL,
                             'target' => Type::TARGET_LINK,
                             'suffix' => null,
                         ],

@@ -15,11 +15,9 @@ use function in_array;
  */
 class InternalLinkValidator
 {
-    /** @var \Ibexa\Contracts\Core\Persistence\Content\Handler */
-    private $contentHandler;
+    private Content\Handler $contentHandler;
 
-    /** @var \Ibexa\Contracts\Core\Persistence\Content\Type\Handler */
-    private $contentTypeHandler;
+    private Content\Type\Handler $contentTypeHandler;
 
     public function __construct(
         Content\Handler $contentHandler,
@@ -32,7 +30,7 @@ class InternalLinkValidator
     public function validate(Value $value, array $allowedContentTypes = []): ?ValidationError
     {
         try {
-            if ($value->isInternal()) {
+            if ($value->isTypeInternal()) {
                 $content = $this->contentHandler->load((int) $value->reference);
                 $contentType = $this->contentTypeHandler->load($content->versionInfo->contentInfo->contentTypeId);
                 if (!empty($allowedContentTypes) && !in_array($contentType->identifier, $allowedContentTypes, true)) {

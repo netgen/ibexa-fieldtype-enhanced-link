@@ -9,13 +9,13 @@ use Ibexa\Contracts\Core\FieldType\StorageGatewayInterface;
 use Ibexa\Contracts\Core\Persistence\Content\Field;
 use Ibexa\Contracts\Core\Persistence\Content\VersionInfo;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class ExternalLinkStorage extends GatewayBasedStorage
 {
-    /** @var \Psr\Log\LoggerInterface */
-    protected $logger;
+    protected LoggerInterface $logger;
 
-    /** @var \Ibexa\Core\FieldType\Url\UrlStorage\Gateway */
+    /** @var \Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway */
     protected $gateway;
 
     /**
@@ -27,7 +27,7 @@ class ExternalLinkStorage extends GatewayBasedStorage
     public function __construct(StorageGatewayInterface $gateway, ?LoggerInterface $logger = null)
     {
         parent::__construct($gateway);
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
@@ -76,7 +76,7 @@ class ExternalLinkStorage extends GatewayBasedStorage
         }
 
         $id = $field->value->data['id'];
-        if (empty($id) || $field->value->data['type'] !== 'external') {
+        if (empty($id) || $field->value->data['type'] !== Type::LINK_TYPE_EXTERNAL) {
             // $field->value->externalData = null;
 
             return;
@@ -85,7 +85,7 @@ class ExternalLinkStorage extends GatewayBasedStorage
         $map = $this->gateway->getIdUrlMap([$id]);
 
         // URL id is not in the DB
-        if (!isset($map[$id]) && isset($this->logger)) {
+        if (!isset($map[$id])) {
             $this->logger->error("URL with ID '{$id}' not found");
         }
 
