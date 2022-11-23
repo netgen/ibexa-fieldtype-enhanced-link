@@ -72,8 +72,10 @@ class FieldValueType extends AbstractType
                 'id',
                 IntegerType::class,
                 [
-                    'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.internal_id',
-                    'required' => false,
+                    'label' => false,
+                    'attr' => ['hidden' => true, 'class' => 'internal-required-field internal-link-id'],
+                    'required' => true,
+                    'disabled' => false,
                 ],
             )
             ->add(
@@ -106,14 +108,16 @@ class FieldValueType extends AbstractType
                     ],
                     'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.target',
                     'required' => true,
+                    'attr' => ['class' => 'internal-required-field']
                 ],
             )
             ->add(
                 'url',
-                UrlType::class,
+                TextType::class,
                 [
                     'label' => /* @Desc("URL") */ 'field_edit.ngenhancedlink.url',
                     'required' => $options['required'],
+                    'attr' => ['class' => $options['required'] ? 'external-required-field' : '']
                 ],
             )
             ->add(
@@ -136,6 +140,7 @@ class FieldValueType extends AbstractType
                     ],
                     'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.target',
                     'required' => true,
+                    'attr' => ['class' => 'external-required-field']
                 ],
             )
             ->addModelTransformer(
