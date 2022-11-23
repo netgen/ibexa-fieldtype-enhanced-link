@@ -8,7 +8,7 @@
             <h1>THIS IS (DEFAULT) TEMPLATE FOR FRONTEND VIEW</h1>
 
             <div {{ block( 'field_attributes' ) }}>
-                {% if field.value.isInternal%}
+                {% if field.value.isTypeInternal%}
                     {% if field.value.isTargetModal %}
                         <a href="#"
                            class="button btn btn-default btn-large btn-arrow-right form-modal-trigger"
@@ -43,7 +43,7 @@
                         ) }}
                     {% endif %}
                 {% endif%}
-                {% if field.value.isExternal %}
+                {% if field.value.isTypeExternal %}
                     {% if field.value.isTargetLinkInNewTab %}
                         <a href="{{ field.value.reference }}" {{ block( 'field_attributes' ) }} target="_blank">{{ field.value.label ? field.value.label : field.value.reference }}</a>
                     {% else %}

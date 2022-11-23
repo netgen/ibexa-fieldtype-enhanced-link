@@ -9,7 +9,7 @@
             {% set attr = attr|merge({'class': (attr.class|default('') ~ ' ibexa-field-preview ibexa-field-preview--ezobjectrelationlist')|trim}) %}
             <h1>THIS IS TEMPLATE FOR ADMIN VIEW (PREVIEW)</h1>
             <div {{ block( 'field_attributes' ) }}>
-                {% if field.value.isInternal%}
+                {% if field.value.isTypeInternal%}
                     {% embed '@ibexadesign/ui/component/table/table.html.twig' with {
                         headline: 'ezobjectrelation.single_relation'|trans|desc('Enhanced link'),
                         head_cols: [
@@ -33,7 +33,7 @@
                     <h3>Target: {{ field.value.target }}</h3>
                     <h3>Suffix: {{ field.value.suffix }}</h3>
                 {% endif %}
-                {% if field.value.isExternal %}
+                {% if field.value.isTypeExternal %}
                     <h2>{% if not ibexa_field_is_empty( content, field ) %}
                             <a href="{{ field.value.reference }}"
                                     {{ block( 'field_attributes' ) }}>{{ field.value.label ? field.value.label : field.value.reference }}</a>
