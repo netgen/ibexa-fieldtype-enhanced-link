@@ -18,27 +18,12 @@ class ExternalLinkStorage extends GatewayBasedStorage
     /** @var \Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway */
     protected $gateway;
 
-    /**
-     * Construct from gateways.
-     *
-     * @param \Ibexa\Contracts\Core\FieldType\StorageGatewayInterface $gateway
-     * @param \Psr\Log\LoggerInterface $logger
-     */
     public function __construct(StorageGatewayInterface $gateway, ?LoggerInterface $logger = null)
     {
         parent::__construct($gateway);
         $this->logger = $logger ?? new NullLogger();
     }
 
-    /**
-     * @see \Ibexa\Contracts\Core\FieldType\FieldStorage
-     *
-     * @param \Ibexa\Contracts\Core\Persistence\Content\VersionInfo $versionInfo
-     * @param \Ibexa\Contracts\Core\Persistence\Content\Field $field
-     * @param array $context
-     *
-     * @return bool|mixed
-     */
     public function storeFieldData(VersionInfo $versionInfo, Field $field, array $context)
     {
         $url = $field->value->externalData;
@@ -92,16 +77,6 @@ class ExternalLinkStorage extends GatewayBasedStorage
         $field->value->externalData = $map[$id] ?? null;
     }
 
-    /**
-     * Deletes field data for all $fieldIds in the version identified by
-     * $versionInfo.
-     *
-     * @param \Ibexa\Contracts\Core\Persistence\Content\VersionInfo $versionInfo
-     * @param array $fieldIds
-     * @param array $context
-     *
-     * @return bool
-     */
     public function deleteFieldData(VersionInfo $versionInfo, array $fieldIds, array $context)
     {
         foreach ($fieldIds as $fieldId) {
@@ -109,23 +84,11 @@ class ExternalLinkStorage extends GatewayBasedStorage
         }
     }
 
-    /**
-     * Checks if field type has external data to deal with.
-     *
-     * @return bool
-     */
     public function hasFieldData()
     {
         return true;
     }
 
-    /**
-     * @param \Ibexa\Contracts\Core\Persistence\Content\VersionInfo $versionInfo
-     * @param \Ibexa\Contracts\Core\Persistence\Content\Field $field
-     * @param array $context
-     *
-     * @return \Ibexa\Contracts\Core\Search\Field[]
-     */
     public function getIndexData(VersionInfo $versionInfo, Field $field, array $context)
     {
     }

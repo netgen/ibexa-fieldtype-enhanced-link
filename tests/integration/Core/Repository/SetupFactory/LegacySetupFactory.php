@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Integration\Core\Repository\SetupFactory;
 
+use Exception;
 use Ibexa\Contracts\Core\Test\Repository\SetupFactory\Legacy as CoreLegacySetupFactory;
 use RuntimeException;
 use Symfony\Component\Config\FileLocator;
@@ -15,9 +16,7 @@ use function realpath;
 class LegacySetupFactory extends CoreLegacySetupFactory
 {
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $containerBuilder
-     *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function externalBuildContainer(ContainerBuilder $containerBuilder): void
     {

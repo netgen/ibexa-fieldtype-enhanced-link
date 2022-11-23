@@ -16,9 +16,6 @@ class FieldValueTransformer implements DataTransformerInterface
 {
     private FieldType $fieldType;
 
-    /**
-     * @param FieldType $fieldType
-     */
     public function __construct(FieldType $fieldType)
     {
         $this->fieldType = $fieldType;

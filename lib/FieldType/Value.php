@@ -21,9 +21,8 @@ class Value extends BaseValue
      * @noinspection PhpMissingParentConstructorInspection
      *
      * @param mixed|null $reference
-     * @param mixed $target
      */
-    public function __construct($reference = null, ?string $label = null, $target = Type::TARGET_LINK, ?string $suffix = null)
+    public function __construct($reference = null, ?string $label = null, string $target = Type::TARGET_LINK, ?string $suffix = null)
     {
         $this->reference = $reference;
         $this->label = $label;

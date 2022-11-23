@@ -701,11 +701,6 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         return $fieldType;
     }
 
-    /**
-     * Returns the validator configuration schema expected from the field type.
-     *
-     * @return array
-     */
     protected function getValidatorConfigurationSchemaExpectation(): array
     {
         return [];

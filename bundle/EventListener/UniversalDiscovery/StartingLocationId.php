@@ -9,9 +9,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class StartingLocationId implements EventSubscriberInterface
 {
-    /**
-     * @return array
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -19,9 +16,6 @@ class StartingLocationId implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param \Ibexa\AdminUi\UniversalDiscovery\Event\ConfigResolveEvent $event
-     */
     public function onUdwConfigResolve(ConfigResolveEvent $event): void
     {
         $configName = $event->getConfigName();
