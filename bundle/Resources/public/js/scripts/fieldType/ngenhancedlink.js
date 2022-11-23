@@ -1,62 +1,177 @@
 (function (global, doc, ibexa, React, ReactDOM, Translator) {
     const CLASS_FIELD_SINGLE = 'ibexa-field-edit--ngenhancedlink';
     const SELECTOR_FIELD = '.ibexa-field-edit--ngenhancedlink';
-    const SELECTOR_INPUT = '.internal_link_id';
+    const otherValue = {
+        internal: 'external',
+        external: 'internal'
+    };
+    const CLASS_REQUIRED_BY_LINK_TYPE = {
+        internal: '.internal-required-field',
+        external: '.external-required-field',
+    }
+    const ID_FIELD_SELECTOR = '.internal-link-id';
+
+    const IBEXA_SUBFIELD_WRAPPER = 'ibexa-data-source__field'
     const SELECTOR_BTN_ADD = '.ibexa-relations__table-action--create';
     const SELECTOR_ROW = '.ibexa-relations__item';
-    const EVENT_CUSTOM = 'validateInput';
 
-    class EzObjectRelationListValidator extends ibexa.BaseFieldValidator {
-        /**
-         * Validates the input
-         *
-         * @method validateInput
-         * @param {Event} event
-         * @returns {Object}
-         * @memberof EzObjectRelationListValidator
-         */
-        validateInput({ currentTarget }) {
-            const isRequired = currentTarget.required;
-            const isEmpty = !currentTarget.value.length;
-            const hasCorrectValues = currentTarget.value.split(',').every((id) => !isNaN(parseInt(id, 10)));
-            const fieldContainer = currentTarget.closest(SELECTOR_FIELD);
-            const label = fieldContainer.querySelector('.ibexa-field-edit__label').innerHTML;
-            const result = { isError: false };
 
-            if (isRequired && isEmpty) {
-                result.isError = true;
-                result.errorMessage = ibexa.errors.emptyField.replace('{fieldName}', label);
-            } else if (!isEmpty && !hasCorrectValues) {
-                result.isError = true;
-                result.errorMessage = ibexa.errors.invalidValue.replace('{fieldName}', label);
+    const requiredFieldContainerClass = 'ibexa-field-edit--required';
+    const requiredSubFieldContainerClass = 'ibexa-data-source__field--required';
+
+    const INTERNAL_RELATION_FIELD_NAME = 'Related object';
+
+    class NGEnhancedLinkValidator extends ibexa.BaseFieldValidator {
+        constructor(props) {
+            super(props);
+
+            this.allowedLinkType = this.fieldContainer.querySelector('.link-type-options').dataset.allowedLinkType;
+            this.isRequired = this.fieldContainer.classList.contains(requiredFieldContainerClass);
+
+            const fieldName = this.fieldContainer.querySelector('.ibexa-field-edit__label').innerHTML;
+            this.validationResult = {
+                isError: false,
+                errorMessage: ibexa.errors.emptyField.replace('{fieldName}', fieldName),
+            };
+        }
+
+        validateInput(fieldElement) {
+            const isRequiredSubField = fieldElement.required;
+            const isEmptySubField = !fieldElement.value.length;
+
+            return !isRequiredSubField || !isEmptySubField;
+        }
+
+        validateField(config, event) {
+            this.validationResult.isError = false;
+            const selectedLinkType = [...this.fieldContainer.querySelectorAll('.link-type-options input[type="radio"]')].find(option => option.checked)?.value;
+
+            if (selectedLinkType !== undefined) {
+                const wrappersSelector = `.${selectedLinkType}-link-form > .${requiredSubFieldContainerClass}`;
+                const currentTypeFormElements = this.fieldContainer.querySelectorAll(`${wrappersSelector} input, ${wrappersSelector} select`);
+                currentTypeFormElements.forEach(element => {
+                    const isValidInput = this.validateInput(element);
+                    this.validationResult.isError ||= !isValidInput;
+                    if (element.id === event.target.id) {
+                        this.toggleInputError(isValidInput, element);
+                    }
+                });
+
+                if (this.allowedLinkType === 'all') {
+                    const otherWrappersSelector = `.${otherValue[selectedLinkType]}-link-form > .${requiredSubFieldContainerClass}`;
+                    const otherTypeFormElements = this.fieldContainer.querySelectorAll(`${otherWrappersSelector} input, ${wrappersSelector} select`);
+                    otherTypeFormElements.forEach(element => {
+                        console.log({element});
+                        this.toggleInputError(true, element);
+                    });
+                }
+            } else if (this.isRequired) {
+                this.validationResult.isError = true;
             }
 
-            return result;
+            this.validationResult.isError &&= this.isRequired;
+
+            this.toggleError(this.validationResult, this.fieldContainer);
+
+            return this.validationResult;
+        }
+
+        toggleError(validationResult, inputWrapper) {
+            const errorElement = [...inputWrapper.children].find(el => el.classList.contains('ibexa-form-error'));
+
+            if (validationResult.isError) {
+                inputWrapper.classList.add(this.classInvalid);
+                errorElement.innerText = validationResult.errorMessage;
+            } else {
+                inputWrapper.classList.remove(this.classInvalid);
+                errorElement.innerText = '';
+            }
+        }
+
+        toggleInputError(isValid, inputElement) {
+            const subFieldName = inputElement.name.split('][').slice(-1)[0].slice(0, -1);
+            if (!subFieldName) {
+                return;
+            }
+
+            const subFieldWrapper = this.fieldContainer.querySelector(`.${IBEXA_SUBFIELD_WRAPPER}--${subFieldName}`);
+
+            const validationResult = {isError: !isValid};
+            if (validationResult.isError) {
+                const label = subFieldWrapper.querySelector('label.ibexa-label')?.innerHTML ?? INTERNAL_RELATION_FIELD_NAME;
+                validationResult.errorMessage = ibexa.errors.emptyField.replace('{fieldName}', label);
+
+                inputElement.classList.add(this.classInvalid);
+            } else {
+                inputElement.classList.remove(this.classInvalid);
+            }
+
+            this.toggleError(validationResult, subFieldWrapper);
         }
     }
 
     [...doc.querySelectorAll(SELECTOR_FIELD)].forEach((fieldContainer) => {
-        const validator = new EzObjectRelationListValidator({
+        /** LINK TYPES */
+        const typeOptionsWrapper = fieldContainer.querySelector('.link-type-options');
+        const allowedLinkType = fieldContainer.querySelector('.link-type-options').dataset.allowedLinkType;
+        const linkTypeOptionsInputs = typeOptionsWrapper.querySelectorAll('.form-check input[type="radio"]');
+
+        if (allowedLinkType === 'all') {
+            typeOptionsWrapper.classList.remove('hidden');
+
+            const handleLinkTypeChange = (option, container) => {
+                if (!option.checked) {
+                    return;
+                }
+
+                container.querySelector(`.${option.value}-link-form`).classList.remove('hidden');
+                container.querySelector(`.${otherValue[option.value]}-link-form`).classList.add('hidden');
+            };
+
+            linkTypeOptionsInputs.forEach(linkTypeOption => {
+                const parent = linkTypeOption.parentElement;
+                const type = linkTypeOption.value;
+                parent.appendChild(fieldContainer.querySelector(`.${type}-link-form`));
+
+                linkTypeOption.addEventListener('change', handleLinkTypeChange.bind(null, linkTypeOption, typeOptionsWrapper));
+            });
+            linkTypeOptionsInputs.forEach(option => handleLinkTypeChange(option, typeOptionsWrapper));
+        } else {
+            fieldContainer.querySelector(`.${allowedLinkType}-link-form`).classList.remove('hidden');
+            typeOptionsWrapper.querySelector(`.form-check input[type="radio"][value="${allowedLinkType}"]`).checked = true;
+        }
+        /** /LINK TYPES */
+
+
+        /** VALIDATOR */
+        const eventsMap = [];
+        if (allowedLinkType !== 'external') {
+            eventsMap.push({
+                selector: CLASS_REQUIRED_BY_LINK_TYPE.internal,
+                eventName: 'blur',
+            });
+        }
+        if (allowedLinkType !== 'internal') {
+            eventsMap.push({
+                selector: CLASS_REQUIRED_BY_LINK_TYPE.external,
+                eventName: 'blur',
+            });
+        }
+
+        const validator = new NGEnhancedLinkValidator({
             classInvalid: 'is-invalid',
             fieldContainer,
-            eventsMap: [
-                {
-                    selector: SELECTOR_INPUT,
-                    eventName: 'blur',
-                    callback: 'validateInput',
-                    errorNodeSelectors: ['.ibexa-form-error'],
-                },
-                {
-                    isValueValidator: false,
-                    selector: SELECTOR_INPUT,
-                    eventName: EVENT_CUSTOM,
-                    callback: 'validateInput',
-                    errorNodeSelectors: ['.ibexa-form-error'],
-                },
-            ],
+            eventsMap,
         });
+        validator.init();
+        ibexa.addConfig('fieldTypeValidators', [validator], true);
+        /** /VALIDATOR */
+
+
+
+
         const udwContainer = doc.getElementById('react-udw');
-        const sourceInput = fieldContainer.querySelector(SELECTOR_INPUT);
+        const relationIdInput = fieldContainer.querySelector(ID_FIELD_SELECTOR);
         const relationsContainer = fieldContainer.querySelector('.ibexa-relations__list');
         const relationsWrapper = fieldContainer.querySelector('.ibexa-relations__wrapper');
         const relationsCTA = fieldContainer.querySelector('.ibexa-relations__cta');
@@ -83,8 +198,8 @@
             ibexa.helpers.tooltips.parse();
         };
         const updateInputValue = (items) => {
-            sourceInput.value = items.join();
-            sourceInput.dispatchEvent(new CustomEvent(EVENT_CUSTOM));
+            relationIdInput.value = items.join();
+            relationIdInput.dispatchEvent(new FocusEvent('blur'));
         };
         const onConfirm = (items) => {
             items = excludeDuplicatedItems(items);
@@ -131,7 +246,10 @@
             );
         };
         const excludeDuplicatedItems = (items) => {
-            selectedItemsMap = items.reduce((total, item) => ({ ...total, [item.ContentInfo.Content._id]: item }), selectedItemsMap);
+            selectedItemsMap = items.reduce((total, item) => ({
+                ...total,
+                [item.ContentInfo.Content._id]: item
+            }), selectedItemsMap);
 
             return items.filter((item) => selectedItemsMap[item.ContentInfo.Content._id]);
         };
@@ -271,43 +389,8 @@
             updateInputValue(selectedItems);
         };
         let selectedItems = [...fieldContainer.querySelectorAll(SELECTOR_ROW)].map((row) => parseInt(row.dataset.contentId, 10));
-        let selectedItemsMap = selectedItems.reduce((total, item) => ({ ...total, [item]: item }), {});
+        let selectedItemsMap = selectedItems.reduce((total, item) => ({...total, [item]: item}), {});
 
-        /** LINK TYPES */
-        const typeOptionsWrapper = fieldContainer.querySelector('.link-type-options');
-        const allowedLinkType = fieldContainer.querySelector('.link-type-options').dataset.allowedLinkType;
-        const linkTypeOptionsInputs = typeOptionsWrapper.querySelectorAll('.form-check input[type="radio"]');
-
-        const otherValue = {
-            internal: 'external',
-            external: 'internal'
-        };
-        if (allowedLinkType === 'all') {
-            typeOptionsWrapper.classList.remove('hidden');
-
-            const handleLinkTypeChange = (option, container) => {
-                if (!option.checked) {
-                    return;
-                }
-    
-                container.querySelector(`.${option.value}-link-form`).classList.remove('hidden');
-                container.querySelector(`.${otherValue[option.value]}-link-form`).classList.add('hidden');
-            };
-
-            linkTypeOptionsInputs.forEach(linkTypeOption => {
-                const parent = linkTypeOption.parentElement;
-                const type = linkTypeOption.value;
-                parent.appendChild(fieldContainer.querySelector(`.${type}-link-form`));
-
-                linkTypeOption.addEventListener('change', handleLinkTypeChange.bind(null, linkTypeOption, typeOptionsWrapper));
-            });
-            linkTypeOptionsInputs.forEach(option => handleLinkTypeChange(option, typeOptionsWrapper));
-        } else {
-            fieldContainer.querySelector(`.${allowedLinkType}-link-form`).classList.remove('hidden');
-            typeOptionsWrapper.querySelector(`.form-check input[type="radio"][value="${allowedLinkType}"]`).checked = true;
-        }
-        /** LINK TYPES */
-        
         updateAddBtnState();
         attachRowsEventHandlers();
 
@@ -325,9 +408,5 @@
         }
 
         relationsContainer.addEventListener('change', updateTrashBtnState, false);
-
-        validator.init();
-
-        ibexa.addConfig('fieldTypeValidators', [validator], true);
     });
 })(window, window.document, window.ibexa, window.React, window.ReactDOM, window.Translator);
