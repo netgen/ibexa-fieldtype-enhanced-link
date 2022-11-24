@@ -7,6 +7,7 @@ namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Integration\Core\Repository\Fi
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\Core\Repository\Values\Content\Relation as APIRelation;
+use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
 use Ibexa\Core\Repository\Values\Content\Relation;
 use Ibexa\Tests\Integration\Core\Repository\FieldType\BaseIntegrationTest;
@@ -122,9 +123,6 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         return [];
     }
 
-    /**
-     * Get a valid $fieldSettings value.
-     */
     public function getValidFieldSettings(): array
     {
         return [
@@ -139,17 +137,11 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         ];
     }
 
-    /**
-     * Get a valid $validatorConfiguration.
-     */
     public function getValidValidatorConfiguration(): array
     {
         return [];
     }
 
-    /**
-     * Get $fieldSettings value not accepted by the field type.
-     */
     public function getInvalidFieldSettings(): array
     {
         return [
@@ -160,25 +152,16 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         ];
     }
 
-    /**
-     * Get $validatorConfiguration not accepted by the field type.
-     */
     public function getInvalidValidatorConfiguration(): array
     {
         return ['noValidator' => true];
     }
 
-    /**
-     * Get initial field data for valid object creation.
-     */
     public function getValidCreationFieldData(): Value
     {
         return new Value(4, 'label', Type::TARGET_LINK, 'suffix');
     }
 
-    /**
-     * Get initial field data for valid object creation.
-     */
     public function getValidExternalCreationFieldData(): Value
     {
         return new Value('https://www.google.com/', 'label', Type::TARGET_LINK);
@@ -269,10 +252,8 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
      *
      * @param mixed $settings
      * @param mixed $expectedSettings
-     *
-     * @return \Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType
      */
-    public function testCreateContentTypes($settings, $expectedSettings)
+    public function testCreateContentTypes($settings, $expectedSettings): ContentType
     {
         $contentType = $this->createContentType(
             $settings,

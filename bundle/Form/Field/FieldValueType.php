@@ -28,10 +28,6 @@ class FieldValueType extends AbstractType
     private ContentTypeService $contentTypeService;
     private FieldTypeService $fieldTypeService;
 
-    /**
-     * @param \Ibexa\Contracts\Core\Repository\ContentService $contentService
-     * @param \Ibexa\Contracts\Core\Repository\ContentTypeService $contentTypeService
-     */
     public function __construct(
         ContentService $contentService,
         ContentTypeService $contentTypeService,

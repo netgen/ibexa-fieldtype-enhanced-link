@@ -235,9 +235,6 @@ class Type extends FieldType
         return '';
     }
 
-    /**
-     * @return \Ibexa\Core\FieldType\ValidationError[]
-     */
     public function validate(FieldDefinition $fieldDefinition, SPIValue $value): array
     {
         /** @var Value $value */
@@ -303,13 +300,6 @@ class Type extends FieldType
         return new Value();
     }
 
-    /**
-     * Returns if the given $value is considered empty by the field type.
-     *
-     * @param mixed $value
-     *
-     * @return bool
-     */
     public function isEmptyValue(SPIValue $value): bool
     {
         /* @var Value $value */
@@ -399,15 +389,6 @@ class Type extends FieldType
         );
     }
 
-    /**
-     * Converts a persistence $fieldValue to a Value.
-     *
-     * This method builds a field type value from the $data and $externalData properties.
-     *
-     * @param FieldValue $fieldValue
-     *
-     * @return Value
-     */
     public function fromPersistenceValue(FieldValue $fieldValue): Value
     {
         if (is_array($fieldValue->data) && array_key_exists('type', $fieldValue->data)) {
@@ -437,9 +418,6 @@ class Type extends FieldType
         return $this->getEmptyValue();
     }
 
-    /**
-     * @param int|string|\Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo|Value $inputValue
-     */
     protected function createValueFromInput($inputValue)
     {
         if ($inputValue instanceof ContentInfo) {
@@ -453,10 +431,6 @@ class Type extends FieldType
     }
 
     /**
-     * Throws an exception if value structure is not of expected format.
-     *
-     * @param Value $value
-     *
      *@throws \Ibexa\Contracts\Core\Repository\Exceptions\InvalidArgumentException if the value does not match the expected structure
      */
     protected function checkValueStructure(BaseValue $value): void

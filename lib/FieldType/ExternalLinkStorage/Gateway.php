@@ -7,8 +7,8 @@ namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage;
 use Ibexa\Contracts\Core\FieldType\StorageGateway;
 
 /**
- * Abstract gateway class for Url field type.
- * Handles URL data.
+ * Abstract gateway class for enhanced link field type.
+ * Handles external link URL data.
  */
 abstract class Gateway extends StorageGateway
 {
