@@ -51,27 +51,21 @@ class FieldValueTransformer implements DataTransformerInterface
 
     public function reverseTransform($value): ?Value
     {
-        $linkType = $value['link_type'] ?? null;
-
-        if ($linkType === Type::LINK_TYPE_INTERNAL) {
-            if (isset($value['id'], $value['target_internal'])) {
-                return new Value(
-                    $value['id'],
-                    $value['label_internal'],
-                    $value['target_internal'],
-                    $value['suffix'] ?? null,
-                );
-            }
+        if ($value['link_type'] === Type::LINK_TYPE_INTERNAL) {
+            return new Value(
+                $value['id'],
+                $value['label_internal'],
+                $value['target_internal'],
+                $value['suffix'] ?? null,
+            );
         }
 
-        if ($linkType === Type::LINK_TYPE_EXTERNAL) {
-            if (isset($value['url'], $value['target_internal'])) {
-                return new Value(
-                    $value['url'],
-                    $value['label_external'],
-                    $value['target_external'],
-                );
-            }
+        if ($value['link_type'] === Type::LINK_TYPE_EXTERNAL) {
+            return new Value(
+                $value['url'],
+                $value['label_external'],
+                $value['target_external'],
+            );
         }
 
         return $this->fieldType->getEmptyValue();
