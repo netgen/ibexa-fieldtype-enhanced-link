@@ -244,7 +244,8 @@ class Type extends FieldType
             return $validationErrors;
         }
 
-        $allowedLinkType = $fieldDefinition->getFieldSettings()['allowedLinkType'] ?? '';
+        $allowedLinkType = $fieldDefinition->getFieldSettings()['allowedLinkType'] ?? null;
+
         if (($allowedLinkType === self::LINK_TYPE_EXTERNAL && !$value->isTypeExternal()) || ($allowedLinkType === self::LINK_TYPE_INTERNAL && !$value->isTypeInternal())) {
             $validationErrors[] = new ValidationError(
                 'Link type is not allowed. Must be of type %type%',

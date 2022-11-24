@@ -20,10 +20,14 @@ class Value extends BaseValue
      * @noinspection MagicMethodsValidityInspection
      * @noinspection PhpMissingParentConstructorInspection
      *
-     * @param mixed|null $reference
+     * @param ?int|?string $reference
      */
-    public function __construct($reference = null, ?string $label = null, string $target = Type::TARGET_LINK, ?string $suffix = null)
-    {
+    public function __construct(
+        $reference = null,
+        ?string $label = null,
+        string $target = Type::TARGET_LINK,
+        ?string $suffix = null
+    ) {
         $this->reference = $reference;
         $this->label = $label;
         $this->target = $target;
@@ -35,6 +39,7 @@ class Value extends BaseValue
         if (is_string($this->reference)) {
             return $this->reference;
         }
+
         if (is_int($this->reference)) {
             return (string) $this->reference;
         }
