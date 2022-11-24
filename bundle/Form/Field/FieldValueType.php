@@ -58,10 +58,10 @@ class FieldValueType extends AbstractType
             ChoiceType::class,
             [
                 'choices' => [
-                    'field_edit.ngenhancedlink.link_type.' . Type::LINK_TYPE_INTERNAL => Type::LINK_TYPE_INTERNAL,
-                    'field_edit.ngenhancedlink.link_type.' . Type::LINK_TYPE_EXTERNAL => Type::LINK_TYPE_EXTERNAL,
+                    'ngenhancedlink.link_type.' . Type::LINK_TYPE_INTERNAL => Type::LINK_TYPE_INTERNAL,
+                    'ngenhancedlink.link_type.' . Type::LINK_TYPE_EXTERNAL => Type::LINK_TYPE_EXTERNAL,
                 ],
-                'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.link_type',
+                'label' => /* @Desc("Text") */ 'ngenhancedlink.link_type',
                 'required' => true,
                 'multiple' => false,
                 'expanded' => true,
@@ -87,7 +87,7 @@ class FieldValueType extends AbstractType
                 'suffix',
                 TextType::class,
                 [
-                    'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.suffix',
+                    'label' => /* @Desc("Text") */ 'ngenhancedlink.suffix',
                     'required' => false,
                     'disabled' => false,
                 ],
@@ -98,7 +98,7 @@ class FieldValueType extends AbstractType
             'label_internal',
             TextType::class,
             [
-                'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.label',
+                'label' => /* @Desc("Text") */ 'ngenhancedlink.label',
                 'required' => false,
             ],
         );
@@ -108,12 +108,12 @@ class FieldValueType extends AbstractType
             ChoiceType::class,
             [
                 'choices' => [
-                    'field_edit.ngenhancedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
-                    'field_edit.ngenhancedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
-                    'field_edit.ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
-                    'field_edit.ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
+                    'ngenhancedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
+                    'ngenhancedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
+                    'ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
+                    'ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
                 ],
-                'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.target',
+                'label' => /* @Desc("Text") */ 'ngenhancedlink.target',
                 'required' => true,
                 'attr' => [
                     'class' => 'internal-required-field',
@@ -125,7 +125,7 @@ class FieldValueType extends AbstractType
             'url',
             UrlType::class,
             [
-                'label' => /* @Desc("URL") */ 'field_edit.ngenhancedlink.url',
+                'label' => /* @Desc("URL") */ 'ngenhancedlink.url',
                 'required' => $options['required'],
                 'attr' => [
                     'class' => $options['required'] ? 'external-required-field' : '',
@@ -137,7 +137,7 @@ class FieldValueType extends AbstractType
             'label_external',
             TextType::class,
             [
-                'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.label',
+                'label' => /* @Desc("Text") */ 'ngenhancedlink.label',
                 'required' => false,
             ],
         );
@@ -147,12 +147,12 @@ class FieldValueType extends AbstractType
             ChoiceType::class,
             [
                 'choices' => [
-                    'field_edit.ngenhancedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
-                    'field_edit.ngenhancedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
-                    'field_edit.ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
-                    'field_edit.ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
+                    'ngenhancedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
+                    'ngenhancedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
+                    'ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
+                    'ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
                 ],
-                'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.target',
+                'label' => /* @Desc("Text") */ 'ngenhancedlink.target',
                 'required' => true,
                 'attr' => [
                     'class' => 'external-required-field',

@@ -62,7 +62,7 @@ class Value extends BaseValue
         return $this->target === Type::TARGET_MODAL;
     }
 
-    public function isTargetInPlace(): bool
+    public function isTargetEmbed(): bool
     {
         return $this->target === Type::TARGET_EMBED;
     }

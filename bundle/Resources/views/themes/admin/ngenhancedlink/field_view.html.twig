@@ -1,4 +1,3 @@
-{# remove or consolidate with ui/field_type/preview #}
 {% extends '@IbexaCore/content_fields.html.twig' %}
 
 {% trans_default_domain 'field_view' %}
@@ -6,16 +5,15 @@
 {% block ngenhancedlink_field %}
     {% apply spaceless %}
         {% if not ibexa_field_is_empty( content, field ) %}
-            {% set attr = attr|merge({'class': (attr.class|default('') ~ ' ibexa-field-preview ibexa-field-preview--ezobjectrelationlist')|trim}) %}
-            <h1>THIS IS TEMPLATE FOR ADMIN VIEW (PREVIEW)</h1>
+            {% set attr = attr|merge({'class': (attr.class|default('') ~ ' ibexa-field-preview ibexa-field-preview--ngenhancedlink')|trim}) %}
             <div {{ block( 'field_attributes' ) }}>
                 {% if field.value.isTypeInternal%}
                     {% embed '@ibexadesign/ui/component/table/table.html.twig' with {
-                        headline: 'ezobjectrelation.single_relation'|trans|desc('Enhanced link'),
+                        headline: 'ngenhancedlink.single_relation'|trans|desc('Enhanced link'),
                         head_cols: [
-                            { content: 'ezobjectrelation.name'|trans|desc('Name') },
-                            { content: 'ezobjectrelation.content_type'|trans|desc('Content Type') },
-                            { content: 'ezobjectrelation.created'|trans|desc('Created') },
+                            { content: 'ngenhancedlink.name'|trans|desc('Name') },
+                            { content: 'ngenhancedlink.content_type'|trans|desc('Content Type') },
+                            { content: 'ngenhancedlink.created'|trans|desc('Created') },
                         ],
                     } %}
                         {% block tbody %}
@@ -28,48 +26,26 @@
                             {% endembed %}
                         {% endblock %}
                     {% endembed %}
-                    <h3>Label: {{ field.value.label }}</h3>
-                    <h3>Type: internal</h3>
-                    <h3>Target: {{ field.value.target }}</h3>
-                    <h3>Suffix: {{ field.value.suffix }}</h3>
+                    <p>Type: internal</p>
+                    <p>Label: {{ field.value.label }}</p>
+                    <p>Target: {{ field.value.target }}</p>
+                    <p>Suffix: {{ field.value.suffix }}</p>
                 {% endif %}
                 {% if field.value.isTypeExternal %}
-                    <h2>{% if not ibexa_field_is_empty( content, field ) %}
-                            <a href="{{ field.value.reference }}"
-                                    {{ block( 'field_attributes' ) }}>{{ field.value.label ? field.value.label : field.value.reference }}</a>
-                        {% endif %}</h2>
-                    <h3>URL: {{ field.value.reference }}</h3>
-                    <h3>Label: {{ field.value.label }}</h3>
-                    <h3>Type: external</h3>
-                    <h3>Target: {{ field.value.target }}</h3>
-                    <h3>Suffix: {{ field.value.suffix }}</h3>
+                    <h3>
+                        {% if not ibexa_field_is_empty( content, field ) %}
+                            <a href="{{ field.value.reference }}" {{ block( 'field_attributes' ) }}>
+                                {{ field.value.label ? field.value.label : field.value.reference }}
+                            </a>
+                        {% endif %}
+                    </h3>
+                    <p>Type: external</p>
+                    <p>URL: {{ field.value.reference }}</p>
+                    <p>Label: {{ field.value.label }}</p>
+                    <p>Target: {{ field.value.target }}</p>
                 {% endif %}
             </div>
         {% endif %}
-    {% endapply %}
-{% endblock %}
-
-
-
-{# The simple_block_field block is a shorthand html block-based fields (like eztext or ezrichtext) #}
-{# You can define a field_value variable before rendering this one if you need special operation for rendering content (i.e. nl2br) #}
-{% block simple_block_field %}
-    {% apply spaceless %}
-        {% if field_value is not defined %}
-            {% set field_value = field.value %}
-        {% endif %}
-        <div {{ block( 'field_attributes' ) }}>
-    {% endapply %}{{ field_value|raw }}{% apply spaceless %}
-    </div>
-{% endapply %}
-{% endblock %}
-
-{% block simple_inline_field %}
-    {% apply spaceless %}
-        {% if field_value is not defined %}
-            {% set field_value = field.value %}
-        {% endif %}
-        <span {{ block( 'field_attributes' ) }}>{{ field_value }}</span>
     {% endapply %}
 {% endblock %}
 

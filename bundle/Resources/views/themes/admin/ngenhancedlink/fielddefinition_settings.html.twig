@@ -8,25 +8,25 @@
 {% trans_default_domain "fielddefinition" %}
 
 {% block ngenhancedlink_settings %}
-    <h1>WHAT IS THIS? APPARENTLY IT'S NOT USED IN ADMIN</h1>
-<ul class="ibexa-fielddefinition-settings ibexa-fielddefinition-{{ fielddefinition.fieldTypeIdentifier }}-settings">
-    <li class="ibexa-fielddefinition-setting selection-method">
-        <div class="ibexa-fielddefinition-setting-name">{{ 'fielddefinition.selection-method.label'|trans|desc("Selection method:")}}</div>
-        <div class="ibexa-fielddefinition-setting-value">
-        {% if settings.selectionMethod == 0 %}
-            {{ 'fielddefinition.selection-method.browse'|trans|desc("Browse")}}
-        {% elseif settings.selectionMethod == 1 %}
-            {{ 'fielddefinition.selection-method.list'|trans|desc("Drop-down list")}}
-        {% else %}
-            {{ 'fielddefinition.selection-method.tree'|trans|desc("Drop-down tree")}}
-        {% endif %}
-        </div>
-    </li>
-    {{ block( 'ngenhancedlink_settings_selection_content_types' ) }}
+    <h1>AT THE MOMENT THIS IS NOT USED ANYWHERE IN THE ADMIN UI, NEEDS TO BE COMPLETED IF USED</h1>
+    <ul class="ibexa-fielddefinition-settings ibexa-fielddefinition-{{ fielddefinition.fieldTypeIdentifier }}-settings">
+        <li class="ibexa-fielddefinition-setting selection-method">
+            <div class="ibexa-fielddefinition-setting-name">{{ 'fielddefinition.selection-method.label'|trans|desc("Selection method:")}}</div>
+            <div class="ibexa-fielddefinition-setting-value">
+                {% if settings.selectionMethod == 0 %}
+                    {{ 'fielddefinition.selection-method.browse'|trans|desc("Browse")}}
+                {% elseif settings.selectionMethod == 1 %}
+                    {{ 'fielddefinition.selection-method.list'|trans|desc("Drop-down list")}}
+                {% else %}
+                    {{ 'fielddefinition.selection-method.tree'|trans|desc("Drop-down tree")}}
+                {% endif %}
+            </div>
+        </li>
+        {{ block( 'ngenhancedlink_settings_selection_content_types' ) }}
 
-    {% set rootLocationId = settings.selectionRoot %}
-    {{ block( 'ngenhancedlink_settings_selectionroot' ) }}
-</ul>
+        {% set rootLocationId = settings.selectionRoot %}
+        {{ block( 'ngenhancedlink_settings_selectionroot' ) }}
+    </ul>
 {% endblock %}
 
 {% block ngenhancedlink_settings_selectionroot %}
