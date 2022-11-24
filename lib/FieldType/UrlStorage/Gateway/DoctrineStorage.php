@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway;
+namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Ibexa\Core\Persistence\Legacy\URL\Gateway\DoctrineDatabase;
-use Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway;
+use Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway;
 use PDO;
 
 use function md5;

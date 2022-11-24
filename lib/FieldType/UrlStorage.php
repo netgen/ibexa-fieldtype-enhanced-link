@@ -11,7 +11,7 @@ use Ibexa\Contracts\Core\Persistence\Content\VersionInfo;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class ExternalLinkStorage extends GatewayBasedStorage
+class UrlStorage extends GatewayBasedStorage
 {
     protected LoggerInterface $logger;
 

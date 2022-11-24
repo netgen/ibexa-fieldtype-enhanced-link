@@ -52,14 +52,14 @@ services:
             $contentHandler: '@Ibexa\Contracts\Core\Persistence\Content\Handler'
             $contentTypeHandler: '@Ibexa\Contracts\Core\Persistence\Content\Type\Handler'
 
-    Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway\DoctrineStorage:
-        class: Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway\DoctrineStorage
+    Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway\DoctrineStorage:
+        class: Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway\DoctrineStorage
         arguments: [ '@ibexa.api.storage_engine.legacy.connection' ]
 
-    Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage:
-        class: Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage
+    Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage:
+        class: Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage
         arguments:
-            - '@Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway\DoctrineStorage'
+            - '@Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway\DoctrineStorage'
             - "@?logger"
         tags:
             - { name: ibexa.field_type.storage.external.handler, alias: ngenhancedlink }

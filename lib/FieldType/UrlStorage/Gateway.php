@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage;
+namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage;
 
 use Ibexa\Contracts\Core\FieldType\StorageGateway;
 
