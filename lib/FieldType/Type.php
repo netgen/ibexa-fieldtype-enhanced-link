@@ -17,7 +17,6 @@ use Ibexa\Core\FieldType\ValidationError;
 use Ibexa\Core\FieldType\Value as BaseValue;
 
 use function array_intersect;
-use function array_key_exists;
 use function count;
 use function in_array;
 use function is_array;
@@ -391,28 +390,28 @@ class Type extends FieldType
 
     public function fromPersistenceValue(FieldValue $fieldValue): Value
     {
-        if (is_array($fieldValue->data) && array_key_exists('type', $fieldValue->data)) {
-            $labelData = $fieldValue->data['label'] ?? null;
-            $suffixData = $fieldValue->data['suffix'] ?? null;
-            $targetData = $fieldValue->data['target'] ?? self::TARGET_LINK;
+        $id = $fieldValue->data['id'] ?? null;
+        $type = $fieldValue->data['type'] ?? null;
+        $label = $fieldValue->data['label'] ?? null;
+        $target = $fieldValue->data['target'] ?? self::TARGET_LINK;
+        $suffix = $fieldValue->data['suffix'] ?? null;
 
-            if ($fieldValue->data['type'] === self::LINK_TYPE_INTERNAL && array_key_exists('id', $fieldValue->data) && is_int($fieldValue->data['id'])) {
-                return new Value(
-                    $fieldValue->data['id'],
-                    $labelData,
-                    $targetData,
-                    $suffixData,
-                );
-            }
+        if ($type === self::LINK_TYPE_INTERNAL && is_int($id)) {
+            return new Value(
+                $id,
+                $label,
+                $target,
+                $suffix,
+            );
+        }
 
-            if ($fieldValue->data['type'] === self::LINK_TYPE_EXTERNAL && is_string($fieldValue->externalData)) {
-                return new Value(
-                    $fieldValue->externalData,
-                    $labelData,
-                    $targetData,
-                    $suffixData,
-                );
-            }
+        if ($type === self::LINK_TYPE_EXTERNAL && is_string($fieldValue->externalData)) {
+            return new Value(
+                $fieldValue->externalData,
+                $label,
+                $target,
+                $suffix,
+            );
         }
 
         return $this->getEmptyValue();
