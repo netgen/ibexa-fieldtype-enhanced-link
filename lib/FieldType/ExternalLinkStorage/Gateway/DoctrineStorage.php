@@ -141,13 +141,10 @@ class DoctrineStorage extends Gateway
     }
 
     /**
-     * @param mixed $fieldId
-     * @param mixed $versionNo
-     *
      * @throws \Doctrine\DBAL\Exception
      * @throws \Doctrine\DBAL\Driver\Exception
      */
-    public function unlinkUrl($fieldId, $versionNo, array $excludeUrlIds = []): void
+    public function unlinkUrl(int $fieldId, int $versionNo, array $excludeUrlIds = []): void
     {
         $selectQuery = $this->connection->createQueryBuilder();
         $selectQuery
@@ -215,6 +212,8 @@ class DoctrineStorage extends Gateway
      * That could be avoided if the feature is implemented there.
      *
      * URL is orphaned if it is not linked to a content attribute through ezurl_object_link table.
+     *
+     * @param int[] $potentiallyOrphanedUrls
      *
      * @throws \Doctrine\DBAL\Exception
      * @throws \Doctrine\DBAL\Driver\Exception
