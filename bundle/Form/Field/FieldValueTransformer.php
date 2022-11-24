@@ -21,11 +21,12 @@ class FieldValueTransformer implements DataTransformerInterface
         $this->fieldType = $fieldType;
     }
 
-    public function transform($value)
+    public function transform($value): ?array
     {
         if (!$value instanceof Value) {
             return null;
         }
+
         if ($value->isTypeExternal()) {
             return [
                 'url' => $value->reference,
@@ -34,6 +35,7 @@ class FieldValueTransformer implements DataTransformerInterface
                 'link_type' => Type::LINK_TYPE_EXTERNAL,
             ];
         }
+
         if ($value->isTypeInternal()) {
             return [
                 'suffix' => $value->suffix,
@@ -52,12 +54,22 @@ class FieldValueTransformer implements DataTransformerInterface
         if (is_array($value) && array_key_exists('link_type', $value)) {
             if ($value['link_type'] === Type::LINK_TYPE_INTERNAL) {
                 if (isset($value['id'], $value['target_internal'])) {
-                    return new Value($value['id'], $value['label_internal'], $value['target_internal'], $value['suffix']);
+                    return new Value(
+                        $value['id'],
+                        $value['label_internal'],
+                        $value['target_internal'],
+                        $value['suffix']
+                    );
                 }
             }
+
             if ($value['link_type'] === Type::LINK_TYPE_EXTERNAL) {
                 if (isset($value['url'], $value['target_internal'])) {
-                    return new Value($value['url'], $value['label_external'], $value['target_external']);
+                    return new Value(
+                        $value['url'],
+                        $value['label_external'],
+                        $value['target_external']
+                    );
                 }
             }
         }

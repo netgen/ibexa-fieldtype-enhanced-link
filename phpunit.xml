@@ -9,7 +9,6 @@
     <testsuites>
         <testsuite name="ngenhancedlink_field_type">
             <directory>tests/lib</directory>
-            <directory>tests/bundle</directory>
         </testsuite>
     </testsuites>
     <coverage>

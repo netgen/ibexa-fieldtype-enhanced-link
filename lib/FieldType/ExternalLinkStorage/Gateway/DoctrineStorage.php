@@ -25,7 +25,11 @@ class DoctrineStorage extends Gateway
         $this->connection = $connection;
     }
 
-    public function getIdUrlMap(array $ids)
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Doctrine\DBAL\Driver\Exception
+     */
+    public function getIdUrlMap(array $ids): array
     {
         $map = [];
 
@@ -41,7 +45,7 @@ class DoctrineStorage extends Gateway
                 ->setParameter(':ids', $ids, Connection::PARAM_INT_ARRAY);
 
             $statement = $query->execute();
-            foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            foreach ($statement->fetchAllAssociative() as $row) {
                 $map[$row['id']] = $row['url'];
             }
         }
@@ -49,7 +53,11 @@ class DoctrineStorage extends Gateway
         return $map;
     }
 
-    public function getUrlIdMap(array $urls)
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Doctrine\DBAL\Driver\Exception
+     */
+    public function getUrlIdMap(array $urls): array
     {
         $map = [];
 
@@ -67,7 +75,8 @@ class DoctrineStorage extends Gateway
                 ->setParameter(':urls', $urls, Connection::PARAM_STR_ARRAY);
 
             $statement = $query->execute();
-            foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
+
+            foreach ($statement->fetchAllAssociative() as $row) {
                 $map[$row['url']] = $row['id'];
             }
         }
@@ -75,7 +84,10 @@ class DoctrineStorage extends Gateway
         return $map;
     }
 
-    public function insertUrl($url)
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function insertUrl($url): int
     {
         $time = time();
 
@@ -104,7 +116,10 @@ class DoctrineStorage extends Gateway
         );
     }
 
-    public function linkUrl($urlId, $fieldId, $versionNo)
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function linkUrl($urlId, $fieldId, $versionNo): void
     {
         $query = $this->connection->createQueryBuilder();
 
@@ -125,6 +140,10 @@ class DoctrineStorage extends Gateway
         $query->execute();
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Doctrine\DBAL\Driver\Exception
+     */
     public function unlinkUrl($fieldId, $versionNo, array $excludeUrlIds = []): void
     {
         $selectQuery = $this->connection->createQueryBuilder();
@@ -132,7 +151,7 @@ class DoctrineStorage extends Gateway
             ->select('link.url_id')
             ->from($this->connection->quoteIdentifier(self::URL_LINK_TABLE), 'link')
             ->where(
-                $selectQuery->expr()->andX(
+                $selectQuery->expr()->and(
                     $selectQuery->expr()->in(
                         'link.contentobject_attribute_id',
                         ':contentobject_attribute_id',
@@ -193,6 +212,9 @@ class DoctrineStorage extends Gateway
      * That could be avoided if the feature is implemented there.
      *
      * URL is orphaned if it is not linked to a content attribute through ezurl_object_link table.
+     *
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Doctrine\DBAL\Driver\Exception
      */
     private function deleteOrphanedUrls(array $potentiallyOrphanedUrls): void
     {
@@ -217,8 +239,8 @@ class DoctrineStorage extends Gateway
         ;
 
         $statement = $query->execute();
+        $ids = $statement->fetchOne();
 
-        $ids = $statement->fetchAll(PDO::FETCH_COLUMN);
         if (empty($ids)) {
             return;
         }

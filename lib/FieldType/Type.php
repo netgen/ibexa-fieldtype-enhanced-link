@@ -430,11 +430,10 @@ class Type extends FieldType
         return $inputValue;
     }
 
-    /**
-     *@throws \Ibexa\Contracts\Core\Repository\Exceptions\InvalidArgumentException if the value does not match the expected structure
-     */
     protected function checkValueStructure(BaseValue $value): void
     {
+        /** @var \Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value $value */
+
         if (!$value->isTypeInternal() && !$value->isTypeExternal()) {
             throw new InvalidArgumentType(
                 '$value->reference',

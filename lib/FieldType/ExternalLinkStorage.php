@@ -24,22 +24,16 @@ class ExternalLinkStorage extends GatewayBasedStorage
         $this->logger = $logger ?? new NullLogger();
     }
 
-    public function storeFieldData(VersionInfo $versionInfo, Field $field, array $context)
+    public function storeFieldData(VersionInfo $versionInfo, Field $field, array $context): bool
     {
-        $url = $field->value->externalData;
+        $url = (string) $field->value->externalData;
 
         if (empty($url)) {
             return false;
         }
 
         $map = $this->gateway->getUrlIdMap([$url]);
-
-        if (isset($map[$url])) {
-            $urlId = $map[$url];
-        } else {
-            $urlId = $this->gateway->insertUrl($url);
-        }
-
+        $urlId = $map[$url] ?? $this->gateway->insertUrl($url);
         $this->gateway->linkUrl($urlId, $field->id, $versionInfo->versionNo);
 
         $this->gateway->unlinkUrl(
@@ -50,26 +44,24 @@ class ExternalLinkStorage extends GatewayBasedStorage
 
         $field->value->data['id'] = $urlId;
 
-        // Signals that the Value has been modified and that an update is to be performed
         return true;
     }
 
-    public function getFieldData(VersionInfo $versionInfo, Field $field, array $context)
+    public function getFieldData(VersionInfo $versionInfo, Field $field, array $context): void
     {
         if ($field->value->data === null) {
             return;
         }
 
         $id = $field->value->data['id'];
-        if (empty($id) || $field->value->data['type'] !== Type::LINK_TYPE_EXTERNAL) {
-            // $field->value->externalData = null;
+        $type = $field->value->data['type'] ?? null;
 
+        if (empty($id) || $type !== Type::LINK_TYPE_EXTERNAL) {
             return;
         }
 
         $map = $this->gateway->getIdUrlMap([$id]);
 
-        // URL id is not in the DB
         if (!isset($map[$id])) {
             $this->logger->error("URL with ID '{$id}' not found");
         }
@@ -77,14 +69,14 @@ class ExternalLinkStorage extends GatewayBasedStorage
         $field->value->externalData = $map[$id] ?? null;
     }
 
-    public function deleteFieldData(VersionInfo $versionInfo, array $fieldIds, array $context)
+    public function deleteFieldData(VersionInfo $versionInfo, array $fieldIds, array $context): void
     {
         foreach ($fieldIds as $fieldId) {
             $this->gateway->unlinkUrl($fieldId, $versionInfo->versionNo);
         }
     }
 
-    public function hasFieldData()
+    public function hasFieldData(): bool
     {
         return true;
     }

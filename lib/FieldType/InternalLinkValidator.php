@@ -16,7 +16,6 @@ use function in_array;
 class InternalLinkValidator
 {
     private Content\Handler $contentHandler;
-
     private Content\Type\Handler $contentTypeHandler;
 
     public function __construct(

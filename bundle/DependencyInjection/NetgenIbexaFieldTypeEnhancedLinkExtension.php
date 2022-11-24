@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\DependencyInjection;
 
-use Exception;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -18,7 +17,7 @@ use function file_get_contents;
 class NetgenIbexaFieldTypeEnhancedLinkExtension extends Extension implements PrependExtensionInterface
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {

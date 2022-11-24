@@ -48,6 +48,9 @@ class FieldValueType extends AbstractType
         return 'ibexa_fieldtype_ngenhancedlink';
     }
 
+    /**
+     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -135,7 +138,11 @@ class FieldValueType extends AbstractType
                     'required' => true,
                 ],
             )
-            ->addModelTransformer(new FieldValueTransformer($this->fieldTypeService->getFieldType('ngenhancedlink')));
+            ->addModelTransformer(
+                new FieldValueTransformer(
+                    $this->fieldTypeService->getFieldType('ngenhancedlink')
+                )
+            );
     }
 
     /**
@@ -174,7 +181,7 @@ class FieldValueType extends AbstractType
         ];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'field_edit',
