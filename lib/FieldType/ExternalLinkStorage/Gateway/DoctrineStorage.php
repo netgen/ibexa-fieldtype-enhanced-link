@@ -87,7 +87,7 @@ class DoctrineStorage extends Gateway
     /**
      * @throws \Doctrine\DBAL\Exception
      */
-    public function insertUrl($url): int
+    public function insertUrl(string $url): int
     {
         $time = time();
 
@@ -119,7 +119,7 @@ class DoctrineStorage extends Gateway
     /**
      * @throws \Doctrine\DBAL\Exception
      */
-    public function linkUrl($urlId, $fieldId, $versionNo): void
+    public function linkUrl(int $urlId, int $fieldId, int $versionNo): void
     {
         $query = $this->connection->createQueryBuilder();
 
@@ -141,6 +141,9 @@ class DoctrineStorage extends Gateway
     }
 
     /**
+     * @param mixed $fieldId
+     * @param mixed $versionNo
+     *
      * @throws \Doctrine\DBAL\Exception
      * @throws \Doctrine\DBAL\Driver\Exception
      */

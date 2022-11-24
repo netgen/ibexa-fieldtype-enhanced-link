@@ -432,7 +432,6 @@ class Type extends FieldType
     protected function checkValueStructure(BaseValue $value): void
     {
         /** @var \Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value $value */
-
         if (!$value->isTypeInternal() && !$value->isTypeExternal()) {
             throw new InvalidArgumentType(
                 '$value->reference',

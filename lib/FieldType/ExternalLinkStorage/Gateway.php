@@ -45,18 +45,12 @@ abstract class Gateway extends StorageGateway
 
     /**
      * Creates link to URL with $urlId for field with $fieldId in $versionNo.
-     *
-     * @param int $urlId
-     * @param int $fieldId
-     * @param int $versionNo
      */
     abstract public function linkUrl(int $urlId, int $fieldId, int $versionNo): void;
 
     /**
      * Removes link to URL for $fieldId in $versionNo and cleans up possibly orphaned URLs.
      *
-     * @param int $fieldId
-     * @param int $versionNo
      * @param int[] $excludeUrlIds
      */
     abstract public function unlinkUrl(int $fieldId, int $versionNo, array $excludeUrlIds = []);

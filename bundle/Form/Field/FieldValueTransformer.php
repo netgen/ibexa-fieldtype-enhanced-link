@@ -9,9 +9,6 @@ use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 use Symfony\Component\Form\DataTransformerInterface;
 
-use function array_key_exists;
-use function is_array;
-
 class FieldValueTransformer implements DataTransformerInterface
 {
     private FieldType $fieldType;

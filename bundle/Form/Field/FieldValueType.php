@@ -117,7 +117,7 @@ class FieldValueType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => 'internal-required-field',
-                ]
+                ],
             ],
         );
 
@@ -129,7 +129,7 @@ class FieldValueType extends AbstractType
                 'required' => $options['required'],
                 'attr' => [
                     'class' => $options['required'] ? 'external-required-field' : '',
-                ]
+                ],
             ],
         );
 
@@ -156,14 +156,14 @@ class FieldValueType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => 'external-required-field',
-                ]
+                ],
             ],
         );
 
         $builder->addModelTransformer(
             new FieldValueTransformer(
-                $this->fieldTypeService->getFieldType('ngenhancedlink')
-            )
+                $this->fieldTypeService->getFieldType('ngenhancedlink'),
+            ),
         );
     }
 
