@@ -8,27 +8,25 @@ use Ibexa\Contracts\Core\FieldType\Indexable;
 use Ibexa\Contracts\Core\Persistence\Content\Field;
 use Ibexa\Contracts\Core\Persistence\Content\Type\FieldDefinition;
 use Ibexa\Contracts\Core\Search;
+use Ibexa\Contracts\Core\Search\FieldType\StringField;
 
-use function array_key_exists;
 use function is_int;
-use function reset;
 
 class SearchFields implements Indexable
 {
     public function getIndexData(Field $field, FieldDefinition $fieldDefinition): array
     {
-        if (isset($field->value->data) && array_key_exists('type', $field->value->data) && $field->value->data['type'] === Type::LINK_TYPE_INTERNAL) {
-            if (array_key_exists('id', $field->value->data) && is_int($field->value->data['id'])) {
-                $id = [$field->value->data['id']];
+        $type = $field->value->data['type'] ?? null;
+        $id = $field->value->data['id'] ?? null;
 
-                return [
-                    new Search\Field(
-                        'value',
-                        reset($id),
-                        new Search\FieldType\StringField(),
-                    ),
-                ];
-            }
+        if ($type === Type::LINK_TYPE_INTERNAL && is_int($id)) {
+            return [
+                new Search\Field(
+                    'value',
+                    $id,
+                    new StringField(),
+                ),
+            ];
         }
 
         return [];
@@ -37,7 +35,7 @@ class SearchFields implements Indexable
     public function getIndexDefinition(): array
     {
         return [
-            'value' => new Search\FieldType\StringField(),
+            'value' => new StringField(),
         ];
     }
 
