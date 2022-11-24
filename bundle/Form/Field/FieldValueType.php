@@ -53,101 +53,118 @@ class FieldValueType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add(
-                'link_type',
-                ChoiceType::class,
-                [
-                    'choices' => [
-                        'field_edit.ngenhancedlink.link_type.' . Type::LINK_TYPE_INTERNAL => Type::LINK_TYPE_INTERNAL,
-                        'field_edit.ngenhancedlink.link_type.' . Type::LINK_TYPE_EXTERNAL => Type::LINK_TYPE_EXTERNAL,
-                    ],
-                    'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.link_type',
-                    'required' => true,
-                    'multiple' => false,
-                    'expanded' => true,
+        $builder->add(
+            'link_type',
+            ChoiceType::class,
+            [
+                'choices' => [
+                    'field_edit.ngenhancedlink.link_type.' . Type::LINK_TYPE_INTERNAL => Type::LINK_TYPE_INTERNAL,
+                    'field_edit.ngenhancedlink.link_type.' . Type::LINK_TYPE_EXTERNAL => Type::LINK_TYPE_EXTERNAL,
                 ],
-            )
-            ->add(
-                'id',
-                IntegerType::class,
-                [
-                    'label' => false,
-                    'attr' => ['hidden' => true, 'class' => 'internal-required-field internal-link-id'],
-                    'required' => true,
-                    'disabled' => false,
+                'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.link_type',
+                'required' => true,
+                'multiple' => false,
+                'expanded' => true,
+            ],
+        );
+
+        $builder->add(
+            'id',
+            IntegerType::class,
+            [
+                'label' => false,
+                'attr' => [
+                    'hidden' => true,
+                    'class' => 'internal-required-field internal-link-id',
                 ],
-            )
-            ->add(
+                'required' => true,
+                'disabled' => false,
+            ],
+        );
+
+        if ($options['enable_suffix']) {
+            $builder->add(
                 'suffix',
                 TextType::class,
                 [
-                    'label' => $options['enable_suffix'] ? /* @Desc("Text") */ 'field_edit.ngenhancedlink.suffix' : false,
+                    'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.suffix',
                     'required' => false,
-                    'attr' => ['hidden' => !$options['enable_suffix']],
-                    'disabled' => !$options['enable_suffix'],
+                    'disabled' => false,
                 ],
-            )
-            ->add(
-                'label_internal',
-                TextType::class,
-                [
-                    'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.label',
-                    'required' => false,
-                ],
-            )
-            ->add(
-                'target_internal',
-                ChoiceType::class,
-                [
-                    'choices' => [
-                        'field_edit.ngenhancedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
-                        'field_edit.ngenhancedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
-                        'field_edit.ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
-                        'field_edit.ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
-                    ],
-                    'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.target',
-                    'required' => true,
-                    'attr' => ['class' => 'internal-required-field']
-                ],
-            )
-            ->add(
-                'url',
-                UrlType::class,
-                [
-                    'label' => /* @Desc("URL") */ 'field_edit.ngenhancedlink.url',
-                    'required' => $options['required'],
-                    'attr' => ['class' => $options['required'] ? 'external-required-field' : '']
-                ],
-            )
-            ->add(
-                'label_external',
-                TextType::class,
-                [
-                    'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.label',
-                    'required' => false,
-                ],
-            )
-            ->add(
-                'target_external',
-                ChoiceType::class,
-                [
-                    'choices' => [
-                        'field_edit.ngenhancedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
-                        'field_edit.ngenhancedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
-                        'field_edit.ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
-                        'field_edit.ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
-                    ],
-                    'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.target',
-                    'required' => true,
-                    'attr' => ['class' => 'external-required-field']
-                ],
-            )
-            ->addModelTransformer(
-                new FieldValueTransformer(
-                    $this->fieldTypeService->getFieldType('ngenhancedlink')
-                )
             );
+        }
+
+        $builder->add(
+            'label_internal',
+            TextType::class,
+            [
+                'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.label',
+                'required' => false,
+            ],
+        );
+
+        $builder->add(
+            'target_internal',
+            ChoiceType::class,
+            [
+                'choices' => [
+                    'field_edit.ngenhancedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
+                    'field_edit.ngenhancedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
+                    'field_edit.ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
+                    'field_edit.ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
+                ],
+                'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.target',
+                'required' => true,
+                'attr' => [
+                    'class' => 'internal-required-field',
+                ]
+            ],
+        );
+
+        $builder->add(
+            'url',
+            UrlType::class,
+            [
+                'label' => /* @Desc("URL") */ 'field_edit.ngenhancedlink.url',
+                'required' => $options['required'],
+                'attr' => [
+                    'class' => $options['required'] ? 'external-required-field' : '',
+                ]
+            ],
+        );
+
+        $builder->add(
+            'label_external',
+            TextType::class,
+            [
+                'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.label',
+                'required' => false,
+            ],
+        );
+
+        $builder->add(
+            'target_external',
+            ChoiceType::class,
+            [
+                'choices' => [
+                    'field_edit.ngenhancedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
+                    'field_edit.ngenhancedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
+                    'field_edit.ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
+                    'field_edit.ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
+                ],
+                'label' => /* @Desc("Text") */ 'field_edit.ngenhancedlink.target',
+                'required' => true,
+                'attr' => [
+                    'class' => 'external-required-field',
+                ]
+            ],
+        );
+
+        $builder->addModelTransformer(
+            new FieldValueTransformer(
+                $this->fieldTypeService->getFieldType('ngenhancedlink')
+            )
+        );
     }
 
     /**

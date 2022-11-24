@@ -51,6 +51,9 @@ class FieldValueTransformer implements DataTransformerInterface
 
     public function reverseTransform($value): ?Value
     {
+        dump($value);
+        throw new \RuntimeException('asdf');
+
         if (is_array($value) && array_key_exists('link_type', $value)) {
             if ($value['link_type'] === Type::LINK_TYPE_INTERNAL) {
                 if (isset($value['id'], $value['target_internal'])) {
@@ -58,7 +61,7 @@ class FieldValueTransformer implements DataTransformerInterface
                         $value['id'],
                         $value['label_internal'],
                         $value['target_internal'],
-                        $value['suffix']
+                        $value['suffix'] ?? null,
                     );
                 }
             }
@@ -68,7 +71,7 @@ class FieldValueTransformer implements DataTransformerInterface
                     return new Value(
                         $value['url'],
                         $value['label_external'],
-                        $value['target_external']
+                        $value['target_external'],
                     );
                 }
             }
