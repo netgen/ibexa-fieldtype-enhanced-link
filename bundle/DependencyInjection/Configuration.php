@@ -16,8 +16,6 @@ class Configuration implements ConfigurationInterface
 
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('netgen_ibexa_fieldtype_enhanced_link');
-
-        return $treeBuilder;
+        return new TreeBuilder('netgen_ibexa_fieldtype_enhanced_link');
     }
 }
