@@ -111,7 +111,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
                     Type::TARGET_LINK_IN_NEW_TAB,
                 ],
             ],
-            'enableQueryParameter' => [
+            'enableSuffix' => [
                 'type' => 'bool',
                 'default' => false,
             ],
@@ -133,7 +133,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
             'allowedLinkType' => Type::LINK_TYPE_ALL,
             'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
             'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
-            'enableQueryParameter' => false,
+            'enableSuffix' => false,
         ];
     }
 
@@ -305,14 +305,14 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
                     'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
                     'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
             'incomplete_settings' => [
                 [
                     'selectionMethod' => Type::SELECTION_BROWSE,
                     'allowedLinkType' => Type::LINK_TYPE_INTERNAL,
-                    'enableQueryParameter' => true,
+                    'enableSuffix' => true,
                 ],
                 [
                     'selectionMethod' => Type::SELECTION_BROWSE,
@@ -322,7 +322,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
                     'allowedLinkType' => Type::LINK_TYPE_INTERNAL,
                     'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
                     'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
-                    'enableQueryParameter' => true,
+                    'enableSuffix' => true,
                 ],
             ],
         ];

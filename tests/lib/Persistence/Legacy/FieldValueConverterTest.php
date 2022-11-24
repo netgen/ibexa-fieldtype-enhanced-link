@@ -41,7 +41,7 @@ class FieldValueConverterTest extends TestCase
                             'allowedLinkType' => Type::LINK_TYPE_ALL,
                             'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
                             'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
-                            'enableQueryParameter' => false,
+                            'enableSuffix' => false,
                         ],
                     ],
                 ),
@@ -70,7 +70,7 @@ class FieldValueConverterTest extends TestCase
                     "link",
                     "link_new_tab"
                 ],
-                "enableQueryParameter": false
+                "enableSuffix": false
             }
             DATATEXT;
 
@@ -107,7 +107,7 @@ class FieldValueConverterTest extends TestCase
                     "link",
                     "link_new_tab"
                 ],
-                "enableQueryParameter": false
+                "enableSuffix": false
             }
             DATATEXT;
 
@@ -122,7 +122,7 @@ class FieldValueConverterTest extends TestCase
                     'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
                     'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
         );
@@ -154,7 +154,7 @@ class FieldValueConverterTest extends TestCase
                     ],
                     'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                     'allowedLinkType' => Type::LINK_TYPE_ALL,
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
         );
@@ -175,7 +175,7 @@ class FieldValueConverterTest extends TestCase
                     ],
                     'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                     'allowedLinkType' => Type::LINK_TYPE_ALL,
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
         );

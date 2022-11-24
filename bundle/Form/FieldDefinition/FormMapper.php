@@ -50,10 +50,10 @@ class FormMapper extends AbstractRelationFormMapper
                 'label' => /* @Desc("Allowed Content Types") */ 'field_definition.ngenhancedlink.selection_content_types',
                 'disabled' => $isTranslation,
             ])
-            ->add('enableQueryParameter', CheckboxType::class, [
+            ->add('enableSuffix', CheckboxType::class, [
                 'required' => false,
-                'label' => /* @Desc("Enable query parameter") */ 'field_definition.ngenhancedlink.enable_query_parameter',
-                'property_path' => 'fieldSettings[enableQueryParameter]',
+                'label' => /* @Desc("Enable suffix") */ 'field_definition.ngenhancedlink.enable_suffix',
+                'property_path' => 'fieldSettings[enableSuffix]',
             ])
             ->add('allowedTargetsInternal', ChoiceType::class, [
                 'choices' => [

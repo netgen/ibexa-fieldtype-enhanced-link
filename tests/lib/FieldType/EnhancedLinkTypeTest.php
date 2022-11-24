@@ -175,7 +175,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
                     ],
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
             [
@@ -194,7 +194,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'allowedTargetsExternal' => [
                         Type::TARGET_LINK_IN_NEW_TAB,
                     ],
-                    'enableQueryParameter' => true,
+                    'enableSuffix' => true,
                 ],
             ],
         ];
@@ -221,7 +221,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
                     ],
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
             [
@@ -242,7 +242,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
                     ],
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
             [
@@ -263,7 +263,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
                     ],
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
             [
@@ -284,11 +284,11 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
                     ],
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
             [
-                // Invalid enableQueryParameter
+                // Invalid enableSuffix
                 [
                     'selectionMethod' => Type::SELECTION_BROWSE,
                     'selectionRoot' => null,
@@ -305,7 +305,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
                     ],
-                    'enableQueryParameter' => 'invalid',
+                    'enableSuffix' => 'invalid',
                 ],
             ],
             [
@@ -326,7 +326,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
                     ],
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
             [
@@ -347,7 +347,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
                     ],
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
             [
@@ -365,7 +365,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK,
                         Type::TARGET_LINK_IN_NEW_TAB,
                     ],
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
             [
@@ -385,7 +385,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     'allowedTargetsExternal' => [
                         'invalid',
                     ],
-                    'enableQueryParameter' => false,
+                    'enableSuffix' => false,
                 ],
             ],
         ];
@@ -745,7 +745,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     Type::TARGET_LINK_IN_NEW_TAB,
                 ],
             ],
-            'enableQueryParameter' => [
+            'enableSuffix' => [
                 'type' => 'bool',
                 'default' => false,
             ],

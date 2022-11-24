@@ -73,7 +73,7 @@ class Type extends FieldType
                 self::TARGET_LINK_IN_NEW_TAB,
             ],
         ],
-        'enableQueryParameter' => [
+        'enableSuffix' => [
             'type' => 'bool',
             'default' => false,
         ],
@@ -140,7 +140,7 @@ class Type extends FieldType
                     break;
 
                 case 'rootDefaultLocation':
-                case 'enableQueryParameter':
+                case 'enableSuffix':
                     if (!is_bool($value)) {
                         $validationErrors[] = new ValidationError(
                             "Setting '%setting%' value must be of boolean type",

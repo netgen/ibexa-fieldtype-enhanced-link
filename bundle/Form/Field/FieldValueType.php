@@ -82,10 +82,10 @@ class FieldValueType extends AbstractType
                 'suffix',
                 TextType::class,
                 [
-                    'label' => $options['enable_query_parameter'] ? /* @Desc("Text") */ 'field_edit.ngenhancedlink.suffix' : false,
+                    'label' => $options['enable_suffix'] ? /* @Desc("Text") */ 'field_edit.ngenhancedlink.suffix' : false,
                     'required' => false,
-                    'attr' => ['hidden' => !$options['enable_query_parameter']],
-                    'disabled' => !$options['enable_query_parameter'],
+                    'attr' => ['hidden' => !$options['enable_suffix']],
+                    'disabled' => !$options['enable_suffix'],
                 ],
             )
             ->add(
@@ -197,11 +197,11 @@ class FieldValueType extends AbstractType
             'default_location' => null,
             'root_default_location' => null,
             'location' => null,
-            'enable_query_parameter' => null,
+            'enable_suffix' => null,
         ]);
         $resolver->setAllowedTypes('default_location', ['null', Location::class]);
         $resolver->setAllowedTypes('root_default_location', ['null', 'bool']);
-        $resolver->setAllowedTypes('enable_query_parameter', ['null', 'bool']);
+        $resolver->setAllowedTypes('enable_suffix', ['null', 'bool']);
         $resolver->setAllowedTypes('location', ['null', Location::class]);
     }
 }

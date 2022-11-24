@@ -29,6 +29,7 @@ class FieldValueConverter implements Converter
         } else {
             $storageFieldValue->dataText = json_encode($value->data, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
         }
+
         $storageFieldValue->sortKeyString = (string) $value->sortKey;
     }
 
@@ -42,6 +43,7 @@ class FieldValueConverter implements Converter
         } else {
             $fieldValue->data = null;
         }
+
         $fieldValue->sortKey = $value->sortKeyString;
     }
 
@@ -63,32 +65,40 @@ class FieldValueConverter implements Converter
         if (empty($storageDef->dataText5)) {
             return;
         }
-        $settingsData = json_decode($storageDef->dataText5, true, 512, JSON_THROW_ON_ERROR);
 
+        $settingsData = json_decode($storageDef->dataText5, true, 512, JSON_THROW_ON_ERROR);
         $fieldSettings = &$fieldDef->fieldTypeConstraints->fieldSettings;
+
         if (array_key_exists('selectionMethod', $settingsData)) {
             $fieldSettings['selectionMethod'] = $settingsData['selectionMethod'];
         }
+
         if (array_key_exists('selectionRoot', $settingsData)) {
             $fieldSettings['selectionRoot'] = $settingsData['selectionRoot'];
         }
+
         if (array_key_exists('rootDefaultLocation', $settingsData)) {
             $fieldSettings['rootDefaultLocation'] = $settingsData['rootDefaultLocation'];
         }
+
         if (array_key_exists('selectionContentTypes', $settingsData)) {
             $fieldSettings['selectionContentTypes'] = $settingsData['selectionContentTypes'];
         }
+
         if (array_key_exists('allowedTargetsInternal', $settingsData)) {
             $fieldSettings['allowedTargetsInternal'] = $settingsData['allowedTargetsInternal'];
         }
+
         if (array_key_exists('allowedTargetsExternal', $settingsData)) {
             $fieldSettings['allowedTargetsExternal'] = $settingsData['allowedTargetsExternal'];
         }
+
         if (array_key_exists('allowedLinkType', $settingsData)) {
             $fieldSettings['allowedLinkType'] = $settingsData['allowedLinkType'];
         }
-        if (array_key_exists('enableQueryParameter', $settingsData)) {
-            $fieldSettings['enableQueryParameter'] = $settingsData['enableQueryParameter'];
+
+        if (array_key_exists('enableSuffix', $settingsData)) {
+            $fieldSettings['enableSuffix'] = $settingsData['enableSuffix'];
         }
     }
 
