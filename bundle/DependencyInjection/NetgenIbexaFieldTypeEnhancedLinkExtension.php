@@ -26,7 +26,6 @@ class NetgenIbexaFieldTypeEnhancedLinkExtension extends Extension implements Pre
             new FileLocator(__DIR__ . '/../Resources/config'),
         );
 
-        $loader->load('default_parameters.yaml');
         $loader->load('services.yaml');
     }
 
