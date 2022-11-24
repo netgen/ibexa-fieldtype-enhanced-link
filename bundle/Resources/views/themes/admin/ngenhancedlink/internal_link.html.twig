@@ -274,7 +274,5 @@
         <p class="ibexa-relations__helper-text">{{ helper }}</p>
     </div>
     {% set attr = attr|merge({'hidden': 'hidden'}) %}
-    {{ form_widget(form.id,{ 'attr': {'class': 'internal_link_id'}}) }}
-
-
+    {{ form_row(form.id, { disabled: is_translation }) }}
 {% endblock %}
