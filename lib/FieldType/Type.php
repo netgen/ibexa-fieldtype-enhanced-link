@@ -220,6 +220,7 @@ class Type extends FieldType
         if ($value->isTypeExternal()) {
             return (string) $value->label;
         }
+
         if ($value->isTypeInternal()) {
             try {
                 $contentInfo = $this->handler->loadContentInfo($value->reference);
@@ -238,6 +239,7 @@ class Type extends FieldType
     {
         /** @var Value $value */
         $validationErrors = [];
+
         if ($this->isEmptyValue($value)) {
             return $validationErrors;
         }
@@ -287,6 +289,7 @@ class Type extends FieldType
             $value,
             $allowedContentTypes,
         );
+
         if (isset($validationError)) {
             $validationErrors[] = $validationError;
         }
@@ -309,6 +312,7 @@ class Type extends FieldType
     {
         if ($hash !== null) {
             $reference = $hash['reference'];
+
             if (isset($reference)) {
                 return new Value($reference, $hash['label'], $hash['target'], $hash['suffix']);
             }
@@ -348,44 +352,38 @@ class Type extends FieldType
     {
         /** @var Value $value */
         if ($value->isTypeExternal()) {
-            return new FieldValue(
-                [
-                    'data' => [
-                        'id' => null,
-                        'label' => $value->label,
-                        'type' => self::LINK_TYPE_EXTERNAL,
-                        'target' => $value->target,
-                        'suffix' => $value->suffix,
-                    ],
-                    'externalData' => $value->reference,
-                    'sortKey' => $this->getSortInfo($value),
+            return new FieldValue([
+                'data' => [
+                    'id' => null,
+                    'label' => $value->label,
+                    'type' => self::LINK_TYPE_EXTERNAL,
+                    'target' => $value->target,
+                    'suffix' => $value->suffix,
                 ],
-            );
+                'externalData' => $value->reference,
+                'sortKey' => $this->getSortInfo($value),
+            ]);
         }
 
         if ($value->isTypeInternal()) {
-            return new FieldValue(
-                [
-                    'data' => [
-                        'id' => $value->reference,
-                        'label' => $value->label,
-                        'type' => self::LINK_TYPE_INTERNAL,
-                        'target' => $value->target,
-                        'suffix' => $value->suffix,
-                    ],
-                    'externalData' => null,
-                    'sortKey' => $this->getSortInfo($value),
+            return new FieldValue([
+                'data' => [
+                    'id' => $value->reference,
+                    'label' => $value->label,
+                    'type' => self::LINK_TYPE_INTERNAL,
+                    'target' => $value->target,
+                    'suffix' => $value->suffix,
                 ],
-            );
+                'externalData' => null,
+                'sortKey' => $this->getSortInfo($value),
+            ]);
         }
 
-        return new FieldValue(
-            [
-                'data' => [],
-                'externalData' => null,
-                'sortKey' => null,
-            ],
-        );
+        return new FieldValue([
+            'data' => [],
+            'externalData' => null,
+            'sortKey' => null,
+        ]);
     }
 
     public function fromPersistenceValue(FieldValue $fieldValue): Value
@@ -422,6 +420,7 @@ class Type extends FieldType
         if ($inputValue instanceof ContentInfo) {
             return new Value($inputValue->id);
         }
+
         if (is_int($inputValue) || is_string($inputValue)) {
             return new Value($inputValue);
         }
