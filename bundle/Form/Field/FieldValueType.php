@@ -113,7 +113,7 @@ class FieldValueType extends AbstractType
             )
             ->add(
                 'url',
-                TextType::class,
+                UrlType::class,
                 [
                     'label' => /* @Desc("URL") */ 'field_edit.ngenhancedlink.url',
                     'required' => $options['required'],
