@@ -29,20 +29,20 @@ class FieldValueTransformer implements DataTransformerInterface
 
         if ($value->isTypeExternal()) {
             return [
+                'link_type' => Type::LINK_TYPE_EXTERNAL,
                 'url' => $value->reference,
                 'label_external' => $value->label,
                 'target_external' => $value->target,
-                'link_type' => Type::LINK_TYPE_EXTERNAL,
             ];
         }
 
         if ($value->isTypeInternal()) {
             return [
-                'suffix' => $value->suffix,
+                'link_type' => Type::LINK_TYPE_INTERNAL,
+                'id' => $value->reference,
                 'label_internal' => $value->label,
                 'target_internal' => $value->target,
-                'id' => $value->reference,
-                'link_type' => Type::LINK_TYPE_INTERNAL,
+                'suffix' => $value->suffix,
             ];
         }
 
@@ -51,29 +51,26 @@ class FieldValueTransformer implements DataTransformerInterface
 
     public function reverseTransform($value): ?Value
     {
-        dump($value);
-        throw new \RuntimeException('asdf');
+        $linkType = $value['link_type'] ?? null;
 
-        if (is_array($value) && array_key_exists('link_type', $value)) {
-            if ($value['link_type'] === Type::LINK_TYPE_INTERNAL) {
-                if (isset($value['id'], $value['target_internal'])) {
-                    return new Value(
-                        $value['id'],
-                        $value['label_internal'],
-                        $value['target_internal'],
-                        $value['suffix'] ?? null,
-                    );
-                }
+        if ($linkType === Type::LINK_TYPE_INTERNAL) {
+            if (isset($value['id'], $value['target_internal'])) {
+                return new Value(
+                    $value['id'],
+                    $value['label_internal'],
+                    $value['target_internal'],
+                    $value['suffix'] ?? null,
+                );
             }
+        }
 
-            if ($value['link_type'] === Type::LINK_TYPE_EXTERNAL) {
-                if (isset($value['url'], $value['target_internal'])) {
-                    return new Value(
-                        $value['url'],
-                        $value['label_external'],
-                        $value['target_external'],
-                    );
-                }
+        if ($linkType === Type::LINK_TYPE_EXTERNAL) {
+            if (isset($value['url'], $value['target_internal'])) {
+                return new Value(
+                    $value['url'],
+                    $value['label_external'],
+                    $value['target_external'],
+                );
             }
         }
 
