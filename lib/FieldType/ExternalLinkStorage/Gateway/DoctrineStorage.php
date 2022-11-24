@@ -239,7 +239,7 @@ class DoctrineStorage extends Gateway
         ;
 
         $statement = $query->execute();
-        $ids = $statement->fetchOne();
+        $ids = $statement->fetchFirstColumn();
 
         if (empty($ids)) {
             return;
