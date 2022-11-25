@@ -207,17 +207,18 @@
                     {% block headline %}
                         <div class="ibexa-relations__info-wrapper">
                             <p class="ibexa-relations__info-text">
-                                {% if limit != 1 %}
-                                    {{ 'ezobjectrelationlist.cta.limit.multi'|trans|desc('Set up a Relation with one or several Items') }}
-                                {% else %}
-                                    {{ 'ezobjectrelationlist.cta.limit.single'|trans|desc('Set up a Relation with one Item') }}
-                                {% endif %}
+                                {{ 'ngenhancedlink.cta.info'|trans|desc('Link a Content Item') }}
+{#                                {% if limit != 1 %}#}
+{#                                    {{ 'ezobjectrelationlist.cta.limit.multi'|trans|desc('Set up a Relation with one or several Items') }}#}
+{#                                {% else %}#}
+{#                                    {{ 'ezobjectrelationlist.cta.limit.single'|trans|desc('Set up a Relation with one Item') }}#}
+{#                                {% endif %}#}
                             </p>
-                            {% if limit != 0 %}
-                                <p class="ibexa-relations__info-sub-text">
-                                    {{ 'ezobjectrelationlist.cta.limit.sub_text'|trans({'%limit%': limit})|desc('Relations max. %limit%') }}
-                                </p>
-                            {% endif %}
+{#                            {% if limit != 0 %}#}
+{#                                <p class="ibexa-relations__info-sub-text">#}
+{#                                    {{ 'ezobjectrelationlist.cta.limit.sub_text'|trans({'%limit%': limit})|desc('Relations max. %limit%') }}#}
+{#                                </p>#}
+{#                            {% endif %}#}
                         </div>
                     {% endblock %}
                     {% block actions %}
@@ -271,7 +272,7 @@
                 {{ 'ezobjectrelationlist.cta.select'|trans|desc('Select Item') }}
             </span>
         </button>
-        <p class="ibexa-relations__helper-text">{{ helper }}</p>
+{#        <p class="ibexa-relations__helper-text">{{ helper }}</p>#}
     </div>
     {% set attr = attr|merge({'hidden': 'hidden'}) %}
     {{ form_row(form.id, { disabled: is_translation }) }}
