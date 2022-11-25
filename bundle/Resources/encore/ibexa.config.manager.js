@@ -10,7 +10,7 @@ module.exports = (ibexaConfig, ibexaConfigManager) => {
     ibexaConfigManager.add({
         ibexaConfig,
         entryName: 'ibexa-admin-ui-layout-css',
-        newItems: [path.resolve(__dirname, '../public/field_definition.scss')],
+        newItems: [path.resolve(__dirname, '../public/admin/field_definition.scss')],
     });
 
     /** Content editing */
