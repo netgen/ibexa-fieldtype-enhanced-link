@@ -36,6 +36,11 @@
             "Netgen\\IbexaFieldTypeEnhancedLink\\Tests\\Unit\\": "tests/lib"
         }
     },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
     "scripts": {
         "test": "@php vendor/bin/phpunit --colors=always"
     }
