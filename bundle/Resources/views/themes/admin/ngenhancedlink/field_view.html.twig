@@ -9,7 +9,6 @@
             <div {{ block( 'field_attributes' ) }}>
                 {% if field.value.isTypeInternal%}
                     {% embed '@ibexadesign/ui/component/table/table.html.twig' with {
-                        headline: 'ngenhancedlink.single_relation'|trans|desc('Enhanced link'),
                         head_cols: [
                             { content: 'ngenhancedlink.name'|trans|desc('Name') },
                             { content: 'ngenhancedlink.content_type'|trans|desc('Content Type') },

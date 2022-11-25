@@ -16,25 +16,26 @@ class FieldValueFormMapper extends AbstractRelationFormMapper
         $formConfig = $fieldForm->getConfig();
         $fieldSettings = $fieldDefinition->getFieldSettings();
 
-        $fieldForm
-            ->add(
-                $formConfig->getFormFactory()->createBuilder()
-                    ->create(
-                        'value',
-                        FieldValueType::class,
-                        [
-                            'required' => $fieldDefinition->isRequired,
-                            'label' => $fieldDefinition->getName(),
-                            'default_location' => $this->loadDefaultLocationForSelection(
-                                $fieldSettings['selectionRoot'],
-                                $fieldForm->getConfig()->getOption('location'),
-                            ),
-                            'root_default_location' => $fieldSettings['rootDefaultLocation'] ?? false,
-                            'enable_suffix' => $fieldSettings['enableSuffix'] ?? false,
-                        ],
-                    )
-                    ->setAutoInitialize(false)
-                    ->getForm(),
-            );
+        $fieldForm->add(
+            $formConfig->getFormFactory()->createBuilder()
+                ->create(
+                    'value',
+                    FieldValueType::class,
+                    [
+                        'required' => $fieldDefinition->isRequired,
+                        'label' => $fieldDefinition->getName(),
+                        'default_location' => $this->loadDefaultLocationForSelection(
+                            $fieldSettings['selectionRoot'],
+                            $fieldForm->getConfig()->getOption('location'),
+                        ),
+                        'root_default_location' => $fieldSettings['rootDefaultLocation'] ?? false,
+                        'enable_suffix' => $fieldSettings['enableSuffix'] ?? false,
+                        'target_internal' => $fieldSettings['allowedTargetsInternal'] ?? [],
+                        'target_external' => $fieldSettings['allowedTargetsExternal'] ?? [],
+                    ],
+                )
+                ->setAutoInitialize(false)
+                ->getForm(),
+        );
     }
 }

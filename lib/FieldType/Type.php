@@ -75,7 +75,7 @@ class Type extends FieldType
         ],
         'enableSuffix' => [
             'type' => 'bool',
-            'default' => false,
+            'default' => true,
         ],
     ];
 

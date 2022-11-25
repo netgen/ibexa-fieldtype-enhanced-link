@@ -107,12 +107,7 @@ class FieldValueType extends AbstractType
             'target_internal',
             ChoiceType::class,
             [
-                'choices' => [
-                    'ngenhancedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
-                    'ngenhancedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
-                    'ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
-                    'ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
-                ],
+                'choices' => $this->mapTargets($options['target_internal']),
                 'label' => /* @Desc("Text") */ 'ngenhancedlink.target',
                 'required' => true,
                 'attr' => [
@@ -146,12 +141,7 @@ class FieldValueType extends AbstractType
             'target_external',
             ChoiceType::class,
             [
-                'choices' => [
-                    'ngenhancedlink.target.' . Type::TARGET_LINK => Type::TARGET_LINK,
-                    'ngenhancedlink.target.' . Type::TARGET_LINK_IN_NEW_TAB => Type::TARGET_LINK_IN_NEW_TAB,
-                    'ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
-                    'ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
-                ],
+                'choices' => $this->mapTargets($options['target_external']),
                 'label' => /* @Desc("Text") */ 'ngenhancedlink.target',
                 'required' => true,
                 'attr' => [
@@ -215,10 +205,30 @@ class FieldValueType extends AbstractType
             'root_default_location' => null,
             'location' => null,
             'enable_suffix' => null,
+            'target_internal' => [],
+            'target_external' => [],
         ]);
         $resolver->setAllowedTypes('default_location', ['null', Location::class]);
         $resolver->setAllowedTypes('root_default_location', ['null', 'bool']);
         $resolver->setAllowedTypes('enable_suffix', ['null', 'bool']);
         $resolver->setAllowedTypes('location', ['null', Location::class]);
+        $resolver->setAllowedTypes('target_internal', ['array']);
+        $resolver->setAllowedTypes('target_external', ['array']);
+    }
+
+    /**
+     * @param string[] $targets
+     *
+     * @return array<string,string>
+     */
+    private function mapTargets(array $targets): array
+    {
+        $map = [];
+
+        foreach ($targets as $target) {
+            $map['ngenhancedlink.target.' . $target] = $target;
+        }
+
+        return $map;
     }
 }
