@@ -5,9 +5,7 @@
     let udwRoot = null;
     const closeUDW = () => udwRoot.unmount();
     const renderTagItem = (container, [item]) => {
-        const template = container.dataset.template.replaceAll('{{ content }}', item.name);
-
-        container.innerHTML = template;
+        container.innerHTML = container.dataset.template.replaceAll('{{ content }}', item.name);
 
         const deleteBtn = container.querySelector(SELECTOR_RESET_STARTING_LOCATION_BTN);
 

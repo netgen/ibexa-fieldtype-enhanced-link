@@ -142,7 +142,6 @@
         }
         /** /LINK TYPES */
 
-
         /** VALIDATOR */
         const eventsMap = [];
         if (allowedLinkType !== 'external') {
@@ -166,9 +165,6 @@
         validator.init();
         ibexa.addConfig('fieldTypeValidators', [validator], true);
         /** /VALIDATOR */
-
-
-
 
         const udwContainer = doc.getElementById('react-udw');
         const relationIdInput = fieldContainer.querySelector(ID_FIELD_SELECTOR);
