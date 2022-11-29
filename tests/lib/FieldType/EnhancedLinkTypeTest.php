@@ -747,7 +747,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             ],
             'enableSuffix' => [
                 'type' => 'bool',
-                'default' => false,
+                'default' => true,
             ],
         ];
     }

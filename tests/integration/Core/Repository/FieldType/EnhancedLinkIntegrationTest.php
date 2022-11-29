@@ -113,7 +113,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
             ],
             'enableSuffix' => [
                 'type' => 'bool',
-                'default' => false,
+                'default' => true,
             ],
         ];
     }
@@ -305,7 +305,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
                     'allowedLinkType' => Type::LINK_TYPE_ALL,
                     'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
                     'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
-                    'enableSuffix' => false,
+                    'enableSuffix' => true,
                 ],
             ],
             'incomplete_settings' => [
