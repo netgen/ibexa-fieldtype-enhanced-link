@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Integration\Core\Repository\FieldType;
 
-use Ibexa\Contracts\Core\Repository\Values\Content\Content;
-use Ibexa\Contracts\Core\Repository\Values\Content\Field;
-use Ibexa\Contracts\Core\Repository\Values\Content\Relation as APIRelation;
-use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
-use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
-use Ibexa\Core\Repository\Values\Content\Relation;
-use Ibexa\Tests\Integration\Core\Repository\FieldType\BaseIntegrationTest;
-use Ibexa\Tests\Integration\Core\Repository\FieldType\RelationSearchBaseIntegrationTestTrait;
+use eZ\Publish\API\Repository\Tests\FieldType\BaseIntegrationTest;
+use eZ\Publish\API\Repository\Tests\FieldType\RelationSearchBaseIntegrationTestTrait;
+use eZ\Publish\API\Repository\Values\Content\Content;
+use eZ\Publish\API\Repository\Values\Content\Field;
+use eZ\Publish\API\Repository\Values\Content\Relation as APIRelation;
+use eZ\Publish\API\Repository\Values\ContentType\ContentType;
+use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
+use eZ\Publish\Core\Repository\Values\Content\Relation;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
-
-use function PHPUnit\Framework\assertEquals;
 
 /**
  * Integration test for use field type.
@@ -33,8 +31,8 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
     }
 
     /**
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\UnauthorizedException
+     * @throws \eZ\Publish\API\Repository\Exceptions\NotFoundException
+     * @throws \eZ\Publish\API\Repository\Exceptions\UnauthorizedException
      */
     public function getCreateExpectedRelations(Content $content): array
     {
@@ -53,8 +51,8 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
     }
 
     /**
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\UnauthorizedException
+     * @throws \eZ\Publish\API\Repository\Exceptions\NotFoundException
+     * @throws \eZ\Publish\API\Repository\Exceptions\UnauthorizedException
      */
     public function getUpdateExpectedRelations(Content $content): array
     {
@@ -167,10 +165,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         return new Value('https://www.google.com/', 'label', Type::TARGET_LINK);
     }
 
-    /**
-     * @depends testLoadContentTypeField
-     */
-    public function testCreateExternalContent()
+    public function testCreateExternalContent(): Content
     {
         $content = $this->createContent($this->getValidExternalCreationFieldData());
         self::assertNotNull($content->id);
@@ -212,11 +207,11 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         ];
     }
 
-    public function testUpdateExternalField()
+    public function testUpdateExternalField(): Content
     {
         $updatedContent = $this->updateContent($this->getValidUpdateExternalFieldData());
         self::assertNotNull($updatedContent->id);
-        assertEquals($updatedContent->getField('data')->value->reference, 'https://www.youtube.com/');
+        self::assertEquals('https://www.youtube.com/', $updatedContent->getField('data')->value->reference);
 
         return $updatedContent;
     }

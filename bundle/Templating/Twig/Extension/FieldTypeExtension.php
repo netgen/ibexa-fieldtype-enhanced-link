@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\Templating\Twig\Extension;
 
 use Twig\Extension\AbstractExtension;

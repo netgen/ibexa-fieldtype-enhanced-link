@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Unit\FieldType;
 
-use Ibexa\Contracts\Core\FieldType\Value as SPIValue;
-use Ibexa\Contracts\Core\Persistence\Content\FieldValue;
-use Ibexa\Contracts\Core\Persistence\Content\Handler as SPIContentHandler;
-use Ibexa\Contracts\Core\Persistence\Content\VersionInfo;
-use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
-use Ibexa\Contracts\Core\Repository\Values\Content\Relation;
-use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
-use Ibexa\Core\Base\Exceptions\InvalidArgumentException;
-use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
-use Ibexa\Core\Base\Exceptions\NotFoundException;
-use Ibexa\Core\FieldType\ValidationError;
-use Ibexa\Tests\Core\FieldType\FieldTypeTest;
+use eZ\Publish\SPI\FieldType\Value as SPIValue;
+use eZ\Publish\SPI\Persistence\Content\FieldValue;
+use eZ\Publish\SPI\Persistence\Content\Handler as SPIContentHandler;
+use eZ\Publish\SPI\Persistence\Content\VersionInfo;
+use eZ\Publish\API\Repository\Values\Content\ContentInfo;
+use eZ\Publish\API\Repository\Values\Content\Relation;
+use eZ\Publish\API\Repository\Values\ContentType\FieldDefinition;
+use eZ\Publish\Core\Base\Exceptions\InvalidArgumentException;
+use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
+use eZ\Publish\Core\Base\Exceptions\NotFoundException;
+use eZ\Publish\Core\FieldType\ValidationError;
+use eZ\Publish\Core\FieldType\Tests\FieldTypeTest;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\InternalLinkValidator;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
@@ -392,7 +392,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
     }
 
     /**
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\InvalidArgumentException
+     * @throws \eZ\Publish\API\Repository\Exceptions\InvalidArgumentException
      */
     public function testGetRelations(): void
     {
@@ -431,41 +431,20 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         self::assertEquals($fieldType, $expected);
     }
 
-    /**
-     * @dataProvider provideDataForGetName
-     */
-    public function testGetName(
-        SPIValue $value,
-        string $expected,
-        array $fieldSettings = [],
-        string $languageCode = 'en_GB'
-    ): void {
-        /** @var \Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition|\PHPUnit\Framework\MockObject\MockObject $fieldDefinitionMock */
-        $fieldDefinitionMock = $this->createMock(FieldDefinition::class);
-        $fieldDefinitionMock->method('getFieldSettings')->willReturn($fieldSettings);
-
-        $name = $this->getFieldTypeUnderTest()->getName($value, $fieldDefinitionMock, $languageCode);
-
-        self::assertSame($expected, $name);
-    }
-
     public function provideDataForGetName(): array
     {
         return [
             'empty_destination_content_id' => [
-                $this->getEmptyValueExpectation(), '', [], 'en_GB',
+                $this->getEmptyValueExpectation(), '',
             ],
             'destination_content_id' => [
-                new Value(self::DESTINATION_CONTENT_ID), 'name_en_GB', [], 'en_GB',
-            ],
-            'destination_content_id_de_DE' => [
-                new Value(self::DESTINATION_CONTENT_ID), 'Name_de_DE', [], 'de_DE',
+                new Value(self::DESTINATION_CONTENT_ID), 'name_en_GB',
             ],
             'string_name' => [
-                new Value('test', 'label'), 'label', [], 'de_DE',
+                new Value('test', 'label'), 'label',
             ],
             'destination_content_id_non_existent' => [
-                new Value(self::NON_EXISTENT_CONTENT_ID), '', [], 'de_DE',
+                new Value(self::NON_EXISTENT_CONTENT_ID), '',
             ],
         ];
     }
@@ -772,6 +751,20 @@ class EnhancedLinkTypeTest extends FieldTypeTest
             ],
             'allowedTargetsExternal',
         );
+    }
+
+    /**
+     * @return \eZ\Publish\API\Repository\Values\ContentType\FieldDefinition|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected function getFieldDefinitionMock(array $fieldSettings)
+    {
+        /** @var |\PHPUnit\Framework\MockObject\MockObject $fieldDefinitionMock */
+        $fieldDefinitionMock = $this->createMock(FieldDefinition::class);
+        $fieldDefinitionMock
+            ->method('getFieldSettings')
+            ->willReturn($fieldSettings);
+
+        return $fieldDefinitionMock;
     }
 
     private function generateInvalidInternalTargetValidationError(string $target): ValidationError

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType;
 
-use Ibexa\Contracts\Core\Persistence\Content;
-use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
-use Ibexa\Core\FieldType\ValidationError;
+use eZ\Publish\API\Repository\Exceptions\NotFoundException;
+use eZ\Publish\Core\FieldType\ValidationError;
+use eZ\Publish\SPI\Persistence\Content;
 
 use function in_array;
 

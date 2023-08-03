@@ -11,9 +11,4 @@
             <directory>tests/lib</directory>
         </testsuite>
     </testsuites>
-    <coverage>
-        <include>
-            <directory suffix=".php">lib</directory>
-        </include>
-    </coverage>
 </phpunit>

@@ -1,7 +1,7 @@
 {
     "name": "netgen/ibexa-fieldtype-enhanced-link",
     "description": "Netgen's enhanced link field type for Ibexa",
-    "type": "ibexa-bundle",
+    "type": "ezplatform-bundle",
     "authors": [
         {
             "name": "Netgen",
@@ -9,17 +9,17 @@
         }
     ],
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^7.4",
         "ext-dom": "*",
         "ext-json": "*",
         "ext-pdo": "*",
-        "ibexa/admin-ui": "*",
-        "ibexa/content-forms": "*",
-        "ibexa/core": "^4.2"
+        "symfony/symfony": "*",
+        "ezsystems/ezplatform-admin-ui": "~1.5.19",
+        "ezsystems/repository-forms": "*",
+        "ezsystems/ezpublish-kernel": "~7.5.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "symfony/phpunit-bridge": "^6.1"
+        "phpunit/phpunit": "^7.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -37,11 +37,17 @@
         }
     },
     "extra": {
+        "ezpublish-legacy-dir": "ezpublish_legacy",
         "branch-alias": {
             "dev-master": "1.0-dev"
         }
     },
     "scripts": {
         "test": "@php vendor/bin/phpunit --colors=always"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": false
+        }
     }
 }

@@ -6,7 +6,7 @@ namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Ibexa\Core\Persistence\Legacy\URL\Gateway\DoctrineDatabase;
+use eZ\Publish\Core\FieldType\Url\UrlStorage\Gateway\DoctrineStorage as UrlDoctrineStorage;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway;
 use PDO;
 
@@ -15,8 +15,8 @@ use function time;
 
 class DoctrineStorage extends Gateway
 {
-    public const URL_TABLE = DoctrineDatabase::URL_TABLE;
-    public const URL_LINK_TABLE = DoctrineDatabase::URL_LINK_TABLE;
+    public const URL_TABLE = UrlDoctrineStorage::URL_TABLE;
+    public const URL_LINK_TABLE = UrlDoctrineStorage::URL_LINK_TABLE;
 
     protected Connection $connection;
 

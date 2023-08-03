@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\Field;
 
-use Ibexa\Contracts\Core\Repository\FieldType;
+use eZ\Publish\API\Repository\FieldType;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 use Symfony\Component\Form\DataTransformerInterface;

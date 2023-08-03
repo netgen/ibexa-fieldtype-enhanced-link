@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Unit\Persistence\Legacy;
 
-use Ibexa\Contracts\Core\Persistence\Content\FieldTypeConstraints;
-use Ibexa\Contracts\Core\Persistence\Content\FieldValue;
-use Ibexa\Contracts\Core\Persistence\Content\Type\FieldDefinition as PersistenceFieldDefinition;
-use Ibexa\Core\Persistence\Legacy\Content\StorageFieldDefinition;
-use Ibexa\Core\Persistence\Legacy\Content\StorageFieldValue;
+use eZ\Publish\SPI\Persistence\Content\FieldTypeConstraints;
+use eZ\Publish\SPI\Persistence\Content\FieldValue;
+use eZ\Publish\SPI\Persistence\Content\Type\FieldDefinition as PersistenceFieldDefinition;
+use eZ\Publish\Core\Persistence\Legacy\Content\StorageFieldDefinition;
+use eZ\Publish\Core\Persistence\Legacy\Content\StorageFieldValue;
+use JsonException;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\Persistence\Legacy\FieldValueConverter;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +19,7 @@ use PHPUnit\Framework\TestCase;
  */
 class FieldValueConverterTest extends TestCase
 {
-    /** @var \PHPUnit\Framework\MockObject\MockObject|\Ibexa\Core\Persistence\Legacy\Content\FieldValue\Converter\RelationConverter */
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\RelationConverter */
     protected $converter;
 
     protected function setUp(): void
@@ -27,7 +28,10 @@ class FieldValueConverterTest extends TestCase
         $this->converter = new FieldValueConverter();
     }
 
-    public function testToStorageFieldDefinition()
+    /**
+     * @throws \JsonException
+     */
+    public function testToStorageFieldDefinition(): void
     {
         $fieldDefinition = new PersistenceFieldDefinition(
             [
@@ -83,7 +87,10 @@ class FieldValueConverterTest extends TestCase
         );
     }
 
-    public function testToFieldDefinition()
+    /**
+     * @throws \JsonException
+     */
+    public function testToFieldDefinition(): void
     {
         $storageFieldDefinition = new StorageFieldDefinition();
         $storageFieldDefinition->dataText5 =
@@ -133,7 +140,10 @@ class FieldValueConverterTest extends TestCase
         self::assertEquals($expectedFieldDefinition, $actualFieldDefinition);
     }
 
-    public function testToFieldDefinitionWithDataText5Null()
+    /**
+     * @throws \JsonException
+     */
+    public function testToFieldDefinitionWithDataText5Null(): void
     {
         $storageFieldDefinition = new StorageFieldDefinition();
         $storageFieldDefinition->dataText5 = null;
@@ -184,9 +194,9 @@ class FieldValueConverterTest extends TestCase
         self::assertEquals($expectedFieldDefinition, $actualFieldDefinition);
     }
 
-    public function testToFieldDefinitionWithInvalidDataText5Format()
+    public function testToFieldDefinitionWithInvalidDataText5Format(): void
     {
-        $this->expectException(\JsonException::class);
+        $this->expectException(JsonException::class);
 
         $storageFieldDefinition = new StorageFieldDefinition();
         $storageFieldDefinition->dataText5 = 'String that is not in a valid json format';
@@ -195,7 +205,10 @@ class FieldValueConverterTest extends TestCase
         $this->converter->toFieldDefinition($storageFieldDefinition, $fieldDefinition);
     }
 
-    public function testToFieldValue()
+    /**
+     * @throws \JsonException
+     */
+    public function testToFieldValue(): void
     {
         $storageFieldValue = new StorageFieldValue();
         $storageFieldValue->dataText =
@@ -226,7 +239,10 @@ class FieldValueConverterTest extends TestCase
         self::assertEquals($expectedFieldValue, $actualFieldValue);
     }
 
-    public function testToFieldValueWithDataTextNull()
+    /**
+     * @throws \JsonException
+     */
+    public function testToFieldValueWithDataTextNull(): void
     {
         $storageFieldValue = new StorageFieldValue();
         $storageFieldValue->dataText = null;
@@ -242,9 +258,9 @@ class FieldValueConverterTest extends TestCase
         self::assertEquals($expectedFieldValue, $actualFieldValue);
     }
 
-    public function testToFieldValueWithInvalidDataTextFormat()
+    public function testToFieldValueWithInvalidDataTextFormat(): void
     {
-        $this->expectException(\JsonException::class);
+        $this->expectException(JsonException::class);
 
         $storageFieldValue = new StorageFieldValue();
         $storageFieldValue->dataText = 'String that is not in a valid json format';
@@ -253,7 +269,10 @@ class FieldValueConverterTest extends TestCase
         $this->converter->toFieldValue($storageFieldValue, $fieldValue);
     }
 
-    public function testToStorageValue()
+    /**
+     * @throws \JsonException
+     */
+    public function testToStorageValue(): void
     {
         $fieldValue = new FieldValue();
         $fieldValue->data = [
@@ -284,7 +303,10 @@ class FieldValueConverterTest extends TestCase
         self::assertEquals($expectedStorageFieldValue, $actualStorageFieldValue);
     }
 
-    public function testToStorageValueWithIdNull()
+    /**
+     * @throws \JsonException
+     */
+    public function testToStorageValueWithIdNull(): void
     {
         $fieldValue = new FieldValue();
         $fieldValue->data = [
@@ -306,7 +328,7 @@ class FieldValueConverterTest extends TestCase
         self::assertEquals($expectedStorageFieldValue, $actualStorageFieldValue);
     }
 
-    public function testGetIndexColumn()
+    public function testGetIndexColumn(): void
     {
         $expectedIndexColumn = 'sort_key_string';
 

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType;
 
-use Ibexa\Contracts\Core\FieldType\Value as SPIValue;
-use Ibexa\Contracts\Core\Persistence\Content\FieldValue;
-use Ibexa\Contracts\Core\Persistence\Content\Handler as SPIContentHandler;
-use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
-use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
-use Ibexa\Contracts\Core\Repository\Values\Content\Relation;
-use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
-use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
-use Ibexa\Core\FieldType\FieldType;
-use Ibexa\Core\FieldType\ValidationError;
-use Ibexa\Core\FieldType\Value as BaseValue;
+use eZ\Publish\API\Repository\Values\Content\ContentInfo;
+use eZ\Publish\API\Repository\Values\Content\Relation;
+use eZ\Publish\API\Repository\Values\ContentType\FieldDefinition;
+use eZ\Publish\SPI\Persistence\Content\FieldValue;
+use eZ\Publish\SPI\Persistence\Content\Handler as SPIContentHandler;
+use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
+use eZ\Publish\Core\Base\Exceptions\NotFoundException;
+use eZ\Publish\Core\FieldType\FieldType;
+use eZ\Publish\Core\FieldType\ValidationError;
+use eZ\Publish\Core\FieldType\Value as BaseValue;
+use eZ\Publish\SPI\FieldType\Value as SPIValue;
 
 use function array_intersect;
 use function count;
@@ -214,7 +214,7 @@ class Type extends FieldType
         return 'ngenhancedlink';
     }
 
-    public function getName(SPIValue $value, FieldDefinition $fieldDefinition, string $languageCode): string
+    public function getName(SPIValue $value): string
     {
         /** @var Value $value */
         if ($value->isTypeExternal()) {
@@ -229,7 +229,7 @@ class Type extends FieldType
                 return '';
             }
 
-            return $versionInfo->names[$languageCode] ?? $versionInfo->names[$contentInfo->mainLanguageCode];
+            return $versionInfo->names[$contentInfo->mainLanguageCode];
         }
 
         return '';

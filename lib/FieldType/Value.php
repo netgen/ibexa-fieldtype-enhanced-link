@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType;
 
-use Ibexa\Core\FieldType\Value as BaseValue;
+use eZ\Publish\Core\FieldType\Value as BaseValue;
 
 use function is_int;
 use function is_string;

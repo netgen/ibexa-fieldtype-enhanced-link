@@ -3,41 +3,35 @@ parameters:
 
 services:
     Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type:
-        parent: Ibexa\Core\FieldType\FieldType
+        parent: ezpublish.fieldType
         public: true
         arguments:
-            - '@Ibexa\Core\Persistence\Cache\ContentHandler'
+            - '@ezpublish.spi.persistence.content_handler'
             - '@Netgen\IbexaFieldTypeEnhancedLink\FieldType\InternalLinkValidator'
         tags:
-            - { name: ibexa.field_type, alias: '%ng.fieldtype.enhanced_link.identifier%' }
+            - { name: ezpublish.fieldType, alias: '%ng.fieldtype.enhanced_link.identifier%' }
 
     Netgen\IbexaFieldTypeEnhancedLink\Persistence\Legacy\FieldValueConverter:
         tags:
-            - { name: ibexa.field_type.storage.legacy.converter, alias: '%ng.fieldtype.enhanced_link.identifier%' }
+            - { name: ezpublish.storageEngine.legacy.converter, alias: '%ng.fieldtype.enhanced_link.identifier%' }
 
     Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\FieldDefinition\FormMapper:
         arguments:
-            - '@ibexa.api.service.content_type'
-            - '@ibexa.api.service.location'
+            - '@ezpublish.api.service.content_type'
+            - '@ezpublish.api.service.location'
         tags:
-            - { name: ibexa.admin_ui.field_type.form.mapper.definition, fieldType: '%ng.fieldtype.enhanced_link.identifier%' }
+            - { name: ez.fieldFormMapper.definition, fieldType: '%ng.fieldtype.enhanced_link.identifier%' }
+            - { name: ez.fieldFormMapper.value, fieldType: '%ng.fieldtype.enhanced_link.identifier%' }
 
     Netgen\IbexaFieldTypeEnhancedLink\FieldType\SearchFields:
         tags:
-            - { name: ibexa.field_type.indexable, alias: '%ng.fieldtype.enhanced_link.identifier%' }
-
-    Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\Field\FieldValueFormMapper:
-        arguments:
-            - '@ibexa.api.service.content_type'
-            - '@ibexa.api.service.location'
-        tags:
-            - { name: ibexa.admin_ui.field_type.form.mapper.value, fieldType: '%ng.fieldtype.enhanced_link.identifier%' }
+            - { name: ezpublish.fieldType.indexable, alias: '%ng.fieldtype.enhanced_link.identifier%' }
 
     Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\Field\FieldValueType:
         arguments:
-            - '@ibexa.api.service.content'
-            - '@ibexa.api.service.content_type'
-            - '@ibexa.api.service.field_type'
+            - '@ezpublish.api.service.content'
+            - '@ezpublish.api.service.content_type'
+            - '@ezpublish.api.service.field_type'
         tags:
             - { name: 'form.type' }
 
@@ -48,12 +42,12 @@ services:
 
     Netgen\IbexaFieldTypeEnhancedLink\FieldType\InternalLinkValidator:
         arguments:
-            $contentHandler: '@Ibexa\Contracts\Core\Persistence\Content\Handler'
-            $contentTypeHandler: '@Ibexa\Contracts\Core\Persistence\Content\Type\Handler'
+            $contentHandler: '@ezpublish.spi.persistence.content_handler'
+            $contentTypeHandler: '@ezpublish.spi.persistence.content_type_handler'
 
     Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway\DoctrineStorage:
         class: Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway\DoctrineStorage
-        arguments: [ '@ibexa.api.storage_engine.legacy.connection' ]
+        arguments: [ '@ezpublish.api.storage_engine.legacy.connection' ]
 
     Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage:
         class: Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage
@@ -61,7 +55,7 @@ services:
             - '@Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway\DoctrineStorage'
             - "@?logger"
         tags:
-            - { name: ibexa.field_type.storage.external.handler, alias: '%ng.fieldtype.enhanced_link.identifier%' }
+            - { name: ezpublish.fieldType.externalStorageHandler, alias: '%ng.fieldtype.enhanced_link.identifier%' }
 
     Netgen\IbexaFieldTypeEnhancedLinkBundle\Templating\Twig\Extension\FieldTypeExtension:
         tags:
@@ -69,6 +63,6 @@ services:
 
     Netgen\IbexaFieldTypeEnhancedLinkBundle\Templating\Twig\Extension\FieldTypeRuntime:
         arguments:
-            - '@ibexa.api.repository'
+            - '@ezpublish.api.repository'
         tags:
             - { name: twig.runtime }

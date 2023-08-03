@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\FieldDefinition;
 
-use Ibexa\AdminUi\FieldType\Mapper\AbstractRelationFormMapper;
-use Ibexa\AdminUi\Form\Data\FieldDefinitionData;
-use Ibexa\ContentForms\Form\Type\RelationType;
+use EzSystems\RepositoryForms\Data\Content\FieldData;
+use EzSystems\RepositoryForms\Data\FieldDefinitionData;
+use EzSystems\RepositoryForms\FieldType\Mapper\AbstractRelationFormMapper;
+use EzSystems\RepositoryForms\Form\Type\LocationType;
 use JMS\TranslationBundle\Annotation\Desc;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
+use Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\Field\FieldValueType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormInterface;
@@ -32,7 +34,7 @@ class FormMapper extends AbstractRelationFormMapper
             'expanded' => true,
         ]);
 
-        $fieldDefinitionForm->add('selectionRoot', RelationType::class, [
+        $fieldDefinitionForm->add('selectionRoot', LocationType::class, [
             'required' => true,
             'property_path' => 'fieldSettings[selectionRoot]',
             'label' => /* @Desc("Starting Location") */ 'field_definition.ngenhancedlink.selection_root',
@@ -87,6 +89,32 @@ class FormMapper extends AbstractRelationFormMapper
         ]);
     }
 
+    public function mapFieldValueForm(FormInterface $fieldForm, FieldData $data): void
+    {
+        $fieldDefinition = $data->fieldDefinition;
+        $formConfig = $fieldForm->getConfig();
+        $fieldSettings = $fieldDefinition->getFieldSettings();
+
+        $fieldForm->add(
+            $formConfig->getFormFactory()->createBuilder()
+                ->create(
+                    'value',
+                    FieldValueType::class,
+                    [
+                        'required' => $fieldDefinition->isRequired,
+                        'label' => $fieldDefinition->getName(),
+                        'default_location' => $this->loadDefaultLocationForSelection($fieldSettings['selectionRoot']),
+                        'root_default_location' => $fieldSettings['rootDefaultLocation'] ?? false,
+                        'enable_suffix' => $fieldSettings['enableSuffix'] ?? false,
+                        'target_internal' => $fieldSettings['allowedTargetsInternal'] ?? [],
+                        'target_external' => $fieldSettings['allowedTargetsExternal'] ?? [],
+                    ],
+                )
+                ->setAutoInitialize(false)
+                ->getForm(),
+        );
+    }
+
     /**
      * Fake method to set the translation domain for the extractor.
      */
@@ -94,7 +122,7 @@ class FormMapper extends AbstractRelationFormMapper
     {
         $resolver
             ->setDefaults([
-                'translation_domain' => 'content_type',
+                'translation_domain' => 'ezrepoforms_content_type',
             ]);
     }
 }

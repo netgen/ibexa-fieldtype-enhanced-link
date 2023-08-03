@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\Field;
 
-use Ibexa\Contracts\Core\Repository\ContentService;
-use Ibexa\Contracts\Core\Repository\ContentTypeService;
-use Ibexa\Contracts\Core\Repository\Exceptions\UnauthorizedException;
-use Ibexa\Contracts\Core\Repository\FieldTypeService;
-use Ibexa\Contracts\Core\Repository\Values\Content\Location;
+use eZ\Publish\API\Repository\ContentService;
+use eZ\Publish\API\Repository\ContentTypeService;
+use eZ\Publish\API\Repository\Exceptions\UnauthorizedException;
+use eZ\Publish\API\Repository\FieldTypeService;
+use eZ\Publish\API\Repository\Values\Content\Location;
 use JMS\TranslationBundle\Annotation\Desc;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
@@ -48,7 +48,7 @@ class FieldValueType extends AbstractType
     }
 
     /**
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException
+     * @throws \eZ\Publish\API\Repository\Exceptions\NotFoundException
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -157,7 +157,7 @@ class FieldValueType extends AbstractType
     }
 
     /**
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException
+     * @throws \eZ\Publish\API\Repository\Exceptions\NotFoundException
      */
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {

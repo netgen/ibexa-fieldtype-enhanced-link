@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\Templating\Twig\Extension;
 
-use Ibexa\Contracts\Core\Repository\Repository;
+use eZ\Publish\API\Repository\Repository;
 
 class FieldTypeRuntime
 {
