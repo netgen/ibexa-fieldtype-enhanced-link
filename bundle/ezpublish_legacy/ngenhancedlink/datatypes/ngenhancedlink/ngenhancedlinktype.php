@@ -9,15 +9,43 @@
  */
 
 /*!
-  \class eZObjectRelationType ezobjectrelationtype.php
+  \class ngEnhgancedLinkType ngenhancedlinktype.php
   \ingroup eZDatatype
-  \brief A content datatype which handles object relations
-
+  \brief A content datatype which handles object relations and urls
 */
 
 class NgEnhancedLinkType extends eZDataType
 {
-    const DATA_TYPE_STRING = "ngenhancedlink";
+    public const SELECTION_LINK_TYPE_INTERNAL = 0;
+    public const SELECTION_LINK_TYPE_EXTERNAL = 1;
+    public const LINK_TYPE_ALL = 'all';
+
+    public const LINK_TYPE_INTERNAL = 'internal';
+    public const LINK_TYPE_EXTERNAL = 'external';
+    public const TARGET_LINK = 'link';
+    public const TARGET_LINK_IN_NEW_TAB = 'link_in_new_tab';
+    public const TARGET_EMBED = 'embed';
+    public const TARGET_MODAL = 'modal';
+
+    public const LINK_TYPES = [
+        'internal',
+        'external',
+    ];
+
+    public const ALLOWED_LINK_TYPES = [
+        'all',
+        'internal',
+        'external',
+    ];
+
+    public const TARGETS = [
+        0 => 'link',
+        1 => 'link_in_new_tab',
+        2 => 'embed',
+        3 => 'modal',
+    ];
+
+    public const DATA_TYPE_STRING = "ngenhancedlink";
 
     public function __construct()
     {
@@ -34,6 +62,9 @@ class NgEnhancedLinkType extends eZDataType
         );
     }
 
+    /*!
+     * Indicates if the datatype handles relations
+     */
     public function isRelationType(): bool
     {
         return true;
@@ -46,8 +77,12 @@ class NgEnhancedLinkType extends eZDataType
     {
         if ( $currentVersion != false )
         {
-            $dataText = $originalContentObjectAttribute->attribute( "data_int" );
-            $contentObjectAttribute->setAttribute( "data_int", $dataText );
+            $dataText = $originalContentObjectAttribute->attribute( "data_text" );
+            $dataInt = $originalContentObjectAttribute->attribute( "data_int" );
+            $data = $originalContentObjectAttribute->attribute( "content" );
+            $contentObjectAttribute->setAttribute( "data_text", $dataText );
+            $contentObjectAttribute->setAttribute( "data_int", $dataInt );
+            $contentObjectAttribute->setContent( $data );
         }
     }
 
@@ -57,23 +92,32 @@ class NgEnhancedLinkType extends eZDataType
     */
     function validateObjectAttributeHTTPInput( $http, $base, $contentObjectAttribute )
     {
-        $postVariableName = $base . "_data_object_relation_id_" . $contentObjectAttribute->attribute( "id" );
-        if ( $http->hasPostVariable( $postVariableName ) )
-        {
-            $relatedObjectID = $http->postVariable( $postVariableName );
-            $classAttribute = $contentObjectAttribute->contentClassAttribute();
+        $linkTypeVariableName = "ContentClass_ngenhancedlink_link_type_" . $contentObjectAttribute->ContentClassAttributeID;
 
-            if ( $contentObjectAttribute->validateIsRequired() and $relatedObjectID == 0 )
-            {
-                $contentObjectAttribute->setValidationError( ezpI18n::tr( 'kernel/classes/datatypes',
-                                                                     'Missing objectrelation input.' ) );
+        if(!$http->hasPostVariable($linkTypeVariableName) or !in_array($http->postVariable($linkTypeVariableName), [self::SELECTION_LINK_TYPE_INTERNAL, self::SELECTION_LINK_TYPE_EXTERNAL])){
+            $contentObjectAttribute->setValidationError(ezpI18n::tr('kernel/classes/datatypes', 'Invalid link type input.'));
+            return eZInputValidator::STATE_INVALID;
+        }
+
+        $linkType = $http->postVariable($linkTypeVariableName);
+
+        if($linkType == $this::SELECTION_LINK_TYPE_INTERNAL){
+            $relationVariableName = $base . "_data_object_relation_id_" . $contentObjectAttribute->attribute( "id" );
+
+            if (!$http->hasPostVariable($relationVariableName) or ($contentObjectAttribute->validateIsRequired() and $http->postVariable($relationVariableName) == 0)) {
+                $contentObjectAttribute->setValidationError(ezpI18n::tr('kernel/classes/datatypes',
+                    'Missing internal link input.'));
                 return eZInputValidator::STATE_INVALID;
             }
-        }
-        else if ( $contentObjectAttribute->validateIsRequired() )
-        {
-            $contentObjectAttribute->setValidationError( ezpI18n::tr( 'kernel/classes/datatypes', 'Missing objectrelation input.' ) );
-            return eZInputValidator::STATE_INVALID;
+
+        }else if ($linkType == $this::SELECTION_LINK_TYPE_EXTERNAL){
+            $urlVariableName = $base . "_ngenhancedlink_url_" . $contentObjectAttribute->attribute( "id" );
+
+            if (!$http->hasPostVariable($urlVariableName) or ($contentObjectAttribute->validateIsRequired() and empty($http->postVariable($urlVariableName)))) {
+                $contentObjectAttribute->setValidationError(ezpI18n::tr('kernel/classes/datatypes',
+                    'Missing external link input.'));
+                return eZInputValidator::STATE_INVALID;
+            }
         }
 
         return eZInputValidator::STATE_ACCEPTED;
@@ -82,152 +126,67 @@ class NgEnhancedLinkType extends eZDataType
     /*!
      Fetches the http post var string input and stores it in the data instance.
     */
-    function fetchObjectAttributeHTTPInput( $http, $base, $contentObjectAttribute )
+    /**
+     * @throws JsonException
+     */
+    function fetchObjectAttributeHTTPInput($http, $base, $contentObjectAttribute )
     {
-        $postVariableName = $base . "_data_object_relation_id_" . $contentObjectAttribute->attribute( "id" );
+        $linkTypeVariableName = "ContentClass_ngenhancedlink_link_type_" . $contentObjectAttribute->ContentClassAttributeID;
+        $linkType = $http->postVariable($linkTypeVariableName);
         $haveData = false;
-        if ( $http->hasPostVariable( $postVariableName ) )
-        {
-            $relatedObjectID = $http->postVariable( $postVariableName );
-            if ( $relatedObjectID == '' )
-                $relatedObjectID = null;
-            $contentObjectAttribute->setAttribute( 'data_int', $relatedObjectID );
-            $haveData = true;
-        }
-        $fuzzyMatchVariableName = $base . "_data_object_relation_fuzzy_match_" . $contentObjectAttribute->attribute( "id" );
-        if ( $http->hasPostVariable( $fuzzyMatchVariableName ) )
-        {
-            $trans = eZCharTransform::instance();
 
-            $fuzzyMatchText = trim( $http->postVariable( $fuzzyMatchVariableName ) );
-            if ( $fuzzyMatchText != '' )
-            {
-                $fuzzyMatchText = $trans->transformByGroup( $fuzzyMatchText, 'lowercase' );
-                $classAttribute = $contentObjectAttribute->attribute( 'contentclass_attribute' );
-                if ( $classAttribute )
-                {
-                    $classContent = $classAttribute->content();
-                    if ( $classContent['default_selection_node'] )
-                    {
-                        $nodeID = $classContent['default_selection_node'];
-                        $nodeList = eZContentObjectTreeNode::subTreeByNodeID( array( 'Depth' => 1 ), $nodeID );
-                        $lastDiff = false;
-                        $matchObjectID = false;
-                        foreach ( $nodeList as $node )
-                        {
-                            $name = $trans->transformByGroup( trim( $node->attribute( 'name' ) ), 'lowercase' );
-                            $diff = $this->fuzzyTextMatch( $name, $fuzzyMatchText );
-                            if ( $diff === false )
-                                continue;
-                            if ( $diff == 0 )
-                            {
-                                $matchObjectID = $node->attribute( 'contentobject_id' );
-                                break;
-                            }
-                            if ( $lastDiff === false or
-                                 $diff < $lastDiff )
-                            {
-                                $lastDiff = $diff;
-                                $matchObjectID = $node->attribute( 'contentobject_id' );
-                            }
-                        }
-                        if ( $matchObjectID !== false )
-                        {
-                            $contentObjectAttribute->setAttribute( 'data_int', $matchObjectID );
-                            $haveData = true;
-                        }
-                    }
-                }
-            }
+        if($linkType == $this::SELECTION_LINK_TYPE_INTERNAL){
+            $internalLinkIdInputName = $base . "_data_object_relation_id_" . $contentObjectAttribute->attribute( "id" );
+            $internalLinkSuffixInputName = $base . "_ngenhancedlink_suffix_" . $contentObjectAttribute->attribute( "id" );
+            $internalLinkLabelInputName = $base . "_ngenhancedlink_label_internal_" . $contentObjectAttribute->attribute( "id" );
+            $internalLinkTargetInputName = "ContentClass_ngenhancedlink_target_internal_" . $contentObjectAttribute->ContentClassAttributeID;
+
+            $internalLinkId = $http->postVariable($internalLinkIdInputName);
+            $internalLinkSuffix = $http->postVariable($internalLinkSuffixInputName);
+            $internalLinkLabel = $http->postVariable($internalLinkLabelInputName);
+            $internalLinkTarget = $http->postVariable($internalLinkTargetInputName);
+
+            $data = [
+                'id' => (int)$internalLinkId,
+                'label' => $internalLinkLabel,
+                'type' => self::LINK_TYPE_INTERNAL,
+                'target' => $this::TARGETS[$internalLinkTarget],
+                'suffix' => $internalLinkSuffix,
+            ];
+
+            $dataText = json_encode($data, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+
+            $contentObjectAttribute->setAttribute('data_text', $dataText);
+            $contentObjectAttribute->setAttribute('data_int', (int)$internalLinkId);
+            $haveData = true;
+        }else if($linkType == 1){
+            $externalLinkIdInputName = $base . "_ngenhancedlink_url_" . $contentObjectAttribute->attribute( "id" );
+            $externalLinkLabelInputName = $base . "_ngenhancedlink_label_external_" . $contentObjectAttribute->attribute( "id" );
+            $externalLinkTargetInputName = "ContentClass_ngenhancedlink_target_external_" . $contentObjectAttribute->ContentClassAttributeID;
+
+            $externalLinkId = $http->postVariable($externalLinkIdInputName);
+            $externalLinkLabel = $http->postVariable($externalLinkLabelInputName);
+            $externalLinkTarget = $http->postVariable($externalLinkTargetInputName);
+
+            $data = [
+                'id' => $externalLinkId,
+                'label' => $externalLinkLabel,
+                'type' => self::LINK_TYPES[$linkType],
+                'target' => $this::TARGETS[$externalLinkTarget],
+                'suffix' => null,
+            ];
+
+            $dataText = json_encode($data, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+
+            $contentObjectAttribute->setAttribute('data_text', $dataText);
+
+            $haveData = true;
         }
         return $haveData;
     }
 
     /*!
-     \private
-     \return a number of how near \a $match is to \a $text, the lower the better and 0 is a perfect match.
-     \return \c false if it does not match
-    */
-    function fuzzyTextMatch( $text, $match )
-    {
-        $pos = strpos( $text, $match );
-        if ( $pos !== false )
-        {
-            $diff = strlen( $text ) - ( strlen( $match ) + $pos );
-            $diff += $pos;
-            return $diff;
-        }
-        return false;
-    }
-
-    function storeClassAttributeContent( $classAttribute, $content )
-    {
-        if ( is_array( $content ) )
-        {
-            $doc = $this->createClassDOMDocument( $content );
-            $this->storeClassDOMDocument( $doc, $classAttribute );
-            return true;
-        }
-        return false;
-    }
-
-    static function storeClassDOMDocument( $doc, $classAttribute )
-    {
-        $docText = self::domString( $doc );
-        $classAttribute->setAttribute( 'data_text5', $docText );
-    }
-
-    static function storeObjectDOMDocument( $doc, $objectAttribute )
-    {
-        $docText = self::domString( $doc );
-        $objectAttribute->setAttribute( 'data_text', $docText );
-    }
-
-    /*!
-     \static
-     \return the XML structure in \a $domDocument as text.
-             It will take of care of the necessary charset conversions
-             for content storage.
-    */
-    static function domString( $domDocument )
-    {
-        $ini = eZINI::instance();
-        $xmlCharset = $ini->variable( 'RegionalSettings', 'ContentXMLCharset' );
-        if ( $xmlCharset == 'enabled' )
-        {
-            $charset = eZTextCodec::internalCharset();
-        }
-        else if ( $xmlCharset == 'disabled' )
-            $charset = true;
-        else
-            $charset = $xmlCharset;
-        if ( $charset !== true )
-        {
-            $charset = eZCharsetInfo::realCharsetCode( $charset );
-        }
-        $domString = $domDocument->saveXML();
-        return $domString;
-    }
-
-    static function createClassDOMDocument( $content )
-    {
-        $doc = new DOMDocument( '1.0', 'utf-8' );
-        $root = $doc->createElement( 'related-object' );
-        $constraints = $doc->createElement( 'constraints' );
-        foreach ( $content['class_constraint_list'] as $constraintClassIdentifier )
-        {
-            unset( $constraintElement );
-            $constraintElement = $doc->createElement( 'allowed-class' );
-            $constraintElement->setAttribute( 'contentclass-identifier', $constraintClassIdentifier );
-            $constraints->appendChild( $constraintElement );
-        }
-        $root->appendChild( $constraints );
-        $doc->appendChild( $root );
-        return $doc;
-    }
-
-    /*!
-     Stores relation to the ezcontentobject_link table
+     Stores relation or url
     */
     function storeObjectAttribute( $contentObjectAttribute )
     {
@@ -239,70 +198,178 @@ class NgEnhancedLinkType extends eZDataType
         /** @var eZContentObject */
         $contentObject = $contentObjectAttribute->object();
 
-        if ( $contentObjectAttribute->ID !== null )
-        {
-            // cleanup previous relations
-            $contentObject->removeContentObjectRelation( false, $contentObjectVersion, $contentClassAttributeID, eZContentObject::RELATION_ATTRIBUTE );
+        if(trim($contentObjectAttribute->attribute('data_text')) == '' ){
+            return false;
+        }
+        $contentObjectAttributeData = json_decode($contentObjectAttribute->attribute('data_text'), true, 512, JSON_THROW_ON_ERROR);
 
-            // if translatable, we need to re-add the relations for other languages of (previously) published version.
-            $publishedVersionNo = $contentObject->publishedVersion();
-            if ( $contentObjectAttribute->contentClassAttributeCanTranslate() && $publishedVersionNo > 0 )
+        if($contentObjectAttributeData['type'] === $this::LINK_TYPE_INTERNAL){
+            if ( $contentObjectAttribute->ID !== null )
             {
-                $existingRelations = array();
-
-                // get published translations of this attribute
-                $pubAttribute = eZContentObjectAttribute::fetch($contentObjectAttribute->ID, $publishedVersionNo );
-                if ( $pubAttribute )
+                // cleanup previous relations
+                $contentObject->removeContentObjectRelation( false, $contentObjectVersion, $contentClassAttributeID, eZContentObject::RELATION_ATTRIBUTE );
+                // if translatable, we need to re-add the relations for other languages of (previously) published version.
+                $publishedVersionNo = $contentObject->publishedVersion();
+                if ( $contentObjectAttribute->contentClassAttributeCanTranslate() && $publishedVersionNo > 0 )
                 {
-                    foreach( $pubAttribute->fetchAttributeTranslations() as $attributeTranslation )
+                    $existingRelations = array();
+
+                    // get published translations of this attribute
+                    $pubAttribute = eZContentObjectAttribute::fetch($contentObjectAttribute->ID, $publishedVersionNo );
+                    if ( $pubAttribute )
                     {
-                        // skip if language is the one being saved
+                        foreach( $pubAttribute->fetchAttributeTranslations() as $attributeTranslation )
+                        {
+                            // skip if language is the one being saved
+                            if ( $attributeTranslation->LanguageCode === $languageCode )
+                                continue;
+
+                            if ( $attributeTranslation->attribute( 'data_int' ) )
+                                $existingRelations[$attributeTranslation->LanguageCode] = (int)$attributeTranslation->attribute( 'data_int' );
+                        }
+                    }
+
+                    // fetch existing attribute translations for current editing version
+                    foreach( $contentObjectAttribute->fetchAttributeTranslations() as $attributeTranslation )
+                    {
                         if ( $attributeTranslation->LanguageCode === $languageCode )
                             continue;
 
                         if ( $attributeTranslation->attribute( 'data_int' ) )
                             $existingRelations[$attributeTranslation->LanguageCode] = (int)$attributeTranslation->attribute( 'data_int' );
                     }
-                }
 
-                // fetch existing attribute translations for current editing version
-                foreach( $contentObjectAttribute->fetchAttributeTranslations() as $attributeTranslation )
-                {
-                    if ( $attributeTranslation->LanguageCode === $languageCode )
-                        continue;
 
-                    if ( $attributeTranslation->attribute( 'data_int' ) )
-                        $existingRelations[$attributeTranslation->LanguageCode] = (int)$attributeTranslation->attribute( 'data_int' );
-                }
-
-                // re-add existing or new relations for other languages
-                foreach( array_unique($existingRelations) as $existingObjectId )
-                {
-                    $contentObject->addContentObjectRelation( $existingObjectId, $contentObjectVersion, $contentClassAttributeID, eZContentObject::RELATION_ATTRIBUTE );
+                    // re-add existing or new relations for other languages
+                    foreach( array_unique($existingRelations) as $existingObjectId )
+                    {
+                        $contentObject->addContentObjectRelation( $existingObjectId, $contentObjectVersion, $contentClassAttributeID, eZContentObject::RELATION_ATTRIBUTE );
+                    }
                 }
             }
-        }
 
-        $objectID = $contentObjectAttribute->attribute( 'data_int' );
-        if ( $objectID )
-        {
-            $contentObject->addContentObjectRelation( $objectID, $contentObjectVersion, $contentClassAttributeID, eZContentObject::RELATION_ATTRIBUTE );
+            $objectID = $contentObjectAttribute->attribute( 'data_int' );
+            if ( $objectID )
+            {
+                $contentObject->addContentObjectRelation( $objectID, $contentObjectVersion, $contentClassAttributeID, eZContentObject::RELATION_ATTRIBUTE );
+            }
+        }else if($contentObjectAttributeData['type'] === $this::LINK_TYPE_EXTERNAL){
+            $urlValue = $contentObjectAttributeData['id'];
+            if(is_string($urlValue)){
+                $contentObjectAttribute->setContent($urlValue);
+            }else{
+                $url = eZURL::fetch( $contentObjectAttribute->attribute( 'data_int' ) );
+                if ( is_object( $url ) and
+                    trim( $url->attribute( 'url' ) ) != '' and
+                    $url->attribute( 'is_valid' ) ){
+                    $contentObjectAttribute->setContent($url->attribute('url'));
+                    $contentObjectAttributeData['id']=$url->attribute('url');
+                    $urlValue=$url->attribute('url');
+                }
+            }
+            $contentObjectAttribute->setAttribute( 'data_text', json_encode($contentObjectAttributeData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) );
+            if ( trim( $urlValue ) != '' )
+            {
+                $oldURLID = $contentObjectAttribute->attribute( 'data_int' );
+                $urlID = eZURL::registerURL( $urlValue );
+                $contentObjectAttribute->setAttribute( 'data_int', $urlID );
+                $contentObjectAttributeData['id'] = (int)$urlID;
+                $contentObjectAttribute->setAttribute( 'data_text', json_encode($contentObjectAttributeData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) );
+
+                if ( $oldURLID && $oldURLID != $urlID &&
+                    !eZURLObjectLink::hasObjectLinkList( $oldURLID ) )
+                    eZURL::removeByID( $oldURLID );
+            }
+            else
+            {
+                $contentObjectAttribute->setAttribute( 'data_int', 0 );
+            }
+        }
+        return true;
+    }
+
+    function postStore($contentObjectAttribute){
+        if(trim($contentObjectAttribute->attribute('data_text')) == '' ){
+            return false;
+        }
+        $contentObjectAttributeData = json_decode($contentObjectAttribute->attribute('data_text'), true, 512, JSON_THROW_ON_ERROR);
+        if($contentObjectAttributeData['type'] === $this::LINK_TYPE_EXTERNAL){
+
+            $urlValue = $contentObjectAttribute->content();
+
+            if ( trim( $urlValue ) != '' )
+            {
+                $urlID = eZURL::registerURL( $urlValue );
+                $objectAttributeID = $contentObjectAttribute->attribute( 'id' );
+                $objectAttributeVersion = $contentObjectAttribute->attribute( 'version' );
+
+
+                $db = eZDB::instance();
+                $db->begin();
+
+                $objectLinkList = eZURLObjectLink::fetchLinkObjectList( $objectAttributeID, $objectAttributeVersion );
+
+                // In order not to have duplicated links, delete existing ones that have been created during the version creation process
+                // and create a clean one (we can't update url_id since there's no primary key). This fixes EZP-20988
+                if ( !empty( $objectLinkList ) )
+                {
+                    eZURLObjectLink::removeURLlinkList( $objectAttributeID, $objectAttributeVersion );
+                }
+
+                $linkObjectLink = eZURLObjectLink::create( $urlID, $objectAttributeID, $objectAttributeVersion );
+                $linkObjectLink->store();
+
+                $db->commit();
+            }
         }
     }
 
     function validateClassAttributeHTTPInput( $http, $base, $classAttribute )
     {
-        $selectionTypeName = 'ContentClass_ezobjectrelation_selection_type_' . $classAttribute->attribute( 'id' );
         $state = eZInputValidator::STATE_ACCEPTED;
-        if ( $http->hasPostVariable( $selectionTypeName ) )
-        {
-            $selectionType = $http->postVariable( $selectionTypeName );
-            if ( $selectionType < 0 and
-                 $selectionType > 2 )
-            {
+
+        $linkTypeName = 'ContentClass_ngenhancedlink_link_type_' . $classAttribute->attribute( 'id' );
+
+        if(!($http->hasPostVariable($linkTypeName))) {
+            $state = eZInputValidator::STATE_INVALID;
+        }
+
+        $linkType = $http->postVariable($linkTypeName);
+        if($linkType < 0 or $linkType > 2){
+            $state = eZInputValidator::STATE_INVALID;
+        }
+
+        if(in_array($this::ALLOWED_LINK_TYPES[$linkType], [$this::LINK_TYPE_ALL, $this::LINK_TYPE_INTERNAL])){
+            $internalTargetsName = 'ContentClass_ngenhancedlink_internal_target_' . $classAttribute->attribute( 'id' );
+            $classConstraintsName = 'ContentClass_ngenhancedlink_class_list_' . $classAttribute->attribute( 'id' );
+
+            if(!($http->hasPostVariable($internalTargetsName) and
+                $http->hasPostVariable($classConstraintsName))) {
+                $state = eZInputValidator::STATE_INVALID;
+            }
+
+            $internalTargetTypes = $http->postVariable($internalTargetsName);
+            $diff = array_diff(array_values($internalTargetTypes), array_keys($this::TARGETS));
+            if(!empty($diff)){
                 $state = eZInputValidator::STATE_INVALID;
             }
         }
+
+        if(in_array($this::ALLOWED_LINK_TYPES[$linkType], [$this::LINK_TYPE_ALL, $this::LINK_TYPE_EXTERNAL])){
+            $externalTargetsName = 'ContentClass_ngenhancedlink_external_target_' . $classAttribute->attribute( 'id' );
+
+            if(!$http->hasPostVariable($externalTargetsName)) {
+                $state = eZInputValidator::STATE_INVALID;
+            }
+
+            $externalTargetTypes = $http->postVariable($externalTargetsName);
+            $diff = array_diff(array_values($externalTargetTypes), array_keys($this::TARGETS));
+            if(!empty($diff)){
+                $state = eZInputValidator::STATE_INVALID;
+            }
+
+        }
+
         return $state;
     }
 
@@ -312,53 +379,64 @@ class NgEnhancedLinkType extends eZDataType
 
     function fetchClassAttributeHTTPInput( $http, $base, $classAttribute )
     {
-        $selectionTypeName = 'ContentClass_ezobjectrelation_selection_type_' . $classAttribute->attribute( 'id' );
         $content = $classAttribute->content();
-        $postVariable = 'ContentClass_ezobjectrelation_class_list_' . $classAttribute->attribute( 'id' );
-        if ( $http->hasPostVariable( $postVariable ) )
-        {
-            $constrainedList = $http->postVariable( $postVariable );
-            $constrainedClassList = array();
-            foreach ( $constrainedList as $constraint )
-            {
-                if ( trim( $constraint ) != '' )
-                    $constrainedClassList[] = $constraint;
+
+        $linkTypeName = 'ContentClass_ngenhancedlink_link_type_' . $classAttribute->attribute( 'id' );
+        if($http->hasPostVariable($linkTypeName)){
+            $linkType = $http->postVariable($linkTypeName);
+            $content['allowedLinkType'] = $this::ALLOWED_LINK_TYPES[$linkType];
+            if(in_array($this::ALLOWED_LINK_TYPES[$linkType], [$this::LINK_TYPE_ALL, $this::LINK_TYPE_INTERNAL])){
+                $internalTargetsName = 'ContentClass_ngenhancedlink_internal_target_' . $classAttribute->attribute( 'id' );
+                if($http->hasPostVariable($internalTargetsName)){
+                    $internalTargets = $http->postVariable($internalTargetsName);
+                    $internalTargetsList = array();
+                    foreach ($internalTargets as $target){
+                        $internalTargetsList[] = $this::TARGETS[$target];
+                    }
+                    $content['allowedTargetsInternal'] = $internalTargetsList;
+                }
+
+                $enableSuffix = 'ContentClass_ngenhancedlink_enable_suffix_' . $classAttribute->attribute( 'id' );
+                if($http->hasPostVariable($enableSuffix)){
+                    $content['enableSuffix'] = true;
+                }
+
+                $classConstraintsName = 'ContentClass_ngenhancedlink_class_list_' . $classAttribute->attribute( 'id' );
+                if($http->hasPostVariable($classConstraintsName)){
+                    $constrainedList = $http->postVariable( $classConstraintsName );
+                    $constrainedClassList = array();
+                    foreach ( $constrainedList as $constraint )
+                    {
+                        if ( trim( $constraint ) != '' )
+                            $constrainedClassList[] = $constraint;
+                    }
+                    $content['selectionContentTypes'] = $constrainedClassList;
+                }
             }
-            $content['class_constraint_list'] = $constrainedClassList;
-            $hasData = true;
-        }
-        $hasData = false;
-        if ( $http->hasPostVariable( $selectionTypeName ) )
-        {
-            $selectionType = $http->postVariable( $selectionTypeName );
-            $content['selection_type'] = $selectionType;
-            $hasData = true;
-        }
-        $helperName = 'ContentClass_ezobjectrelation_selection_fuzzy_match_helper_' . $classAttribute->attribute( 'id' );
-        if ( $http->hasPostVariable( $helperName ) )
-        {
-            $fuzzyMatchName = 'ContentClass_ezobjectrelation_selection_fuzzy_match_' . $classAttribute->attribute( 'id' );
-            $content['fuzzy_match'] = false;
-            $hasData = true;
-            if ( $http->hasPostVariable( $fuzzyMatchName ) )
-            {
-                $content['fuzzy_match'] = true;
+            if(in_array($this::ALLOWED_LINK_TYPES[$linkType], [$this::LINK_TYPE_ALL, $this::LINK_TYPE_EXTERNAL])){
+                $externalTargetsName = 'ContentClass_ngenhancedlink_external_target_' . $classAttribute->attribute( 'id' );
+                if($http->hasPostVariable($externalTargetsName)){
+                    $externalTargets = $http->postVariable($externalTargetsName);
+                    $externalTargetsList = array();
+                    foreach ($externalTargets as $target){
+                        $externalTargetsList[] = $this::TARGETS[$target];
+                    }
+                    $content['allowedTargetsExternal'] = $externalTargetsList;
+                }
             }
         }
-        if ( $hasData )
-        {
-            $classAttribute->setContent( $content );
-            return true;
-        }
-        return false;
+        $classAttribute->setContent( $content );
+        return true;
     }
 
     function initializeClassAttribute( $classAttribute )
     {
-        $xmlText = $classAttribute->attribute( 'data_text5' );
-        if ( trim( $xmlText ) == '' )
+        $dataText = $classAttribute->attribute( 'data_text5' );
+
+        if ( trim( $dataText ) == '' )
         {
             $content = $this->defaultClassAttributeContent();
+            $classAttribute->setContent($content);
             return $this->storeClassAttributeContent( $classAttribute, $content );
         }
     }
@@ -366,20 +444,29 @@ class NgEnhancedLinkType extends eZDataType
     function preStoreClassAttribute( $classAttribute, $version )
     {
         $content = $classAttribute->content();
-        $classAttribute->setAttribute( 'data_int1', $content['selection_type'] );
-        $classAttribute->setAttribute( 'data_int2', $content['default_selection_node'] );
-        $classAttribute->setAttribute( 'data_int3', $content['fuzzy_match'] );
-
-        $xmlContentArray = array();
-        $defaultClassAttributeContent = $this->defaultClassAttributeContent();
-        foreach( $content as $xmlKey => $xmlContent )
+        $classAttributeContent = $this->defaultClassAttributeContent();
+        foreach( $content as $key => $value )
         {
-            if( isset( $defaultClassAttributeContent[$xmlKey] ) )
+            if( isset( $classAttributeContent[$key] ) )
             {
-                $xmlContentArray[$xmlKey] = $xmlContent;
+                $classAttributeContent[$key] = $value;
             }
         }
-        $this->storeClassAttributeContent( $classAttribute, $xmlContentArray );
+
+        $this->storeClassAttributeContent( $classAttribute, $classAttributeContent );
+    }
+
+    /**
+     * @throws JsonException
+     */
+    function storeClassAttributeContent($classAttribute, $content )
+    {
+        if(is_array($content)){
+            $fieldSettings = json_encode($content, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+            $classAttribute->setAttribute( 'data_text5', $fieldSettings );
+            return true;
+        }
+        return false;
     }
 
     /*!
@@ -390,12 +477,18 @@ class NgEnhancedLinkType extends eZDataType
     {
         $obj = $contentObjectAttribute->object();
         $atrributeTrans = $contentObjectAttribute->fetchAttributeTranslations( );
+        try {
+            $contentObjectAttributeData = json_decode($contentObjectAttribute->attribute('data_text'), true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            return;
+        }
+        if($contentObjectAttributeData['type'] === $this::LINK_TYPE_EXTERNAL) return;
         // Check if current relation exists in ezcontentobject_link
         foreach ( $atrributeTrans as $attrTarns )
         {
             if ( $attrTarns->attribute( 'id' ) != $contentObjectAttribute->attribute( 'id' ) )
                 if ( $attrTarns->attribute( 'data_int' ) == $contentObjectAttribute->attribute( 'data_int' ) )
-                     return;
+                    return;
         }
 
         //get eZContentObjectVersion
@@ -421,6 +514,7 @@ class NgEnhancedLinkType extends eZDataType
         {
             case "set_object_relation" :
             {
+
                 if ( $http->hasPostVariable( 'BrowseActionName' ) and
                           $http->postVariable( 'BrowseActionName' ) == ( 'AddRelatedObject_' . $contentObjectAttribute->attribute( 'id' ) ) and
                           $http->hasPostVariable( "SelectedObjectIDArray" ) )
@@ -509,29 +603,72 @@ class NgEnhancedLinkType extends eZDataType
         }
     }
 
+    function hasObjectAttributeContent( $contentObjectAttribute )
+    {
+        $contentObjectAttributeData = json_decode($contentObjectAttribute->attribute('data_text'), true, 512, JSON_THROW_ON_ERROR);
+        if($contentObjectAttributeData['type'] === self::LINK_TYPE_INTERNAL){
+            $object = $this->objectAttributeContent( $contentObjectAttribute );
+            if ( $object )
+                return true;
+        }else if($contentObjectAttribute['type'] === self::LINK_TYPE_EXTERNAL){
+            if ( $contentObjectAttribute->attribute( 'data_int' ) == 0 )
+                return false;
+
+            $url = eZURL::fetch( $contentObjectAttribute->attribute( 'data_int' ) );
+            if ( is_object( $url ) and
+                trim( $url->attribute( 'url' ) ) != '' and
+                $url->attribute( 'is_valid' ) )
+                return true;
+        }
+        return false;
+    }
+
     /*!
      Returns the content.
     */
     function objectAttributeContent( $contentObjectAttribute )
     {
-        $objectID = $contentObjectAttribute->attribute( "data_int" );
-        if ( $objectID != 0 )
-            $object = eZContentObject::fetch( $objectID );
-        else
-            $object = null;
-        return $object;
-    }
+        $data = $contentObjectAttribute->attribute( "data_text" );
+        if(empty(trim($data))) return null;
+        $contentObjectAttributeData = json_decode($contentObjectAttribute->attribute('data_text'), true, 512, JSON_THROW_ON_ERROR);
+        if($contentObjectAttributeData['type'] === self::LINK_TYPE_INTERNAL){
+            $objectID = $contentObjectAttribute->attribute( "data_int" );
+            if ( trim($data) != '' and $objectID != 0 )
+                //treba dodati i za url
+                $object = eZContentObject::fetch( $objectID );
+            else
+                $object = null;
+            return $object;
+        }else if($contentObjectAttributeData['type'] === self::LINK_TYPE_EXTERNAL){
+            if ( !$contentObjectAttribute->attribute( 'data_int' ) )
+            {
+                $attrValue = null;
+                return $attrValue;
+            }
+            $url = eZURL::url( $contentObjectAttribute->attribute( 'data_int' ) );
 
-    static function parseXML( $xmlText )
-    {
-        $dom = new DOMDocument( '1.0', 'utf-8' );
-        $dom->loadXML( $xmlText );
-        return $dom;
+            return $url;
+        }
+        return null;
     }
 
     function defaultClassAttributeContent()
     {
-        return array( 'class_constraint_list' => array() );
+        return [
+        'selectionContentTypes' => [],
+        'allowedLinkType' => $this::LINK_TYPE_ALL,
+        'allowedTargetsInternal' => [
+            $this::TARGET_LINK,
+            $this::TARGET_LINK_IN_NEW_TAB,
+            $this::TARGET_EMBED,
+            $this::TARGET_MODAL,
+        ],
+        'allowedTargetsExternal' => [
+            $this::TARGET_LINK,
+            $this::TARGET_LINK_IN_NEW_TAB,
+        ],
+        'enableSuffix' => false,
+        ];
     }
 
     /*!
@@ -542,8 +679,7 @@ class NgEnhancedLinkType extends eZDataType
     {
         $classAttribute = $objectAttribute->contentClassAttribute();
         $content = $this->classAttributeContent( $classAttribute );
-        $editGrouped = ( $content['selection_type'] == 0 or
-                         ( $content['selection_type'] == 1 and $content['fuzzy_match'] ) );
+        $editGrouped = true;
 
         $info = array( 'edit' => array( 'grouped_input' => $editGrouped ),
                        'collection' => array( 'grouped_input' => $editGrouped ) );
@@ -552,33 +688,32 @@ class NgEnhancedLinkType extends eZDataType
 
     function sortKey( $contentObjectAttribute )
     {
+        try {
+            $contentObjectAttributeData = json_decode($contentObjectAttribute->attribute('data_text'), true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            return '';
+        }
+        if($contentObjectAttributeData['type']===self::LINK_TYPE_EXTERNAL){
+            $url = eZURL::url( $contentObjectAttribute->attribute( 'data_int' ) );
+            return (trim($url));
+        }
         return $contentObjectAttribute->attribute( 'data_int' );
     }
 
     function sortKeyType()
     {
-        return 'int';
+        return 'string';
     }
 
     function classAttributeContent( $classObjectAttribute )
     {
-        $selectionType = $classObjectAttribute->attribute( "data_int1" );
-        $defaultSelectionNode = $classObjectAttribute->attribute( "data_int2" );
-        $fuzzyMatch = $classObjectAttribute->attribute( "data_int3" );
-
-        $attributeContent = array( 'selection_type' => $selectionType,
-                                   'default_selection_node' => $defaultSelectionNode,
-                                   'fuzzy_match' => $fuzzyMatch );
-
-        $attributeXMLContent = $this->defaultClassAttributeContent();
-        $xmlText = $classObjectAttribute->attribute( 'data_text5' );
-        if ( trim( $xmlText ) != '' )
+        $attributeContent = $this->defaultClassAttributeContent();
+        $encodedContent = $classObjectAttribute->attribute( 'data_text5' );
+        if ( trim( $encodedContent ) != '' )
         {
-            $doc = $this->parseXML( $xmlText );
-            $attributeXMLContent = $this->createClassContentStructure( $doc );
+            $attributeContent = json_decode($encodedContent, true, 512, JSON_THROW_ON_ERROR);
         }
-        return array_merge( $attributeContent, $attributeXMLContent );
-
+        return $attributeContent;
     }
 
     function deleteNotVersionedStoredClassAttribute( eZContentClassAttribute $classAttribute )
@@ -586,23 +721,7 @@ class NgEnhancedLinkType extends eZDataType
         eZContentObjectAttribute::removeRelationsByContentClassAttributeId( $classAttribute->attribute( 'id' ) );
     }
 
-    function createClassContentStructure( $doc )
-    {
-        $content = $this->defaultClassAttributeContent();
-        $root = $doc->documentElement;
-        $constraints = $root->getElementsByTagName( 'constraints' )->item( 0 );
-        if ( $constraints )
-        {
-            $allowedClassList = $constraints->getElementsByTagName( 'allowed-class' );
-            foreach( $allowedClassList as $allowedClass )
-            {
-                $content['class_constraint_list'][] = $allowedClass->getAttribute( 'contentclass-identifier' );
-            }
-        }
-        return $content;
-    }
-
-    function customClassAttributeHTTPAction( $http, $action, $classAttribute )
+/*    function customClassAttributeHTTPAction( $http, $action, $classAttribute )
     {
         switch ( $action )
         {
@@ -643,7 +762,7 @@ class NgEnhancedLinkType extends eZDataType
                 eZDebug::writeError( "Unknown objectrelationlist action '$action'", __METHOD__ );
             } break;
         }
-    }
+    }*/
 
     /*!
      Returns the meta data used for storing search indeces.
@@ -653,6 +772,14 @@ class NgEnhancedLinkType extends eZDataType
         $object = $this->objectAttributeContent( $contentObjectAttribute );
         if ( $object )
         {
+            try {
+                $contentObjectAttributeData = json_decode($contentObjectAttribute->attribute('data_text'), true, 512, JSON_THROW_ON_ERROR);
+            } catch (JsonException $e) {
+                return false;
+            }
+            if($contentObjectAttributeData['type']===self::LINK_TYPE_EXTERNAL){
+                return $object;
+            }
             // Does the related object exist in the same language as the current content attribute ?
             if ( in_array( $contentObjectAttribute->attribute( 'language_code' ), $object->attribute( 'current' )->translationList( false, false ) ) )
             {
@@ -673,7 +800,7 @@ class NgEnhancedLinkType extends eZDataType
     */
     function toString( $contentObjectAttribute )
     {
-        return $contentObjectAttribute->attribute( 'data_int' );
+        return $contentObjectAttribute->attribute( 'data_text' );
     }
 
     function fromString( $contentObjectAttribute, $string )
@@ -695,19 +822,16 @@ class NgEnhancedLinkType extends eZDataType
     */
     function title( $contentObjectAttribute, $name = null )
     {
+        $contentObjectAttributeData = json_decode($contentObjectAttribute->attribute('data_text'), true, 512, JSON_THROW_ON_ERROR);
         $object = $this->objectAttributeContent( $contentObjectAttribute );
         if ( $object )
         {
+            if($contentObjectAttributeData['type'] === $this::LINK_TYPE_EXTERNAL){
+                $url = eZURL::url( $contentObjectAttribute->attribute( 'data_int' ) );
+                return (trim($url));
+            }
             return $object->attribute( 'name' );
         }
-        return false;
-    }
-
-    function hasObjectAttributeContent( $contentObjectAttribute )
-    {
-        $object = $this->objectAttributeContent( $contentObjectAttribute );
-        if ( $object )
-            return true;
         return false;
     }
 
@@ -731,6 +855,7 @@ class NgEnhancedLinkType extends eZDataType
 
     function unserializeContentClassAttribute( $classAttribute, $attributeNode, $attributeParametersNode )
     {
+        //ok, selection-type moze ostati, osim toga moze, ost
         $content = $classAttribute->content();
         $selectionTypeNode = $attributeParametersNode->getElementsByTagName( 'selection-type' )->item( 0 );
         $content['selection_type'] = 0;
@@ -825,15 +950,6 @@ class NgEnhancedLinkType extends eZDataType
         }
 
         return $attributeChanged;
-    }
-
-    /*!
-     Removes objects with given ID from the relations list
-    */
-    function removeRelatedObjectItem( $contentObjectAttribute, $objectID )
-    {
-        $contentObjectAttribute->setAttribute( "data_int", null );
-        return true;
     }
 
     function supportsBatchInitializeObjectAttribute()
