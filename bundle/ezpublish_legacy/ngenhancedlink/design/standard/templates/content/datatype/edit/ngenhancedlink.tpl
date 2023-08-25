@@ -117,10 +117,10 @@
 
     <label for="eccael_target_{$attribute.contentclass_attribute.id}">{'Target'|i18n( 'design/standard/class/datatype' )}:</label>
     <select id="eccael_target_{$attribute.contentclass_attribute.id}" name="ContentClass_ngenhancedlink_target_internal_{$attribute.contentclass_attribute.id}">
-        <option value="0" {if not($attribute.contentclass_attribute.content.allowedTargetsInternal|contains('link'))}disabled="disabled"{/if} {eq( $content.link_type, 0 )|choose( '', 'selected="selected"' )}>{'Link'|i18n( 'design/standard/class/datatype' )}</option>
-        <option value="1" {if not($attribute.contentclass_attribute.content.allowedTargetsInternal|contains('link_in_new_tab'))}disabled="disabled"{/if} {eq( $content.link_type, 1 )|choose( '', 'selected="selected"' )}>{'Link in new tab'|i18n( 'design/standard/class/datatype' )}</option>
-        <option value="2" {if not($attribute.contentclass_attribute.content.allowedTargetsInternal|contains('embed'))}disabled="disabled"{/if} {eq( $content.link_type, 2 )|choose( '', 'selected="selected"' )}>{'Embed'|i18n( 'design/standard/class/datatype' )}</option>
-        <option value="3" {if not($attribute.contentclass_attribute.content.allowedTargetsInternal|contains('modal'))}disabled="disabled"{/if} {eq( $content.link_type, 3 )|choose( '', 'selected="selected"' )}>{'Modal'|i18n( 'design/standard/class/datatype' )}</option>
+        <option value="0" {if not($attribute.contentclass_attribute.content.allowedTargetsInternal|contains('link'))}disabled="disabled"{/if} {{if eq($content_data.type, 'internal')} {eq( $content_data.target, 'link' )|choose( '', 'selected="selected"' )}{/if}>{'Link'|i18n( 'design/standard/class/datatype' )}</option>
+        <option value="1" {if not($attribute.contentclass_attribute.content.allowedTargetsInternal|contains('link_in_new_tab'))}disabled="disabled"{/if} {if eq($content_data.type, 'internal')} {eq( $content_data.target, 'link_in_new_tab' )|choose( '', 'selected="selected"' )}{/if}>{'Link in new tab'|i18n( 'design/standard/class/datatype' )}</option>
+        <option value="2" {if not($attribute.contentclass_attribute.content.allowedTargetsInternal|contains('embed'))}disabled="disabled"{/if} {if eq($content_data.type, 'internal')} {eq( $content_data.target, 'embed' )|choose( '', 'selected="selected"' )}{/if}>{'Embed'|i18n( 'design/standard/class/datatype' )}</option>
+        <option value="3" {if not($attribute.contentclass_attribute.content.allowedTargetsInternal|contains('modal'))}disabled="disabled"{/if} {if eq($content_data.type, 'internal')} {eq( $content_data.target, 'modal' )|choose( '', 'selected="selected"' )}{/if}>{'Modal'|i18n( 'design/standard/class/datatype' )}</option>
     </select>
 </div>
 
