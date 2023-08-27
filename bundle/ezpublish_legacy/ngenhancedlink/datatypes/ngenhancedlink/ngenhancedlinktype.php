@@ -147,7 +147,7 @@ class NgEnhancedLinkType extends eZDataType
             $internalLinkTarget = $http->postVariable($internalLinkTargetInputName);
 
             $data = [
-                'id' => (int)$internalLinkId,
+                'id' => ((int)$internalLinkId) === 0 ? null : (int)$internalLinkId,
                 'label' => $internalLinkLabel,
                 'type' => self::LINK_TYPE_INTERNAL,
                 'target' => $this::TARGETS[$internalLinkTarget],
@@ -605,7 +605,11 @@ class NgEnhancedLinkType extends eZDataType
 
     function hasObjectAttributeContent( $contentObjectAttribute )
     {
-        $contentObjectAttributeData = json_decode($contentObjectAttribute->attribute('data_text'), true, 512, JSON_THROW_ON_ERROR);
+        try {
+            $contentObjectAttributeData = json_decode($contentObjectAttribute->attribute('data_text'), true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            return false;
+        }
         if($contentObjectAttributeData['type'] === self::LINK_TYPE_INTERNAL){
             $object = $this->objectAttributeContent( $contentObjectAttribute );
             if ( $object )
