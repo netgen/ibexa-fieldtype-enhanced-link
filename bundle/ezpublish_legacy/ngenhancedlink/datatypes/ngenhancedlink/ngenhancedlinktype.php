@@ -23,7 +23,7 @@ class NgEnhancedLinkType extends eZDataType
     public const LINK_TYPE_INTERNAL = 'internal';
     public const LINK_TYPE_EXTERNAL = 'external';
     public const TARGET_LINK = 'link';
-    public const TARGET_LINK_IN_NEW_TAB = 'link_in_new_tab';
+    public const TARGET_LINK_IN_NEW_TAB = 'link_new_tab';
     public const TARGET_EMBED = 'embed';
     public const TARGET_MODAL = 'modal';
 
@@ -40,7 +40,7 @@ class NgEnhancedLinkType extends eZDataType
 
     public const TARGETS = [
         0 => 'link',
-        1 => 'link_in_new_tab',
+        1 => 'link_new_tab',
         2 => 'embed',
         3 => 'modal',
     ];

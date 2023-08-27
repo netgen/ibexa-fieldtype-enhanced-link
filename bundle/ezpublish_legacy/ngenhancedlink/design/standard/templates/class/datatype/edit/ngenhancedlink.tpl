@@ -35,7 +35,7 @@
         <div class="block">
             <select id="eccael_allowed_internal_target_{$class_attribute.id}" name="ContentClass_ngenhancedlink_internal_target_{$class_attribute.id}[]" multiple="multiple" title="{'Allowed internal targets'|i18n( 'design/standard/class/datatype' )}" size="4">
                 <option value="0" {if $content.allowedTargetsInternal|contains( 'link' )}selected="selected"{/if}>{'Link'|i18n( 'design/standard/class/datatype' )}</option>
-                <option value="1" {if $content.allowedTargetsInternal|contains( 'link_in_new_tab' )}selected="selected"{/if}>{'Link in new tab'|i18n( 'design/standard/class/datatype' )}</option>
+                <option value="1" {if $content.allowedTargetsInternal|contains( 'link_new_tab' )}selected="selected"{/if}>{'Link in new tab'|i18n( 'design/standard/class/datatype' )}</option>
                 <option value="2" {if $content.allowedTargetsInternal|contains( 'embed' )}selected="selected"{/if}>{'Embed'|i18n( 'design/standard/class/datatype' )}</option>
                 <option value="3" {if $content.allowedTargetsInternal|contains( 'modal' )}selected="selected"{/if}>{'Modal'|i18n( 'design/standard/class/datatype' )}</option>
             </select>
@@ -47,7 +47,7 @@
         <div class="block">
             <select id="eccael_allowed_external_target_{$class_attribute.id}" name="ContentClass_ngenhancedlink_external_target_{$class_attribute.id}[]" multiple="multiple" title="{'Allowed external targets'|i18n( 'design/standard/class/datatype' )}" size="4">
                 <option value="0" {if $content.allowedTargetsExternal|contains( 'link' )}selected="selected"{/if}>{'Link'|i18n( 'design/standard/class/datatype' )}</option>
-                <option value="1" {if $content.allowedTargetsExternal|contains( 'link_in_new_tab' )}selected="selected"{/if}>{'Link in new tab'|i18n( 'design/standard/class/datatype' )}</option>
+                <option value="1" {if $content.allowedTargetsExternal|contains( 'link_new_tab' )}selected="selected"{/if}>{'Link in new tab'|i18n( 'design/standard/class/datatype' )}</option>
                 <option value="2" {if $content.allowedTargetsExternal|contains( 'embed' )}selected="selected"{/if}>{'Embed'|i18n( 'design/standard/class/datatype' )}</option>
                 <option value="3" {if $content.allowedTargetsExternal|contains( 'modal' )}selected="selected"{/if}>{'Modal'|i18n( 'design/standard/class/datatype' )}</option>
             </select>
