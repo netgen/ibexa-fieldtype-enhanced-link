@@ -6,15 +6,15 @@
 <div class="block">
     <label for="eccael_types_{$class_attribute.id}">{'Allowed link types'|i18n( 'design/standard/class/datatype' )}:</label>
     <select id="eccael_types_{$class_attribute.id}" name="ContentClass_ngenhancedlink_link_type_{$class_attribute.id}">
-        <option value="0" {eq( $content.allowedLinkType, 'all' )|choose( '', 'selected="selected"' )}>{'All'|i18n( 'design/standard/class/datatype' )}</option>
-        <option value="1" {eq( $content.allowedLinkType, 'internal' )|choose( '', 'selected="selected"' )}>{'Internal'|i18n( 'design/standard/class/datatype' )}</option>
-        <option value="2" {eq( $content.allowedLinkType, 'external' )|choose( '', 'selected="selected"' )}>{'External'|i18n( 'design/standard/class/datatype' )}</option>
+        <option value="0" data-template-id="{$class_attribute.id}" {eq( $content.allowedLinkType, 'all' )|choose( '', 'selected="selected"' )}>{'All'|i18n( 'design/standard/class/datatype' )}</option>
+        <option value="1" data-template-id="{$class_attribute.id}" {eq( $content.allowedLinkType, 'internal' )|choose( '', 'selected="selected"' )}>{'Internal'|i18n( 'design/standard/class/datatype' )}</option>
+        <option value="2" data-template-id="{$class_attribute.id}" {eq( $content.allowedLinkType, 'external' )|choose( '', 'selected="selected"' )}>{'External'|i18n( 'design/standard/class/datatype' )}</option>
         {* Commented out because somebody forgot to implement this functionality... *}
         {*    <option value="2" {eq( $content.selection_type, 2 )|choose( '', 'selected="selected"' )}>{'Drop-down tree'|i18n( 'design/standard/class/datatype' )}</option> *}
     </select>
 </div>
 
-    <div class="block internal-link-options-block">
+    <div class="block internal-link-options-block-{$class_attribute.id}">
         <h2>{'Internal link type options'|i18n( 'design/standard/class/datatype' )}:</h2>
 
         <div class="block">
@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <div class="block external-link-options-block">
+    <div class="block external-link-options-block-{$class_attribute.id}">
         <h2>{'External link type options'|i18n( 'design/standard/class/datatype' )}:</h2>
         <div class="block">
             <select id="eccael_allowed_external_target_{$class_attribute.id}" name="ContentClass_ngenhancedlink_external_target_{$class_attribute.id}[]" multiple="multiple" title="{'Allowed external targets'|i18n( 'design/standard/class/datatype' )}" size="4">
