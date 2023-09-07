@@ -843,38 +843,70 @@ class NgEnhancedLinkType extends eZDataType
     {
         $content = $classAttribute->content();
         $dom = $attributeParametersNode->ownerDocument;
-        $selectionTypeNode = $dom->createElement( 'selection-type' );
-        $selectionTypeNode->setAttribute( 'id', $content['selection_type'] );
-        $attributeParametersNode->appendChild( $selectionTypeNode );
-        $fuzzyMatchNode = $dom->createElement( 'fuzzy-match' );
-        $fuzzyMatchNode->setAttribute( 'id', $content['fuzzy_match'] );
-        $attributeParametersNode->appendChild( $fuzzyMatchNode );
-        if ( $content['default_selection_node'] )
-        {
-            $defaultSelectionNode = $dom->createElement( 'default-selection' );
-            $defaultSelectionNode->setAttribute( 'node-id', $content['default_selection_node'] );
-            $attributeParametersNode->appendChild( $defaultSelectionNode );
-        }
+
+        $selectionContentTypesNode = $dom->createElement( 'selection-content-types' );
+        $selectionContentTypesNode->appendChild($dom->createTextNode(implode(" ", $content['selectionContentTypes'])));
+        $attributeParametersNode->appendChild( $selectionContentTypesNode );
+
+        $allowedLinkTypeNode = $dom->createElement( 'allowed-link-type' );
+        $allowedLinkTypeNode->appendChild($dom->createTextNode($content['allowedLinkType']));
+        $attributeParametersNode->appendChild($allowedLinkTypeNode);
+
+        $allowedTargetsInternalNode = $dom->createElement('allowed-targets-internal');
+        $allowedTargetsInternalNode->appendChild($dom->createTextNode(implode(" ", $content['allowedTargetsInternal'])));
+        $attributeParametersNode->appendChild($allowedTargetsInternalNode);
+
+        $allowedTargetsExternalNode = $dom->createElement('allowed-targets-external');
+        $allowedTargetsExternalNode->appendChild($dom->createTextNode(implode(" ", $content['allowedTargetsExternal'])));
+        $attributeParametersNode->appendChild($allowedTargetsExternalNode);
+
+        $enableSuffixNode = $dom->createElement('enable-suffix');
+        $enableSuffixString = $content['enableSuffix'] === true ? 'true' : 'false';
+        $enableSuffixNode->appendChild($dom->createTextNode($enableSuffixString));
+        $attributeParametersNode->appendChild($enableSuffixNode);
     }
 
     function unserializeContentClassAttribute( $classAttribute, $attributeNode, $attributeParametersNode )
     {
-        //ok, selection-type moze ostati, osim toga moze, ost
         $content = $classAttribute->content();
-        $selectionTypeNode = $attributeParametersNode->getElementsByTagName( 'selection-type' )->item( 0 );
-        $content['selection_type'] = 0;
-        if ( $selectionTypeNode )
-            $content['selection_type'] = $selectionTypeNode->getAttribute( 'id' );
 
-        $fuzzyMatchNode = $attributeParametersNode->getElementsByTagName( 'fuzzy-match' )->item( 0 );
-        $content['fuzzy_match'] = false;
-        if ( $fuzzyMatchNode )
-            $content['fuzzy_match'] = $fuzzyMatchNode->getAttribute( 'id' );
+        $content['selectionContentTypes'] = [];
+        $selectionContentTypesNode = $attributeParametersNode->getElementsByTagName( 'selection-content-types' );
+        if($selectionContentTypesNode->length > 0 && !empty($selectionContentTypesNode->item( 0 )->textContent)){
+            $content['selectionContentTypes'] = explode(' ', $selectionContentTypesNode->item( 0 )->textContent);
+        }
 
-        $defaultSelectionNode = $attributeParametersNode->getElementsByTagName( 'default-selection' )->item( 0 );
-        $content['default_selection_node'] = false;
-        if ( $defaultSelectionNode )
-            $content['default_selection_node'] = $defaultSelectionNode->getAttribute( 'node-id' );
+        $content['allowedLinkType'] = 'all';
+        $allowedLinkTypeNode = $attributeParametersNode->getElementsByTagName( 'allowed-link-type' );
+        if ($allowedLinkTypeNode->length > 0){
+            $content['allowedLinkType'] = $allowedLinkTypeNode->item(0)->textContent;
+        }
+
+        $content['allowedTargetsInternal'] = [
+            $this::TARGET_LINK,
+            $this::TARGET_LINK_IN_NEW_TAB,
+            $this::TARGET_EMBED,
+            $this::TARGET_MODAL,
+        ];
+        $allowedTargetsInternalNode = $attributeParametersNode->getElementsByTagName( 'allowed-targets-internal' );
+        if($allowedTargetsInternalNode->length > 0 && !empty($allowedTargetsInternalNode->item( 0 )->textContent)){
+            $content['allowedTargetsInternal'] = explode(' ', $allowedTargetsInternalNode->item( 0 )->textContent);
+        }
+
+        $content['allowedTargetsExternal'] = [
+            $this::TARGET_LINK,
+            $this::TARGET_LINK_IN_NEW_TAB,
+        ];
+        $allowedTargetsExternalNode = $attributeParametersNode->getElementsByTagName( 'allowed-targets-external' );
+        if($allowedTargetsExternalNode->length > 0 && !empty($allowedTargetsExternalNode->item( 0 )->textContent)){
+            $content['allowedTargetsInternal'] = explode(' ', $allowedTargetsInternalNode->item( 0 )->textContent);
+        }
+
+        $content['enableSuffix'] = false;
+        $enableSuffixNode = $attributeParametersNode->getElementsByTagName( 'enable-suffix' );
+        if ($allowedLinkTypeNode->length > 0){
+            $content['enableSuffix'] = $allowedLinkTypeNode->item(0)->textContent === 'true';
+        }
 
         $classAttribute->setContent( $content );
         $classAttribute->store();
