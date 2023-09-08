@@ -367,9 +367,7 @@ class NgEnhancedLinkType extends eZDataType
             if(!empty($diff)){
                 $state = eZInputValidator::STATE_INVALID;
             }
-
         }
-
         return $state;
     }
 
@@ -918,74 +916,149 @@ class NgEnhancedLinkType extends eZDataType
     function serializeContentObjectAttribute( $package, $objectAttribute )
     {
         $node = $this->createContentObjectAttributeDOMNode( $objectAttribute );
-        $relatedObjectID = $objectAttribute->attribute( 'data_int' );
+        try {
+            $objectAttributeData = json_decode($objectAttribute->attribute('data_text'), true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            return $node;
+        }
+        if($objectAttributeData['type'] === self::LINK_TYPE_INTERNAL){
+            $relatedObjectID = $objectAttribute->attribute( 'data_int' );
 
-        if ( $relatedObjectID !== null )
-        {
-            $relatedObject = eZContentObject::fetch( $relatedObjectID );
-            if ( !$relatedObject )
+            if ( $relatedObjectID !== null )
             {
-                eZDebug::writeNotice( 'Related object with ID: ' . $relatedObjectID . ' does not exist.' );
+                $relatedObject = eZContentObject::fetch( $relatedObjectID );
+                if ( !$relatedObject )
+                {
+                    eZDebug::writeNotice( 'Related object with ID: ' . $relatedObjectID . ' does not exist.' );
+                }
+                else
+                {
+                    $dom = $node->ownerDocument;
+                    $remoteIdNode = $dom->createElement( 'id' );
+                    $remoteIdNode->appendChild( $dom->createTextNode( $relatedObject->attribute('remote_id')));
+                    $node->appendChild($remoteIdNode);
+
+                    $typeNode = $dom->createElement('type');
+                    $typeNode->appendChild( $dom->createTextNode($objectAttributeData['type']));
+                    $node->appendChild($typeNode);
+
+                    $targetNode = $dom->createElement( 'target' );
+                    $targetNode->appendChild( $dom->createTextNode($objectAttributeData['target']));
+                    $node->appendChild($targetNode);
+
+                    $labelNode = $dom->createElement( 'label' );
+                    $labelNode->appendChild( $dom->createTextNode($objectAttributeData['label']));
+                    $node->appendChild($labelNode);
+
+                    $suffixNode = $dom->createElement( 'suffix' );
+                    $suffixNode->appendChild( $dom->createTextNode($objectAttributeData['suffix']));
+                    $node->appendChild( $suffixNode );
+                }
             }
-            else
+        }elseif ($objectAttributeData['type'] === self::LINK_TYPE_EXTERNAL){
+            $url = eZURL::fetch( $objectAttribute->attribute( 'data_int' ) );
+            if ( is_object( $url ) and
+                trim( $url->attribute( 'url' ) ) != '' )
             {
-                $relatedObjectRemoteID = $relatedObject->attribute( 'remote_id' );
                 $dom = $node->ownerDocument;
-                $relatedObjectRemoteIDNode = $dom->createElement( 'related-object-remote-id' );
-                $relatedObjectRemoteIDNode->appendChild( $dom->createTextNode( $relatedObjectRemoteID ) );
-                $node->appendChild( $relatedObjectRemoteIDNode );
+/*                $url = eZURL::url( $objectAttribute->attribute( 'data_int' ) );*/
+                $urlNode = $dom->createElement( 'url' );
+                $urlNode->appendChild( $dom->createTextNode( urlencode( $url->attribute( 'url' ) ) ) );
+                $urlNode->setAttribute( 'original-url-md5', $url->attribute( 'original_url_md5' ) );
+                $urlNode->setAttribute( 'is-valid', $url->attribute( 'is_valid' ) );
+                $urlNode->setAttribute( 'last-checked', $url->attribute( 'last_checked' ) );
+                $urlNode->setAttribute( 'created', $url->attribute( 'created' ) );
+                $urlNode->setAttribute( 'modified', $url->attribute( 'modified' ) );
+                $node->appendChild( $urlNode );
+
+                $typeNode = $dom->createElement('type');
+                $typeNode->appendChild( $dom->createTextNode($objectAttributeData['type']));
+                $node->appendChild($typeNode);
+
+                $targetNode = $dom->createElement( 'target' );
+                $targetNode->appendChild( $dom->createTextNode($objectAttributeData['target']));
+                $node->appendChild($targetNode);
+
+                $labelNode = $dom->createElement( 'label' );
+                $labelNode->appendChild( $dom->createTextNode($objectAttributeData['label']));
+                $node->appendChild($labelNode);
+
+                $suffixNode = $dom->createElement( 'suffix' );
+                $suffixNode->appendChild( $dom->createTextNode($objectAttributeData['suffix']));
+                $node->appendChild( $suffixNode );
             }
+        }else{
+            return $node;
         }
 
         return $node;
     }
 
-    function unserializeContentObjectAttribute( $package, $objectAttribute, $attributeNode )
+    /**
+     * @throws JsonException
+     */
+    function unserializeContentObjectAttribute($package, $objectAttribute, $attributeNode )
     {
-        $relatedObjectRemoteIDNode = $attributeNode->getElementsByTagName( 'related-object-remote-id' )->item( 0 );
-        $relatedObjectID = null;
+        $typeNodeString = $attributeNode->getElementsByTagName( 'type' )->item( 0 )->textContent;
+        $targetNodeString = $attributeNode->getElementsByTagName( 'target' )->item( 0 )->textContent;
+        $labelNodeString = $attributeNode->getElementsByTagName( 'label' )->item( 0 )->textContent;
+        $suffixNodeString = $attributeNode->getElementsByTagName( 'suffix' )->item( 0 )->textContent;
+        if($typeNodeString === self::LINK_TYPE_INTERNAL){
+            $remoteIdNodeString = $attributeNode->getElementsByTagName( 'id' )->item( 0 )->textContent;
+            $relatedObjectID = null;
 
-        if ( $relatedObjectRemoteIDNode )
-        {
-            $relatedObjectRemoteID = $relatedObjectRemoteIDNode->textContent;
-            $object = eZContentObject::fetchByRemoteID( $relatedObjectRemoteID );
-            if ( $object )
+            if ( $remoteIdNodeString )
             {
-                $relatedObjectID = $object->attribute( 'id' );
-            }
-            else
-            {
-                // store remoteID so it can be used in postUnserialize
-                $objectAttribute->setAttribute( 'data_text', $relatedObjectRemoteID );
-            }
-        }
-
-        $objectAttribute->setAttribute( 'data_int', $relatedObjectID );
-    }
-
-    function postUnserializeContentObjectAttribute( $package, $objectAttribute )
-    {
-        $attributeChanged = false;
-        $relatedObjectID = $objectAttribute->attribute( 'data_int' );
-
-        if ( !$relatedObjectID )
-        {
-            // Restore cross-relations using preserved remoteID
-            $relatedObjectRemoteID = $objectAttribute->attribute( 'data_text' );
-            if ( $relatedObjectRemoteID)
-            {
-                $object = eZContentObject::fetchByRemoteID( $relatedObjectRemoteID );
-                $relatedObjectID = ( $object !== null ) ? $object->attribute( 'id' ) : null;
-
-                if ( $relatedObjectID )
+                $object = eZContentObject::fetchByRemoteID( $remoteIdNodeString );
+                if ( $object )
                 {
-                    $objectAttribute->setAttribute( 'data_int', $relatedObjectID );
-                    $attributeChanged = true;
+                    $relatedObjectID = $object->attribute( 'id' );
                 }
             }
-        }
 
-        return $attributeChanged;
+            $objectAttribute->setAttribute( 'data_int', $relatedObjectID );
+
+            $dataText = [
+                'id' => (int)$relatedObjectID,
+                'label' => empty($labelNodeString) ? null : $labelNodeString,
+                'type' => $typeNodeString,
+                'target' => $targetNodeString,
+                'suffix' => empty($suffixNodeString) ? null : $suffixNodeString,
+            ];
+
+            $objectAttribute->setAttribute('data_text', json_encode($dataText, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
+        }else if($typeNodeString === self::LINK_TYPE_EXTERNAL){
+            $urlNode = $attributeNode->getElementsByTagName( 'url' )->item( 0 );
+            if ( is_object( $urlNode ) )
+            {
+                unset( $url );
+                $url = urldecode( $urlNode->textContent );
+
+                $urlID = eZURL::registerURL( $url );
+                if ( $urlID )
+                {
+                    $urlObject = eZURL::fetch( $urlID );
+
+                    $urlObject->setAttribute( 'original_url_md5', $urlNode->getAttribute( 'original-url-md5' ) );
+                    $urlObject->setAttribute( 'is_valid', $urlNode->getAttribute( 'is-valid' ) );
+                    $urlObject->setAttribute( 'last_checked', $urlNode->getAttribute( 'last-checked' ) );
+                    $urlObject->setAttribute( 'created', time() );
+                    $urlObject->setAttribute( 'modified', time() );
+                    $urlObject->store();
+
+                    $objectAttribute->setAttribute( 'data_int', $urlID );
+                }
+
+                $dataText = [
+                    'id' => (int)$urlID,
+                    'label' => empty($labelNodeString) ? null : $labelNodeString,
+                    'type' => $typeNodeString,
+                    'target' => $targetNodeString,
+                    'suffix' => empty($suffixNodeString) ? null : $suffixNodeString,
+                ];
+                $objectAttribute->setAttribute('data_text', json_encode($dataText, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
+            }
+        }
     }
 
     function supportsBatchInitializeObjectAttribute()
