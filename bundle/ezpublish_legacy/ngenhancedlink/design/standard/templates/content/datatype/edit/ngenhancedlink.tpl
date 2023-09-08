@@ -12,12 +12,12 @@
 <div class="block">
     <label for="ecael_type_{$attribute.contentclass_attribute.id}">{'Link type'|i18n( 'design/standard/class/datatype' )}:</label>
     <select id="eccael_types_{$attribute.contentclass_attribute.id}" name="ContentClass_ngenhancedlink_link_type_{$attribute.contentclass_attribute.id}">
-        <option value="0" {eq( $content_data.type, 'internal' )|choose( '', 'selected="selected"' )} >{'Internal'|i18n( 'design/standard/class/datatype' )}</option>
-        <option value="1" {eq( $content_data.type, 'external' )|choose( '', 'selected="selected"' )}>{'External'|i18n( 'design/standard/class/datatype' )}</option>
+        <option value="0" data-template-id="{$attribute.id}" {eq( $content_data.type, 'internal' )|choose( '', 'selected="selected"' )} >{'Internal'|i18n( 'design/standard/class/datatype' )}</option>
+        <option value="1" data-template-id="{$attribute.id}" {eq( $content_data.type, 'external' )|choose( '', 'selected="selected"' )}>{'External'|i18n( 'design/standard/class/datatype' )}</option>
     </select>
 </div>
 
-<div class="block internal-link-block">
+<div class="block internal-link-block-{$attribute.id}">
     <h2>{'Internal link'|i18n( 'design/standard/class/datatype' )}:</h2>
 
     <div class="block" id="ngenhancedlink_browse_{$attribute.id}">
@@ -124,7 +124,7 @@
     </select>
 </div>
 
-<div class="block external-link-block">
+<div class="block external-link-block-{$attribute.id}">
     <h2>{'External link'|i18n( 'design/standard/class/datatype' )}:</h2>
 
     <div class="block inline-block">
