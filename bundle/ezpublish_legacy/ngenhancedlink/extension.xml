@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<software>
+    <metadata>
+        <name>Netgen Enhanced Link Field Type</name>
+        <version>2.0</version>
+        <copyright>Copyright (C) 2023 Netgen d.o.o. All rights reserved.</copyright>
+        <license>GNU General Public License v2.0</license>
+        <info_url>https://netgen.io</info_url>
+    </metadata>
+</software>
