@@ -77,7 +77,7 @@ class DoctrineStorage extends Gateway
             $statement = $query->execute();
 
             foreach ($statement->fetchAllAssociative() as $row) {
-                $map[$row['url']] = $row['id'];
+                $map[$row['url']] = (int)$row['id'];
             }
         }
 
