@@ -72,3 +72,11 @@ services:
             - '@ibexa.api.repository'
         tags:
             - { name: twig.runtime }
+
+    Netgen\IbexaFieldTypeEnhancedLinkBundle\View\ParameterProvider:
+        class: Netgen\IbexaFieldTypeEnhancedLinkBundle\View\ParameterProvider
+        arguments:
+            - '@ibexa.api.service.content'
+            - '@ibexa.api.service.field_type'
+        tags:
+            - { name: ibexa.field_type.view.parameter.provider, alias: '%ng.fieldtype.enhanced_link.identifier%' }
