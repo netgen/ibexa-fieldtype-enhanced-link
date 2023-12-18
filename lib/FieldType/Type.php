@@ -325,6 +325,15 @@ class Type extends FieldType
             $reference = $hash['reference'];
 
             if (isset($reference)) {
+                if (is_int($reference)) {
+                    try {
+                        $contentInfo = $this->handler->loadContentInfo($reference);
+                        $versionInfo = $this->handler->loadVersionInfo($reference, $contentInfo->currentVersionNo);
+                    } catch (NotFoundException $e) {
+                        return $this->getEmptyValue();
+                    }
+                }
+
                 return new Value($reference, $hash['label'], $hash['target'], $hash['suffix']);
             }
         }
@@ -406,6 +415,13 @@ class Type extends FieldType
         $suffix = $fieldValue->data['suffix'] ?? null;
 
         if ($type === self::LINK_TYPE_INTERNAL && is_int($id)) {
+            try {
+                $contentInfo = $this->handler->loadContentInfo($id);
+                $versionInfo = $this->handler->loadVersionInfo($id, $contentInfo->currentVersionNo);
+            } catch (NotFoundException $e) {
+                return $this->getEmptyValue();
+            }
+
             return new Value(
                 $id,
                 $label,
