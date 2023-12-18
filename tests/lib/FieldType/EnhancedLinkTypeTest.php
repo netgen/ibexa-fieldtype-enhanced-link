@@ -136,16 +136,25 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         return [
             [
                 [
-                    'reference' => 23,
+                    'reference' => 14,
                     'label' => 'test',
                     'target' => Type::TARGET_LINK,
                     'suffix' => null,
                 ],
-                new Value(23, 'test', Type::TARGET_LINK, null),
+                new Value(14, 'test', Type::TARGET_LINK, null),
             ],
             [
                 [
                     'reference' => null,
+                    'label' => null,
+                    'target' => Type::TARGET_LINK,
+                    'suffix' => null,
+                ],
+                new Value(),
+            ],
+            [
+                [
+                    'reference' => 123,
                     'label' => null,
                     'target' => Type::TARGET_LINK,
                     'suffix' => null,
@@ -594,14 +603,14 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 new FieldValue([
                     'data' => [
                         'type' => Type::LINK_TYPE_INTERNAL,
-                        'id' => 12,
+                        'id' => 14,
                         'label' => 'label',
                         'target' => Type::TARGET_MODAL,
                         'suffix' => null,
                     ],
                     'externalData' => null,
                 ]),
-                new Value(12, 'label', Type::TARGET_MODAL),
+                new Value(14, 'label', Type::TARGET_MODAL),
             ],
             'no_type_key' => [
                 new FieldValue([
@@ -659,15 +668,28 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                 ]),
                 $this->getEmptyValueExpectation(),
             ],
+            'internal_type_with_unexisting_content_id' => [
+                new FieldValue([
+                    'data' => [
+                        'type' => Type::LINK_TYPE_INTERNAL,
+                        'id' => 123,
+                        'label' => 'label',
+                        'target' => Type::TARGET_MODAL,
+                        'suffix' => null,
+                    ],
+                    'externalData' => null,
+                ]),
+                new Value(),
+            ],
             'missing_fields' => [
                 new FieldValue([
                     'data' => [
-                        'id' => 12,
+                        'id' => 14,
                         'type' => Type::LINK_TYPE_INTERNAL,
                     ],
                     'externalData' => null,
                 ]),
-                new Value(12, null, Type::TARGET_LINK, null),
+                new Value(14, null, Type::TARGET_LINK, null),
             ],
         ];
     }
