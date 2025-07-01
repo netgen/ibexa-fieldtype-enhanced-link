@@ -83,6 +83,7 @@ class FormMapper extends AbstractRelationFormMapper
                 'field_definition.ngenhancedlink.target.' . Type::TARGET_EMBED => Type::TARGET_EMBED,
                 'field_definition.ngenhancedlink.target.' . Type::TARGET_MODAL => Type::TARGET_MODAL,
                 'field_definition.ngenhancedlink.target.' . Type::TARGET_DOWNLOAD_LINK => Type::TARGET_DOWNLOAD_LINK,
+                'field_definition.ngenhancedlink.target.' . Type::TARGET_DOWNLOAD_INLINE => Type::TARGET_DOWNLOAD_INLINE,
             ],
             'property_path' => 'fieldSettings[allowedTargetsInternal]',
             'label' => /* @Desc("Allowed Targets Internal") */ 'field_definition.ngenhancedlink.selection_allowed_targets.internal',

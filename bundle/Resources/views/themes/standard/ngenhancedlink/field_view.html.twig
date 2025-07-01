@@ -29,6 +29,17 @@
                             }
                         )
                     ) }}
+                {% elseif field.value.isTargetDownloadInline %}
+                    {{ render(
+                        controller(
+                            "ibexa_content::viewAction",
+                            {
+                                'contentId': field.value.reference,
+                                'viewType': 'download_inline',
+                                'layout': false
+                            }
+                        )
+                    ) }}
                 {% else %}
                     {{ render(
                         controller(

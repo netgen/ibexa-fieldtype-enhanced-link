@@ -36,6 +36,7 @@ class Type extends FieldType
     public const TARGET_MODAL = 'modal';
     public const TARGET_LINK_IN_NEW_TAB = 'link_new_tab';
     public const TARGET_DOWNLOAD_LINK = 'download_link';
+    public const TARGET_DOWNLOAD_INLINE = 'download_inline';
 
     protected $settingsSchema = [
         'selectionMethod' => [
@@ -66,6 +67,7 @@ class Type extends FieldType
                 self::TARGET_EMBED,
                 self::TARGET_MODAL,
                 self::TARGET_DOWNLOAD_LINK,
+                self::TARGET_DOWNLOAD_INLINE,
             ],
         ],
         'allowedTargetsExternal' => [
@@ -199,9 +201,9 @@ class Type extends FieldType
 
                 case 'allowedTargetsExternal':
                 case 'allowedTargetsInternal':
-                    if (!is_array($value) || count(array_intersect($value, [self::TARGET_LINK, self::TARGET_LINK_IN_NEW_TAB, self::TARGET_EMBED, self::TARGET_MODAL, self::TARGET_DOWNLOAD_LINK])) === 0) {
+                    if (!is_array($value) || count(array_intersect($value, [self::TARGET_LINK, self::TARGET_LINK_IN_NEW_TAB, self::TARGET_EMBED, self::TARGET_MODAL, self::TARGET_DOWNLOAD_LINK, self::TARGET_DOWNLOAD_INLINE])) === 0) {
                         $validationErrors[] = new ValidationError(
-                            "Setting '%setting%' value must be one or either %link%, %link_in_new_tab%, %in_place%, %modal% and/or %download_link%",
+                            "Setting '%setting%' value must be one or either %link%, %link_in_new_tab%, %in_place%, %modal%, %download_link% and/or %download_inline%",
                             null,
                             [
                                 '%setting%' => $name,
@@ -210,6 +212,7 @@ class Type extends FieldType
                                 '%in_place%' => self::TARGET_EMBED,
                                 '%modal%' => self::TARGET_MODAL,
                                 '%download_link%' => self::TARGET_DOWNLOAD_LINK,
+                                '%download_inline%' => self::TARGET_DOWNLOAD_INLINE,
                             ],
                             "[{$name}]",
                         );
