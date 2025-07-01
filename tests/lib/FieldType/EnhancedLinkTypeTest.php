@@ -179,6 +179,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [
                         Type::TARGET_LINK,
@@ -201,6 +203,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [
                         Type::TARGET_LINK_IN_NEW_TAB,
@@ -229,6 +233,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [
                         Type::TARGET_LINK,
@@ -252,6 +258,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [
                         Type::TARGET_LINK,
@@ -275,6 +283,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [
                         Type::TARGET_LINK,
@@ -298,6 +308,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [
                         Type::TARGET_LINK,
@@ -321,6 +333,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [
                         Type::TARGET_LINK,
@@ -344,6 +358,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [
                         Type::TARGET_LINK,
@@ -367,6 +383,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [
                         Type::TARGET_LINK,
@@ -390,6 +408,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [
                         Type::TARGET_LINK,
@@ -433,6 +453,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [
                         'invalid',
@@ -803,6 +825,8 @@ class EnhancedLinkTypeTest extends FieldTypeTest
                     Type::TARGET_LINK_IN_NEW_TAB,
                     Type::TARGET_EMBED,
                     Type::TARGET_MODAL,
+                    Type::TARGET_DOWNLOAD_LINK,
+                    Type::TARGET_DOWNLOAD_INLINE,
                 ],
             ],
             'allowedTargetsExternal' => [

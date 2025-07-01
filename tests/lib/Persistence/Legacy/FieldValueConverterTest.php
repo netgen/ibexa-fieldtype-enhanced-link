@@ -7,10 +7,12 @@ namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Unit\Persistence\Legacy;
 use Ibexa\Contracts\Core\Persistence\Content\FieldTypeConstraints;
 use Ibexa\Contracts\Core\Persistence\Content\FieldValue;
 use Ibexa\Contracts\Core\Persistence\Content\Type\FieldDefinition as PersistenceFieldDefinition;
+use Ibexa\Core\Persistence\Legacy\Content\FieldValue\Converter\RelationConverter;
 use Ibexa\Core\Persistence\Legacy\Content\StorageFieldDefinition;
 use Ibexa\Core\Persistence\Legacy\Content\StorageFieldValue;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\Persistence\Legacy\FieldValueConverter;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -18,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  */
 class FieldValueConverterTest extends TestCase
 {
-    /** @var \PHPUnit\Framework\MockObject\MockObject|\Ibexa\Core\Persistence\Legacy\Content\FieldValue\Converter\RelationConverter */
+    /** @var MockObject|RelationConverter */
     protected $converter;
 
     protected function setUp(): void
@@ -39,7 +41,14 @@ class FieldValueConverterTest extends TestCase
                             'rootDefaultLocation' => false,
                             'selectionContentTypes' => ['article', 'blog_post'],
                             'allowedLinkType' => Type::LINK_TYPE_ALL,
-                            'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                            'allowedTargetsInternal' => [
+                                Type::TARGET_LINK,
+                                Type::TARGET_LINK_IN_NEW_TAB,
+                                Type::TARGET_EMBED,
+                                Type::TARGET_MODAL,
+                                Type::TARGET_DOWNLOAD_LINK,
+                                Type::TARGET_DOWNLOAD_INLINE,
+                            ],
                             'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                             'enableSuffix' => false,
                             'enableLabelInternal' => true,
@@ -66,7 +75,9 @@ class FieldValueConverterTest extends TestCase
                     "link",
                     "link_new_tab",
                     "embed",
-                    "modal"
+                    "modal",
+                    "download_link",
+                    "download_inline"
                 ],
                 "allowedTargetsExternal": [
                     "link",
@@ -105,7 +116,9 @@ class FieldValueConverterTest extends TestCase
                     "link",
                     "link_new_tab",
                     "embed",
-                    "modal"
+                    "modal",
+                    "download_link",
+                    "download_inline"
                 ],
                 "allowedTargetsExternal": [
                     "link",
@@ -126,7 +139,14 @@ class FieldValueConverterTest extends TestCase
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => ['article', 'blog_post'],
                     'allowedLinkType' => Type::LINK_TYPE_ALL,
-                    'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                    'allowedTargetsInternal' => [
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_EMBED,
+                        Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
+                    ],
                     'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                     'enableSuffix' => false,
                     'enableLabelInternal' => true,
@@ -159,6 +179,8 @@ class FieldValueConverterTest extends TestCase
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                     'allowedLinkType' => Type::LINK_TYPE_ALL,
@@ -182,6 +204,8 @@ class FieldValueConverterTest extends TestCase
                         Type::TARGET_LINK_IN_NEW_TAB,
                         Type::TARGET_EMBED,
                         Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
                     ],
                     'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                     'allowedLinkType' => Type::LINK_TYPE_ALL,

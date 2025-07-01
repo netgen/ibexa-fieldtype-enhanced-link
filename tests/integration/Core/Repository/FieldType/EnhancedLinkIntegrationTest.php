@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Integration\Core\Repository\FieldType;
 
+use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
+use Ibexa\Contracts\Core\Repository\Exceptions\UnauthorizedException;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\Core\Repository\Values\Content\Relation as APIRelation;
@@ -33,8 +35,8 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
     }
 
     /**
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\UnauthorizedException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      */
     public function getCreateExpectedRelations(Content $content): array
     {
@@ -53,8 +55,8 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
     }
 
     /**
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\UnauthorizedException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
      */
     public function getUpdateExpectedRelations(Content $content): array
     {
@@ -102,6 +104,8 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
                     Type::TARGET_LINK_IN_NEW_TAB,
                     Type::TARGET_EMBED,
                     Type::TARGET_MODAL,
+                    Type::TARGET_DOWNLOAD_LINK,
+                    Type::TARGET_DOWNLOAD_INLINE,
                 ],
             ],
             'allowedTargetsExternal' => [
@@ -139,7 +143,14 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
             'rootDefaultLocation' => false,
             'selectionContentTypes' => [],
             'allowedLinkType' => Type::LINK_TYPE_ALL,
-            'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+            'allowedTargetsInternal' => [
+                Type::TARGET_LINK,
+                Type::TARGET_LINK_IN_NEW_TAB,
+                Type::TARGET_EMBED,
+                Type::TARGET_MODAL,
+                Type::TARGET_DOWNLOAD_LINK,
+                Type::TARGET_DOWNLOAD_INLINE,
+            ],
             'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
             'enableSuffix' => false,
             'enableLabelInternal' => true,
@@ -258,7 +269,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
     }
 
     /**
-     * @dataProvider provideFieldSettings
+     * @dataProvider provideCreateContentTypesCases
      *
      * @param mixed $settings
      * @param mixed $expectedSettings
@@ -302,7 +313,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         );
     }
 
-    public function provideFieldSettings(): array
+    public static function provideCreateContentTypesCases(): iterable
     {
         return [
             'empty_settings' => [
@@ -313,7 +324,14 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
                     'allowedLinkType' => Type::LINK_TYPE_ALL,
-                    'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                    'allowedTargetsInternal' => [
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_EMBED,
+                        Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
+                    ],
                     'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                     'enableSuffix' => true,
                     'enableLabelInternal' => true,
@@ -332,7 +350,14 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
                     'rootDefaultLocation' => false,
                     'selectionContentTypes' => [],
                     'allowedLinkType' => Type::LINK_TYPE_INTERNAL,
-                    'allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB, Type::TARGET_EMBED, Type::TARGET_MODAL],
+                    'allowedTargetsInternal' => [
+                        Type::TARGET_LINK,
+                        Type::TARGET_LINK_IN_NEW_TAB,
+                        Type::TARGET_EMBED,
+                        Type::TARGET_MODAL,
+                        Type::TARGET_DOWNLOAD_LINK,
+                        Type::TARGET_DOWNLOAD_INLINE,
+                    ],
                     'allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB],
                     'enableSuffix' => true,
                     'enableLabelInternal' => true,
