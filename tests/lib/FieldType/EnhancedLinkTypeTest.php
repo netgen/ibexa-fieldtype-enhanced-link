@@ -15,10 +15,12 @@ use Ibexa\Core\Base\Exceptions\InvalidArgumentException;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
 use Ibexa\Core\Base\Exceptions\NotFoundException;
 use Ibexa\Core\FieldType\ValidationError;
+use Ibexa\Core\Repository\Validator\TargetContentValidatorInterface;
 use Ibexa\Tests\Core\FieldType\FieldTypeTest;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\InternalLinkValidator;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @group type
@@ -30,7 +32,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
 
     private $contentHandler;
 
-    /** @var \Ibexa\Core\Repository\Validator\TargetContentValidatorInterface|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var TargetContentValidatorInterface|MockObject */
     private $targetContentValidator;
 
     protected function setUp(): void
@@ -516,7 +518,7 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         array $fieldSettings = [],
         string $languageCode = 'en_GB'
     ): void {
-        /** @var \Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition|\PHPUnit\Framework\MockObject\MockObject $fieldDefinitionMock */
+        /** @var FieldDefinition|MockObject $fieldDefinitionMock */
         $fieldDefinitionMock = $this->createMock(FieldDefinition::class);
         $fieldDefinitionMock->method('getFieldSettings')->willReturn($fieldSettings);
 
