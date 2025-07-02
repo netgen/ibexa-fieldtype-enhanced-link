@@ -76,7 +76,7 @@ class FieldValueConverterTest extends TestCase
                     "link_new_tab",
                     "embed",
                     "modal",
-                    "download_link",
+                    "download",
                     "download_inline"
                 ],
                 "allowedTargetsExternal": [
@@ -117,7 +117,7 @@ class FieldValueConverterTest extends TestCase
                     "link_new_tab",
                     "embed",
                     "modal",
-                    "download_link",
+                    "download",
                     "download_inline"
                 ],
                 "allowedTargetsExternal": [
