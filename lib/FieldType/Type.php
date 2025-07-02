@@ -35,7 +35,7 @@ class Type extends FieldType
     public const TARGET_EMBED = 'embed';
     public const TARGET_MODAL = 'modal';
     public const TARGET_LINK_IN_NEW_TAB = 'link_new_tab';
-    public const TARGET_DOWNLOAD_LINK = 'download_link';
+    public const TARGET_DOWNLOAD_LINK = 'download';
     public const TARGET_DOWNLOAD_INLINE = 'download_inline';
 
     protected $settingsSchema = [
