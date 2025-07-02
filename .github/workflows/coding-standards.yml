@@ -14,14 +14,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v4
-        with:
-          path: .php-cs-fixer.cache
-          key: ${{ runner.os }}-${{ github.repository }}-phpcsfixer-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-${{ github.repository }}-phpcsfixer-
-
-      - name: PHP-CS-Fixer
-        uses: docker://oskarstark/php-cs-fixer-ga
+      - uses: docker://oskarstark/php-cs-fixer-ga
         with:
           args: --diff --dry-run
