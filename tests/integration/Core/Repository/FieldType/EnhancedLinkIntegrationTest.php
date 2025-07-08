@@ -191,7 +191,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
     /**
      * @depends testLoadContentTypeField
      */
-    public function testCreateExternalContent()
+    public function testCreateExternalContent(): Content
     {
         $content = $this->createContent($this->getValidExternalCreationFieldData());
         self::assertNotNull($content->id);
@@ -233,7 +233,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         ];
     }
 
-    public function testUpdateExternalField()
+    public function testUpdateExternalField(): Content
     {
         $updatedContent = $this->updateContent($this->getValidUpdateExternalFieldData());
         self::assertNotNull($updatedContent->id);
@@ -288,31 +288,6 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         return $contentType;
     }
 
-    public function provideInvalidUpdateFieldData(): array
-    {
-        return $this->provideInvalidCreationFieldData();
-    }
-
-    public function assertCopiedFieldDataLoadedCorrectly(Field $field): void
-    {
-        self::assertInstanceOf(
-            Value::class,
-            $field->value,
-        );
-
-        $expectedData = [
-            'reference' => 4,
-            'label' => 'label',
-            'target' => Type::TARGET_LINK,
-            'suffix' => 'suffix',
-        ];
-
-        $this->assertPropertiesCorrect(
-            $expectedData,
-            $field->value,
-        );
-    }
-
     public static function provideCreateContentTypesCases(): iterable
     {
         return [
@@ -365,6 +340,31 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
                 ],
             ],
         ];
+    }
+
+    public function provideInvalidUpdateFieldData(): array
+    {
+        return $this->provideInvalidCreationFieldData();
+    }
+
+    public function assertCopiedFieldDataLoadedCorrectly(Field $field): void
+    {
+        self::assertInstanceOf(
+            Value::class,
+            $field->value,
+        );
+
+        $expectedData = [
+            'reference' => 4,
+            'label' => 'label',
+            'target' => Type::TARGET_LINK,
+            'suffix' => 'suffix',
+        ];
+
+        $this->assertPropertiesCorrect(
+            $expectedData,
+            $field->value,
+        );
     }
 
     public function provideToHashData(): array

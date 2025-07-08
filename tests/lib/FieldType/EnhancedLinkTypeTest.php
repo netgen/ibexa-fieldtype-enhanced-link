@@ -496,6 +496,54 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         self::assertEquals($fieldValue, $expected);
     }
 
+    public function provideDataForToPersistenceValue(): array
+    {
+        return [
+            'string_reference_value' => [
+                new Value('test'),
+                new FieldValue(
+                    [
+                        'data' => [
+                            'id' => null,
+                            'label' => null,
+                            'type' => Type::LINK_TYPE_EXTERNAL,
+                            'target' => Type::TARGET_LINK,
+                            'suffix' => null,
+                        ],
+                        'externalData' => 'test',
+                        'sortKey' => 'test',
+                    ],
+                ),
+            ],
+            'int_reference_value' => [
+                new Value(15, 'label', Type::TARGET_LINK),
+                new FieldValue(
+                    [
+                        'data' => [
+                            'id' => 15,
+                            'label' => 'label',
+                            'type' => Type::LINK_TYPE_INTERNAL,
+                            'target' => Type::TARGET_LINK,
+                            'suffix' => null,
+                        ],
+                        'externalData' => null,
+                        'sortKey' => '15',
+                    ],
+                ),
+            ],
+            'boolean_reference_value' => [
+                new Value(false),
+                new FieldValue(
+                    [
+                        'data' => [],
+                        'externalData' => null,
+                        'sortKey' => null,
+                    ],
+                ),
+            ],
+        ];
+    }
+
     /**
      * @dataProvider provideDataForFromPersistenceValue
      */
@@ -507,100 +555,6 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         $fieldType = $type->fromPersistenceValue($persistenceValue);
 
         self::assertEquals($fieldType, $expected);
-    }
-
-    /**
-     * @dataProvider provideDataForGetName
-     */
-    public function testGetName(
-        SPIValue $value,
-        string $expected,
-        array $fieldSettings = [],
-        string $languageCode = 'en_GB'
-    ): void {
-        /** @var FieldDefinition|MockObject $fieldDefinitionMock */
-        $fieldDefinitionMock = $this->createMock(FieldDefinition::class);
-        $fieldDefinitionMock->method('getFieldSettings')->willReturn($fieldSettings);
-
-        $name = $this->getFieldTypeUnderTest()->getName($value, $fieldDefinitionMock, $languageCode);
-
-        self::assertSame($expected, $name);
-    }
-
-    public function provideDataForGetName(): array
-    {
-        return [
-            'empty_destination_content_id' => [
-                $this->getEmptyValueExpectation(), '', [], 'en_GB',
-            ],
-            'destination_content_id' => [
-                new Value(self::DESTINATION_CONTENT_ID), 'name_en_GB', [], 'en_GB',
-            ],
-            'destination_content_id_de_DE' => [
-                new Value(self::DESTINATION_CONTENT_ID), 'Name_de_DE', [], 'de_DE',
-            ],
-            'string_name' => [
-                new Value('test', 'label'), 'label', [], 'de_DE',
-            ],
-            'destination_content_id_non_existent' => [
-                new Value(self::NON_EXISTENT_CONTENT_ID), '', [], 'de_DE',
-            ],
-        ];
-    }
-
-    public function testIsSearchable(): void
-    {
-        $type = $this->createFieldTypeUnderTest();
-
-        self::assertTrue($type->isSearchable());
-    }
-
-    /**
-     * @group targetValidation
-     */
-    public function testInvalidExternalTargetValidationError(): void
-    {
-        $fieldDefinition = $this->getFieldDefinitionMock(['allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB]]);
-        $fieldType = $this->createFieldTypeUnderTest();
-        $validationErrors = $fieldType->validate($fieldDefinition, new Value('test', '', Type::TARGET_MODAL));
-
-        self::assertIsArray($validationErrors);
-        self::assertEquals([$this->generateInvalidExternalTargetValidationError(Type::TARGET_MODAL)], $validationErrors);
-    }
-
-    /**
-     * @group targetValidation
-     */
-    public function testInvalidInternalTargetValidationError(): void
-    {
-        $fieldDefinition = $this->getFieldDefinitionMock(['allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB]]);
-        $fieldType = $this->createFieldTypeUnderTest();
-        $validationErrors = $fieldType->validate($fieldDefinition, new Value(1, '', Type::TARGET_MODAL));
-
-        self::assertIsArray($validationErrors);
-        self::assertEquals([$this->generateInvalidInternalTargetValidationError(Type::TARGET_MODAL)], $validationErrors);
-    }
-
-    public function testDisallowedLinkTypeValidationError(): void
-    {
-        $fieldDefinition = $this->getFieldDefinitionMock(['allowedLinkType' => Type::LINK_TYPE_EXTERNAL]);
-        $fieldType = $this->createFieldTypeUnderTest();
-        $validationErrors = $fieldType->validate($fieldDefinition, new Value(1));
-        self::assertIsArray($validationErrors);
-        self::assertEquals([$this->generateDisallowedLinkTypeValidationError(Type::LINK_TYPE_EXTERNAL)], $validationErrors);
-    }
-
-    public function testInvalidValueStructureValidationError(): void
-    {
-        $fieldType = $this->createFieldTypeUnderTest();
-
-        try {
-            $fieldType->acceptValue(new Value(true));
-        } catch (InvalidArgumentType $e) {
-            $result = true;
-        }
-
-        self::assertTrue($result);
     }
 
     public function provideDataForFromPersistenceValue(): array
@@ -718,52 +672,98 @@ class EnhancedLinkTypeTest extends FieldTypeTest
         ];
     }
 
-    public function provideDataForToPersistenceValue(): array
+    /**
+     * @dataProvider provideDataForGetName
+     */
+    public function testGetName(
+        SPIValue $value,
+        string $expected,
+        array $fieldSettings = [],
+        string $languageCode = 'en_GB'
+    ): void {
+        /** @var FieldDefinition|MockObject $fieldDefinitionMock */
+        $fieldDefinitionMock = $this->createMock(FieldDefinition::class);
+        $fieldDefinitionMock->method('getFieldSettings')->willReturn($fieldSettings);
+
+        $name = $this->getFieldTypeUnderTest()->getName($value, $fieldDefinitionMock, $languageCode);
+
+        self::assertSame($expected, $name);
+    }
+
+    public function provideDataForGetName(): array
     {
         return [
-            'string_reference_value' => [
-                new Value('test'),
-                new FieldValue(
-                    [
-                        'data' => [
-                            'id' => null,
-                            'label' => null,
-                            'type' => Type::LINK_TYPE_EXTERNAL,
-                            'target' => Type::TARGET_LINK,
-                            'suffix' => null,
-                        ],
-                        'externalData' => 'test',
-                        'sortKey' => 'test',
-                    ],
-                ),
+            'empty_destination_content_id' => [
+                $this->getEmptyValueExpectation(), '', [], 'en_GB',
             ],
-            'int_reference_value' => [
-                new Value(15, 'label', Type::TARGET_LINK),
-                new FieldValue(
-                    [
-                        'data' => [
-                            'id' => 15,
-                            'label' => 'label',
-                            'type' => Type::LINK_TYPE_INTERNAL,
-                            'target' => Type::TARGET_LINK,
-                            'suffix' => null,
-                        ],
-                        'externalData' => null,
-                        'sortKey' => '15',
-                    ],
-                ),
+            'destination_content_id' => [
+                new Value(self::DESTINATION_CONTENT_ID), 'name_en_GB', [], 'en_GB',
             ],
-            'boolean_reference_value' => [
-                new Value(false),
-                new FieldValue(
-                    [
-                        'data' => [],
-                        'externalData' => null,
-                        'sortKey' => null,
-                    ],
-                ),
+            'destination_content_id_de_DE' => [
+                new Value(self::DESTINATION_CONTENT_ID), 'Name_de_DE', [], 'de_DE',
+            ],
+            'string_name' => [
+                new Value('test', 'label'), 'label', [], 'de_DE',
+            ],
+            'destination_content_id_non_existent' => [
+                new Value(self::NON_EXISTENT_CONTENT_ID), '', [], 'de_DE',
             ],
         ];
+    }
+
+    public function testIsSearchable(): void
+    {
+        $type = $this->createFieldTypeUnderTest();
+
+        self::assertTrue($type->isSearchable());
+    }
+
+    /**
+     * @group targetValidation
+     */
+    public function testInvalidExternalTargetValidationError(): void
+    {
+        $fieldDefinition = $this->getFieldDefinitionMock(['allowedTargetsExternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB]]);
+        $fieldType = $this->createFieldTypeUnderTest();
+        $validationErrors = $fieldType->validate($fieldDefinition, new Value('test', '', Type::TARGET_MODAL));
+
+        self::assertIsArray($validationErrors);
+        self::assertEquals([$this->generateInvalidExternalTargetValidationError(Type::TARGET_MODAL)], $validationErrors);
+    }
+
+    /**
+     * @group targetValidation
+     */
+    public function testInvalidInternalTargetValidationError(): void
+    {
+        $fieldDefinition = $this->getFieldDefinitionMock(['allowedTargetsInternal' => [Type::TARGET_LINK, Type::TARGET_LINK_IN_NEW_TAB]]);
+        $fieldType = $this->createFieldTypeUnderTest();
+        $validationErrors = $fieldType->validate($fieldDefinition, new Value(1, '', Type::TARGET_MODAL));
+
+        self::assertIsArray($validationErrors);
+        self::assertEquals([$this->generateInvalidInternalTargetValidationError(Type::TARGET_MODAL)], $validationErrors);
+    }
+
+    public function testDisallowedLinkTypeValidationError(): void
+    {
+        $fieldDefinition = $this->getFieldDefinitionMock(['allowedLinkType' => Type::LINK_TYPE_EXTERNAL]);
+        $fieldType = $this->createFieldTypeUnderTest();
+        $validationErrors = $fieldType->validate($fieldDefinition, new Value(1));
+        self::assertIsArray($validationErrors);
+        self::assertEquals([$this->generateDisallowedLinkTypeValidationError(Type::LINK_TYPE_EXTERNAL)], $validationErrors);
+    }
+
+    public function testInvalidValueStructureValidationError(): void
+    {
+        $fieldType = $this->createFieldTypeUnderTest();
+
+        try {
+            $fieldType->acceptValue(new Value(true));
+        } catch (InvalidArgumentType $e) {
+            $result = true;
+        }
+
+        self::assertTrue($result);
     }
 
     public function provideValidDataForValidate(): array
