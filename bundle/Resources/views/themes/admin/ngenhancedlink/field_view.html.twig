@@ -27,7 +27,7 @@
                 {% endembed %}
                 <p>Type: internal</p>
                 <p>Label: {{ field.value.label }}</p>
-                <p>Target: {{ field.value.target }}</p>
+                <p>Target: {{ ('ngenhancedlink.target.' ~ field.value.target)|trans }}</p>
                 <p>Suffix: {{ field.value.suffix }}</p>
             {% endif %}
             {% if field.value.isTypeExternal %}

@@ -6,6 +6,7 @@ namespace Netgen\IbexaFieldTypeEnhancedLinkBundle\Form\Field;
 
 use Ibexa\Contracts\Core\Repository\ContentService;
 use Ibexa\Contracts\Core\Repository\ContentTypeService;
+use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
 use Ibexa\Contracts\Core\Repository\Exceptions\UnauthorizedException;
 use Ibexa\Contracts\Core\Repository\FieldTypeService;
 use Ibexa\Contracts\Core\Repository\Values\Content\Location;
@@ -48,7 +49,7 @@ class FieldValueType extends AbstractType
     }
 
     /**
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException
+     * @throws NotFoundException
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -161,7 +162,7 @@ class FieldValueType extends AbstractType
     }
 
     /**
-     * @throws \Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException
+     * @throws NotFoundException
      */
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
@@ -169,7 +170,7 @@ class FieldValueType extends AbstractType
         $view->vars['default_location'] = $options['default_location'];
         $view->vars['root_default_location'] = $options['root_default_location'];
 
-        /** @var \Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value $data */
+        /** @var Value $data */
         $data = $form->getData();
 
         if (!$data instanceof Value || null === $data->reference || $data->isTypeExternal()) {

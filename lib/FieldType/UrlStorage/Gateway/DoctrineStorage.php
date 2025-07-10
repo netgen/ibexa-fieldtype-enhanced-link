@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception as DBALDriverException;
+use Doctrine\DBAL\Exception as DoctrineDBALException;
 use Doctrine\DBAL\ParameterType;
 use Ibexa\Core\Persistence\Legacy\URL\Gateway\DoctrineDatabase;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway;
@@ -26,8 +28,8 @@ class DoctrineStorage extends Gateway
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
-     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws DoctrineDBALException
+     * @throws DBALDriverException
      */
     public function getIdUrlMap(array $ids): array
     {
@@ -54,8 +56,8 @@ class DoctrineStorage extends Gateway
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
-     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws DoctrineDBALException
+     * @throws DBALDriverException
      */
     public function getUrlIdMap(array $urls): array
     {
@@ -77,7 +79,7 @@ class DoctrineStorage extends Gateway
             $statement = $query->execute();
 
             foreach ($statement->fetchAllAssociative() as $row) {
-                $map[$row['url']] = (int)$row['id'];
+                $map[$row['url']] = (int) $row['id'];
             }
         }
 
@@ -85,7 +87,7 @@ class DoctrineStorage extends Gateway
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws DoctrineDBALException
      */
     public function insertUrl(string $url): int
     {
@@ -117,7 +119,7 @@ class DoctrineStorage extends Gateway
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws DoctrineDBALException
      */
     public function linkUrl(int $urlId, int $fieldId, int $versionNo): void
     {
@@ -141,8 +143,8 @@ class DoctrineStorage extends Gateway
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
-     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws DoctrineDBALException
+     * @throws DBALDriverException
      */
     public function unlinkUrl(int $fieldId, int $versionNo, array $excludeUrlIds = []): void
     {
@@ -215,8 +217,8 @@ class DoctrineStorage extends Gateway
      *
      * @param int[] $potentiallyOrphanedUrls
      *
-     * @throws \Doctrine\DBAL\Exception
-     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws DoctrineDBALException
+     * @throws DBALDriverException
      */
     private function deleteOrphanedUrls(array $potentiallyOrphanedUrls): void
     {

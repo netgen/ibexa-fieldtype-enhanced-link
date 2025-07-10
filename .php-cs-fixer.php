@@ -32,6 +32,9 @@ return $config
         'yoda_style' => false,
         'php_unit_strict' => false,
         'php_unit_test_annotation' => false,
+        'php_unit_data_provider_static' => false,
+        'php_unit_data_provider_name' => false,
+        'php_unit_data_provider_return_type' => false,
 
         // Additional rules
         'return_assignment' => false,

@@ -76,4 +76,14 @@ class Value extends BaseValue
     {
         return $this->target === Type::TARGET_LINK_IN_NEW_TAB;
     }
+
+    public function isTargetDownloadLink(): bool
+    {
+        return $this->target === Type::TARGET_DOWNLOAD_LINK;
+    }
+
+    public function isTargetDownloadInline(): bool
+    {
+        return $this->target === Type::TARGET_DOWNLOAD_INLINE;
+    }
 }

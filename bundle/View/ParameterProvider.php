@@ -10,6 +10,7 @@ use Ibexa\Contracts\Core\Repository\Exceptions\UnauthorizedException;
 use Ibexa\Contracts\Core\Repository\FieldTypeService;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\MVC\Symfony\FieldType\View\ParameterProviderInterface;
+use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 
 final class ParameterProvider implements ParameterProviderInterface
 {
@@ -33,7 +34,7 @@ final class ParameterProvider implements ParameterProviderInterface
 
     private function isLinkAvailable(Field $field): bool
     {
-        /** @var \Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value $value */
+        /** @var Value $value */
         $value = $field->value;
 
         if ($this->fieldTypeService->getFieldType($field->fieldTypeIdentifier)->isEmptyValue($value)) {

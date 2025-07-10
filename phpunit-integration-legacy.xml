@@ -12,6 +12,7 @@
         <env name="backendVersion" value="5" />
         <env name="fixtureDir" value="Legacy" />
         <ini name="error_reporting" value="-1" />
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
     </php>
     <testsuites>
         <testsuite name="ngenhancedlink_fieldtype_db_integration">

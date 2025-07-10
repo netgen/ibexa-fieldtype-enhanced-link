@@ -8,6 +8,7 @@ use Ibexa\Contracts\Core\FieldType\GatewayBasedStorage;
 use Ibexa\Contracts\Core\FieldType\StorageGatewayInterface;
 use Ibexa\Contracts\Core\Persistence\Content\Field;
 use Ibexa\Contracts\Core\Persistence\Content\VersionInfo;
+use Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -15,7 +16,7 @@ class UrlStorage extends GatewayBasedStorage
 {
     protected LoggerInterface $logger;
 
-    /** @var \Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway */
+    /** @var Gateway */
     protected $gateway;
 
     public function __construct(StorageGatewayInterface $gateway, ?LoggerInterface $logger = null)
@@ -81,7 +82,5 @@ class UrlStorage extends GatewayBasedStorage
         return true;
     }
 
-    public function getIndexData(VersionInfo $versionInfo, Field $field, array $context)
-    {
-    }
+    public function getIndexData(VersionInfo $versionInfo, Field $field, array $context): void {}
 }
