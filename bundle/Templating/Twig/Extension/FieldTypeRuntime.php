@@ -19,6 +19,6 @@ class FieldTypeRuntime
     {
         return $this->repository->sudo(
             fn (): bool => $this->repository->getContentService()->loadContentInfo($reference)->mainLocationId !== null,
-        )();
+        );
     }
 }
