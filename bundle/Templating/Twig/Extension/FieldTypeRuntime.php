@@ -17,8 +17,9 @@ class FieldTypeRuntime
 
     public function hasLocation(int $reference): bool
     {
-        return $this->repository->sudo(
-            fn (): bool => $this->repository->getContentService()->loadContentInfo($reference)->mainLocationId !== null,
-        );
+        /** @var bool $callback */
+        $callback = fn (): bool => $this->repository->getContentService()->loadContentInfo($reference)->mainLocationId !== null;
+
+        return $this->repository->sudo($callback);
     }
 }
