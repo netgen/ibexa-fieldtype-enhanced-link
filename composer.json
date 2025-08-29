@@ -15,7 +15,7 @@
         "ext-pdo": "*",
         "ibexa/admin-ui": "*",
         "ibexa/content-forms": "*",
-        "ibexa/core": "^4.2"
+        "ibexa/core": "^4.6"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
