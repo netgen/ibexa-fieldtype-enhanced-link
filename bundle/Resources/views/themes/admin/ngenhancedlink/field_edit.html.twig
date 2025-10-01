@@ -14,6 +14,7 @@
 
     <div class="link-type-options hidden" data-allowed-link-type="{{ allowed_link_type }}">
         {{- form_row(form.link_type, { disabled: is_translation }) -}}
+        {{- form_row(form.rel_attribute, { disabled: is_translation }) -}}
     </div>
     <div class="internal-link-form hidden">
         {{ block('ibexa_fieldtype_ngenhancedlink_internal_link_widget') }}

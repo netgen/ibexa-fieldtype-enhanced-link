@@ -15,6 +15,7 @@ class Value extends BaseValue
     public ?string $label;
     public string $target;
     public ?string $suffix;
+    public ?string $relAttribute;
 
     /**
      * @noinspection MagicMethodsValidityInspection
@@ -26,12 +27,14 @@ class Value extends BaseValue
         $reference = null,
         ?string $label = null,
         string $target = Type::TARGET_LINK,
-        ?string $suffix = null
+        ?string $suffix = null,
+        ?string $relAttribute = null
     ) {
         $this->reference = $reference;
         $this->label = $label;
         $this->target = $target;
         $this->suffix = $suffix;
+        $this->relAttribute = $relAttribute;
     }
 
     public function __toString()
