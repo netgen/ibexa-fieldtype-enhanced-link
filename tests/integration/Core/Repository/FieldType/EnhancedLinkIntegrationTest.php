@@ -169,7 +169,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
 
     public function getValidCreationFieldData(): Value
     {
-        return new Value(4, 'label', Type::TARGET_LINK, 'suffix');
+        return new Value(4, 'label', Type::TARGET_LINK, 'suffix', 'noopener');
     }
 
     public function getValidExternalCreationFieldData(): Value
@@ -205,6 +205,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
             'label' => 'label',
             'target' => Type::TARGET_LINK,
             'suffix' => 'suffix',
+            'relAttribute' => 'noopener',
         ];
         $this->assertPropertiesCorrect(
             $expectedData,
@@ -250,6 +251,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
             'label' => 'label',
             'target' => Type::TARGET_LINK,
             'suffix' => 'suffix',
+            'relAttribute' => null,
         ];
         $this->assertPropertiesCorrect(
             $expectedData,
@@ -294,6 +296,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
             'label' => 'label',
             'target' => Type::TARGET_LINK,
             'suffix' => 'suffix',
+            'relAttribute' => 'noopener',
         ];
 
         $this->assertPropertiesCorrect(
@@ -346,12 +349,13 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
     {
         return [
             [
-                new Value(4, 'label', Type::TARGET_LINK, 'suffix'),
+                new Value(4, 'label', Type::TARGET_LINK, 'suffix', 'noopener noreferrer'),
                 [
                     'reference' => 4,
                     'label' => 'label',
                     'target' => Type::TARGET_LINK,
                     'suffix' => 'suffix',
+                    'rel_attribute' => 'noopener noreferrer'
                 ],
             ],
         ];
@@ -366,8 +370,9 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
                     'label' => 'label',
                     'target' => Type::TARGET_LINK,
                     'suffix' => 'suffix',
+                    'rel_attribute' => 'noreferrer',
                 ],
-                new Value(4, 'label', Type::TARGET_LINK, 'suffix'),
+                new Value(4, 'label', Type::TARGET_LINK, 'suffix', 'noreferrer'),
             ],
         ];
     }

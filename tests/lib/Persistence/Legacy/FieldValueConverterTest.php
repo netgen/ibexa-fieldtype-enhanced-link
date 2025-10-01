@@ -217,7 +217,8 @@ class FieldValueConverterTest extends TestCase
                 "label": "Enhanced link",
                 "type": "internal",
                 "target": "link",
-                "suffix": "start"
+                "suffix": "start",
+                "relAttribute": "noreferrer"
             }
             DATATEXT;
         $storageFieldValue->sortKeyString = 'reference';
@@ -229,6 +230,7 @@ class FieldValueConverterTest extends TestCase
             'type' => Type::LINK_TYPE_INTERNAL,
             'target' => Type::TARGET_LINK,
             'suffix' => 'start',
+            'relAttribute' => 'noreferrer',
         ];
         $expectedFieldValue->sortKey = 'reference';
 
@@ -274,6 +276,7 @@ class FieldValueConverterTest extends TestCase
             'type' => Type::LINK_TYPE_INTERNAL,
             'target' => Type::TARGET_LINK,
             'suffix' => 'start',
+            'relAttribute' => 'noopener',
         ];
         $fieldValue->sortKey = 'reference';
 
@@ -285,7 +288,8 @@ class FieldValueConverterTest extends TestCase
                 "label": "Enhanced link",
                 "type": "internal",
                 "target": "link",
-                "suffix": "start"
+                "suffix": "start",
+                "relAttribute": "noopener"
             }
             DATATEXT;
         $expectedStorageFieldValue->sortKeyString = 'reference';
@@ -305,6 +309,7 @@ class FieldValueConverterTest extends TestCase
             'type' => Type::LINK_TYPE_EXTERNAL,
             'target' => Type::TARGET_LINK,
             'suffix' => 'start',
+            'relAttribute' => null,
         ];
         $fieldValue->sortKey = 'reference';
 
