@@ -11,12 +11,6 @@ use function is_string;
 
 class Value extends BaseValue
 {
-    public $reference;
-    public ?string $label;
-    public string $target;
-    public ?string $suffix;
-    public ?string $relAttribute;
-
     /**
      * @noinspection MagicMethodsValidityInspection
      * @noinspection PhpMissingParentConstructorInspection
@@ -24,20 +18,14 @@ class Value extends BaseValue
      * @param ?int|?string $reference
      */
     public function __construct(
-        $reference = null,
-        ?string $label = null,
-        string $target = Type::TARGET_LINK,
-        ?string $suffix = null,
-        ?string $relAttribute = null
-    ) {
-        $this->reference = $reference;
-        $this->label = $label;
-        $this->target = $target;
-        $this->suffix = $suffix;
-        $this->relAttribute = $relAttribute;
-    }
+        public $reference = null,
+        public ?string $label = null,
+        public string $target = Type::TARGET_LINK,
+        public ?string $suffix = null,
+        public ?string $relAttribute = null,
+    ) {}
 
-    public function __toString()
+    public function __toString(): string
     {
         if (is_string($this->reference)) {
             return $this->reference;

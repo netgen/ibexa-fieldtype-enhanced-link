@@ -6,12 +6,9 @@ use Ibexa\Contracts\Core\Repository\Repository;
 
 class FieldTypeRuntime
 {
-    private Repository $repository;
-
-    public function __construct(Repository $repository)
-    {
-        $this->repository = $repository;
-    }
+    public function __construct(
+        private Repository $repository,
+    ) {}
 
     public function hasLocation(int $reference): bool
     {

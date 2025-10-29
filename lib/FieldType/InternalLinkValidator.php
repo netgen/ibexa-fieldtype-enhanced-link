@@ -15,16 +15,10 @@ use function in_array;
  */
 class InternalLinkValidator
 {
-    private Content\Handler $contentHandler;
-    private Content\Type\Handler $contentTypeHandler;
-
     public function __construct(
-        Content\Handler $contentHandler,
-        Content\Type\Handler $contentTypeHandler
-    ) {
-        $this->contentHandler = $contentHandler;
-        $this->contentTypeHandler = $contentTypeHandler;
-    }
+        private Content\Handler $contentHandler,
+        private Content\Type\Handler $contentTypeHandler,
+    ) {}
 
     public function validate(Value $value, array $allowedContentTypes = []): ?ValidationError
     {
