@@ -87,16 +87,10 @@ class Type extends FieldType
         ],
     ];
 
-    private SPIContentHandler $handler;
-    private InternalLinkValidator $targetContentValidator;
-
     public function __construct(
-        SPIContentHandler $handler,
-        InternalLinkValidator $targetContentValidator
-    ) {
-        $this->handler = $handler;
-        $this->targetContentValidator = $targetContentValidator;
-    }
+        private SPIContentHandler $handler,
+        private InternalLinkValidator $targetContentValidator,
+    ) {}
 
     public function validateFieldSettings($fieldSettings): array
     {

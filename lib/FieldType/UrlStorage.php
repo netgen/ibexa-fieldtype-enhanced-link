@@ -13,15 +13,13 @@ use Psr\Log\NullLogger;
 
 class UrlStorage extends GatewayBasedStorage
 {
-    protected LoggerInterface $logger;
-
-    /** @var \Netgen\IbexaFieldTypeEnhancedLink\FieldType\ExternalLinkStorage\Gateway */
-    protected $gateway;
-
-    public function __construct(StorageGatewayInterface $gateway, ?LoggerInterface $logger = null)
-    {
+    /** @param \Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway $gateway */
+    public function __construct(
+        protected StorageGatewayInterface $gateway,
+        protected ?LoggerInterface $logger = null,
+    ) {
         parent::__construct($gateway);
-        $this->logger = $logger ?? new NullLogger();
+        $this->logger ??= new NullLogger();
     }
 
     public function storeFieldData(VersionInfo $versionInfo, Field $field, array $context): bool

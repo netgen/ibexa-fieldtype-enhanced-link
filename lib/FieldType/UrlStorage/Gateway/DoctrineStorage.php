@@ -18,12 +18,9 @@ class DoctrineStorage extends Gateway
     public const URL_TABLE = DoctrineDatabase::URL_TABLE;
     public const URL_LINK_TABLE = DoctrineDatabase::URL_LINK_TABLE;
 
-    protected Connection $connection;
-
-    public function __construct(Connection $connection)
-    {
-        $this->connection = $connection;
-    }
+    public function __construct(
+        protected Connection $connection,
+    ) {}
 
     /**
      * @throws \Doctrine\DBAL\Exception

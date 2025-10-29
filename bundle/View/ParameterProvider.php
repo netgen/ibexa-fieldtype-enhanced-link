@@ -13,16 +13,10 @@ use Ibexa\Core\MVC\Symfony\FieldType\View\ParameterProviderInterface;
 
 final class ParameterProvider implements ParameterProviderInterface
 {
-    private ContentService $contentService;
-    private FieldTypeService $fieldTypeService;
-
     public function __construct(
-        ContentService $contentService,
-        FieldTypeService $fieldTypeService
-    ) {
-        $this->contentService = $contentService;
-        $this->fieldTypeService = $fieldTypeService;
-    }
+        private ContentService $contentService,
+        private FieldTypeService $fieldTypeService,
+    ) {}
 
     public function getViewParameters(Field $field): array
     {
