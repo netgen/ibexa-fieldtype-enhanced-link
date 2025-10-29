@@ -25,7 +25,7 @@ class FieldValueFormMapper extends AbstractRelationFormMapper
                         'required' => $fieldDefinition->isRequired,
                         'label' => $fieldDefinition->getName(),
                         'default_location' => $this->loadDefaultLocationForSelection(
-                            $fieldSettings['selectionRoot'],
+                            $fieldSettings['selectionRoot'] !== '' ? $fieldSettings['selectionRoot'] : null,
                             $fieldForm->getConfig()->getOption('location'),
                         ),
                         'root_default_location' => $fieldSettings['rootDefaultLocation'] ?? false,
