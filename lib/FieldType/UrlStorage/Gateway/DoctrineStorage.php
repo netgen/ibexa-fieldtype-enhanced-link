@@ -25,7 +25,6 @@ class DoctrineStorage extends Gateway
 
     /**
      * @throws \Doctrine\DBAL\Exception
-     * @throws \Doctrine\DBAL\Driver\Exception
      */
     public function getIdUrlMap(array $ids): array
     {
@@ -53,7 +52,6 @@ class DoctrineStorage extends Gateway
 
     /**
      * @throws \Doctrine\DBAL\Exception
-     * @throws \Doctrine\DBAL\Driver\Exception
      */
     public function getUrlIdMap(array $urls): array
     {
@@ -214,7 +212,6 @@ class DoctrineStorage extends Gateway
      * @param int[] $potentiallyOrphanedUrls
      *
      * @throws \Doctrine\DBAL\Exception
-     * @throws \Doctrine\DBAL\Driver\Exception
      */
     private function deleteOrphanedUrls(array $potentiallyOrphanedUrls): void
     {
