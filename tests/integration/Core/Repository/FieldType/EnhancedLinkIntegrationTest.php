@@ -180,7 +180,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
     /**
      * @depends testLoadContentTypeField
      */
-    public function testCreateExternalContent()
+    public function testCreateExternalContent(): Content
     {
         $content = $this->createContent($this->getValidExternalCreationFieldData());
         self::assertNotNull($content->id);
@@ -223,7 +223,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTest
         ];
     }
 
-    public function testUpdateExternalField()
+    public function testUpdateExternalField(): Content
     {
         $updatedContent = $this->updateContent($this->getValidUpdateExternalFieldData());
         self::assertNotNull($updatedContent->id);
