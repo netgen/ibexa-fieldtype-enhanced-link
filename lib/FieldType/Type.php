@@ -26,15 +26,15 @@ use function is_string;
 
 class Type extends FieldType
 {
-    public const SELECTION_BROWSE = 0;
-    public const SELECTION_DROPDOWN = 1;
-    public const LINK_TYPE_EXTERNAL = 'external';
-    public const LINK_TYPE_INTERNAL = 'internal';
-    public const LINK_TYPE_ALL = 'all';
-    public const TARGET_LINK = 'link';
-    public const TARGET_EMBED = 'embed';
-    public const TARGET_MODAL = 'modal';
-    public const TARGET_LINK_IN_NEW_TAB = 'link_new_tab';
+    public const int SELECTION_BROWSE = 0;
+    public const int SELECTION_DROPDOWN = 1;
+    public const string LINK_TYPE_EXTERNAL = 'external';
+    public const string LINK_TYPE_INTERNAL = 'internal';
+    public const string LINK_TYPE_ALL = 'all';
+    public const string TARGET_LINK = 'link';
+    public const string TARGET_EMBED = 'embed';
+    public const string TARGET_MODAL = 'modal';
+    public const string TARGET_LINK_IN_NEW_TAB = 'link_new_tab';
 
     protected $settingsSchema = [
         'selectionMethod' => [

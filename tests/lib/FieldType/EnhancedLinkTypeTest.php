@@ -25,8 +25,8 @@ use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
  */
 class EnhancedLinkTypeTest extends FieldTypeTest
 {
-    private const DESTINATION_CONTENT_ID = 14;
-    private const NON_EXISTENT_CONTENT_ID = 123;
+    private const int DESTINATION_CONTENT_ID = 14;
+    private const int NON_EXISTENT_CONTENT_ID = 123;
 
     private $contentHandler;
 

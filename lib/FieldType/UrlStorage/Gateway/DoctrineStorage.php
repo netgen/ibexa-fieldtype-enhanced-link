@@ -15,8 +15,8 @@ use function time;
 
 class DoctrineStorage extends Gateway
 {
-    public const URL_TABLE = DoctrineDatabase::URL_TABLE;
-    public const URL_LINK_TABLE = DoctrineDatabase::URL_LINK_TABLE;
+    public const string URL_TABLE = DoctrineDatabase::URL_TABLE;
+    public const string URL_LINK_TABLE = DoctrineDatabase::URL_LINK_TABLE;
 
     public function __construct(
         protected Connection $connection,
