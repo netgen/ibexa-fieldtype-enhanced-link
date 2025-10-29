@@ -10,7 +10,7 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Relation as APIRelation;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
 use Ibexa\Core\Repository\Values\Content\Relation;
-use Ibexa\Tests\Integration\Core\Repository\FieldType\BaseIntegrationTest;
+use Ibexa\Tests\Integration\Core\Repository\FieldType\BaseIntegrationTestCase;
 use Ibexa\Tests\Integration\Core\Repository\FieldType\RelationSearchBaseIntegrationTestTrait;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
@@ -23,7 +23,7 @@ use function PHPUnit\Framework\assertEquals;
  * @group integration
  * @group field-type
  */
-class EnhancedLinkIntegrationTest extends BaseIntegrationTest
+class EnhancedLinkIntegrationTest extends BaseIntegrationTestCase
 {
     use RelationSearchBaseIntegrationTestTrait;
 

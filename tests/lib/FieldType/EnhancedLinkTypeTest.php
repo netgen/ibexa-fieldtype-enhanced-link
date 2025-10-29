@@ -15,7 +15,7 @@ use Ibexa\Core\Base\Exceptions\InvalidArgumentException;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
 use Ibexa\Core\Base\Exceptions\NotFoundException;
 use Ibexa\Core\FieldType\ValidationError;
-use Ibexa\Tests\Core\FieldType\FieldTypeTest;
+use Ibexa\Tests\Core\FieldType\FieldTypeTestCase;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\InternalLinkValidator;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Type;
 use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
@@ -23,7 +23,7 @@ use Netgen\IbexaFieldTypeEnhancedLink\FieldType\Value;
 /**
  * @group type
  */
-class EnhancedLinkTypeTest extends FieldTypeTest
+class EnhancedLinkTypeTest extends FieldTypeTestCase
 {
     private const int DESTINATION_CONTENT_ID = 14;
     private const int NON_EXISTENT_CONTENT_ID = 123;
