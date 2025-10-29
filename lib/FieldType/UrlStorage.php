@@ -22,7 +22,7 @@ class UrlStorage extends GatewayBasedStorage
         $this->logger ??= new NullLogger();
     }
 
-    public function storeFieldData(VersionInfo $versionInfo, Field $field, array $context): bool
+    public function storeFieldData(VersionInfo $versionInfo, Field $field): bool
     {
         $url = (string) $field->value->externalData;
 
@@ -45,7 +45,7 @@ class UrlStorage extends GatewayBasedStorage
         return true;
     }
 
-    public function getFieldData(VersionInfo $versionInfo, Field $field, array $context): void
+    public function getFieldData(VersionInfo $versionInfo, Field $field): void
     {
         if ($field->value->data === null) {
             return;
@@ -67,7 +67,7 @@ class UrlStorage extends GatewayBasedStorage
         $field->value->externalData = $map[$id] ?? null;
     }
 
-    public function deleteFieldData(VersionInfo $versionInfo, array $fieldIds, array $context): void
+    public function deleteFieldData(VersionInfo $versionInfo, array $fieldIds): void
     {
         foreach ($fieldIds as $fieldId) {
             $this->gateway->unlinkUrl($fieldId, $versionInfo->versionNo);
@@ -79,7 +79,5 @@ class UrlStorage extends GatewayBasedStorage
         return true;
     }
 
-    public function getIndexData(VersionInfo $versionInfo, Field $field, array $context)
-    {
-    }
+    public function getIndexData(VersionInfo $versionInfo, Field $field, array $context): void {}
 }
