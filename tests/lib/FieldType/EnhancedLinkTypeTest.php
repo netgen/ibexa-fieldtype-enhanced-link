@@ -9,7 +9,7 @@ use Ibexa\Contracts\Core\Persistence\Content\FieldValue;
 use Ibexa\Contracts\Core\Persistence\Content\Handler as SPIContentHandler;
 use Ibexa\Contracts\Core\Persistence\Content\VersionInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
-use Ibexa\Contracts\Core\Repository\Values\Content\Relation;
+use Ibexa\Contracts\Core\Repository\Values\Content\RelationType;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentException;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
@@ -458,7 +458,7 @@ class EnhancedLinkTypeTest extends FieldTypeTestCase
         $type = $this->createFieldTypeUnderTest();
         self::assertEquals(
             [
-                Relation::FIELD => [70],
+                RelationType::FIELD->value => [70],
             ],
             $type->getRelations($type->acceptValue(70)),
         );

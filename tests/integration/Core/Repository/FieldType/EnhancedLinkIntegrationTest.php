@@ -6,7 +6,7 @@ namespace Netgen\IbexaFieldTypeEnhancedLink\Tests\Integration\Core\Repository\Fi
 
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
-use Ibexa\Contracts\Core\Repository\Values\Content\Relation as APIRelation;
+use Ibexa\Contracts\Core\Repository\Values\Content\RelationType as APIRelationType;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
 use Ibexa\Core\Repository\Values\Content\Relation;
@@ -44,7 +44,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTestCase
             new Relation(
                 [
                     'sourceFieldDefinitionIdentifier' => 'data',
-                    'type' => APIRelation::FIELD,
+                    'type' => APIRelationType::FIELD->value,
                     'sourceContentInfo' => $content->contentInfo,
                     'destinationContentInfo' => $contentService->loadContentInfo(4),
                 ],
@@ -64,7 +64,7 @@ class EnhancedLinkIntegrationTest extends BaseIntegrationTestCase
             new Relation(
                 [
                     'sourceFieldDefinitionIdentifier' => 'data',
-                    'type' => APIRelation::FIELD,
+                    'type' => APIRelationType::FIELD->value,
                     'sourceContentInfo' => $content->contentInfo,
                     'destinationContentInfo' => $contentService->loadContentInfo(49),
                 ],

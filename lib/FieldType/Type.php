@@ -9,7 +9,7 @@ use Ibexa\Contracts\Core\Persistence\Content\FieldValue;
 use Ibexa\Contracts\Core\Persistence\Content\Handler as SPIContentHandler;
 use Ibexa\Contracts\Core\Repository\Exceptions\NotFoundException;
 use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
-use Ibexa\Contracts\Core\Repository\Values\Content\Relation;
+use Ibexa\Contracts\Core\Repository\Values\Content\RelationType;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
 use Ibexa\Core\Base\Exceptions\InvalidArgumentType;
 use Ibexa\Core\FieldType\FieldType;
@@ -357,7 +357,7 @@ class Type extends FieldType
         /** @var Value $fieldValue */
         $relations = [];
         if ($fieldValue->isTypeInternal()) {
-            $relations[Relation::FIELD] = [$fieldValue->reference];
+            $relations[RelationType::FIELD->value] = [$fieldValue->reference];
         }
 
         return $relations;
