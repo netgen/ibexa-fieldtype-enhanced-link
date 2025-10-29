@@ -99,10 +99,10 @@ class DoctrineStorage extends Gateway
                     'url' => ':url',
                 ],
             )
-            ->setParameter(':created', $time, PDO::PARAM_INT)
-            ->setParameter(':modified', $time, PDO::PARAM_INT)
-            ->setParameter(':original_url_md5', md5($url))
-            ->setParameter(':url', $url)
+            ->setParameter('created', $time, PDO::PARAM_INT)
+            ->setParameter('modified', $time, PDO::PARAM_INT)
+            ->setParameter('original_url_md5', md5($url))
+            ->setParameter('url', $url)
         ;
 
         $query->executeStatement();
@@ -128,9 +128,9 @@ class DoctrineStorage extends Gateway
                     'url_id' => ':url_id',
                 ],
             )
-            ->setParameter(':contentobject_attribute_id', $fieldId, PDO::PARAM_INT)
-            ->setParameter(':contentobject_attribute_version', $versionNo, PDO::PARAM_INT)
-            ->setParameter(':url_id', $urlId, PDO::PARAM_INT)
+            ->setParameter('contentobject_attribute_id', $fieldId, PDO::PARAM_INT)
+            ->setParameter('contentobject_attribute_version', $versionNo, PDO::PARAM_INT)
+            ->setParameter('url_id', $urlId, PDO::PARAM_INT)
         ;
 
         $query->executeStatement();
@@ -158,8 +158,8 @@ class DoctrineStorage extends Gateway
                     ),
                 ),
             )
-            ->setParameter(':contentobject_attribute_id', $fieldId, ParameterType::INTEGER)
-            ->setParameter(':contentobject_attribute_version', $versionNo, ParameterType::INTEGER);
+            ->setParameter('contentobject_attribute_id', $fieldId, ParameterType::INTEGER)
+            ->setParameter('contentobject_attribute_version', $versionNo, ParameterType::INTEGER);
 
         $statement = $selectQuery->executeQuery();
         $potentiallyOrphanedUrls = $statement->fetchFirstColumn();
@@ -183,8 +183,8 @@ class DoctrineStorage extends Gateway
                     ),
                 ),
             )
-            ->setParameter(':contentobject_attribute_id', $fieldId, ParameterType::INTEGER)
-            ->setParameter(':contentobject_attribute_version', $versionNo, ParameterType::INTEGER);
+            ->setParameter('contentobject_attribute_id', $fieldId, ParameterType::INTEGER)
+            ->setParameter('contentobject_attribute_version', $versionNo, ParameterType::INTEGER);
 
         if (empty($excludeUrlIds) === false) {
             $deleteQuery
