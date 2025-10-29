@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netgen\IbexaFieldTypeEnhancedLink\FieldType\UrlStorage\Gateway;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Ibexa\Core\Persistence\Legacy\URL\Gateway\DoctrineDatabase;
@@ -39,7 +40,7 @@ class DoctrineStorage extends Gateway
                 )
                 ->from(self::URL_TABLE)
                 ->where('id IN (:ids)')
-                ->setParameter(':ids', $ids, Connection::PARAM_INT_ARRAY);
+                ->setParameter('ids', $ids, ArrayParameterType::INTEGER);
 
             $statement = $query->execute();
             foreach ($statement->fetchAllAssociative() as $row) {
@@ -69,7 +70,7 @@ class DoctrineStorage extends Gateway
                 ->where(
                     $query->expr()->in('url', ':urls'),
                 )
-                ->setParameter(':urls', $urls, Connection::PARAM_STR_ARRAY);
+                ->setParameter('urls', $urls, ArrayParameterType::STRING);
 
             $statement = $query->execute();
 
@@ -195,7 +196,7 @@ class DoctrineStorage extends Gateway
                         ':url_ids',
                     ),
                 )
-                ->setParameter('url_ids', $excludeUrlIds, Connection::PARAM_INT_ARRAY);
+                ->setParameter('url_ids', $excludeUrlIds, ArrayParameterType::INTEGER);
         }
 
         $deleteQuery->execute();
@@ -234,7 +235,7 @@ class DoctrineStorage extends Gateway
                 ),
             )
             ->andWhere($query->expr()->isNull('link.url_id'))
-            ->setParameter('url_ids', $potentiallyOrphanedUrls, Connection::PARAM_INT_ARRAY)
+            ->setParameter('url_ids', $potentiallyOrphanedUrls, ArrayParameterType::INTEGER)
         ;
 
         $statement = $query->execute();
@@ -248,7 +249,7 @@ class DoctrineStorage extends Gateway
         $deleteQuery
             ->delete($this->connection->quoteIdentifier(self::URL_TABLE))
             ->where($deleteQuery->expr()->in('id', ':ids'))
-            ->setParameter(':ids', $ids, Connection::PARAM_STR_ARRAY)
+            ->setParameter('ids', $ids, ArrayParameterType::STRING)
         ;
 
         $deleteQuery->execute();
