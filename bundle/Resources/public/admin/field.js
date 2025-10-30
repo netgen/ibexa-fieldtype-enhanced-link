@@ -178,7 +178,12 @@
         const relationsTable = relationsWrapper.querySelector('.ibexa-table');
         const startingLocationId =
             relationsContainer.dataset.defaultLocation !== '0' ? parseInt(relationsContainer.dataset.defaultLocation, 10) : null;
-        const closeUDW = () => ReactDOM.unmountComponentAtNode(udwContainer);
+        const closeUDW = () => {
+            if (udwRoot) {
+                udwRoot.unmount();
+                udwRoot = null;
+            }
+        };
         const renderRows = (items) => {
             items.forEach((item, index) => {
                 relationsContainer.insertAdjacentHTML('beforeend', renderRow(item, index));
@@ -228,7 +233,9 @@
                           'universal_discovery_widget',
                       );
 
-            ReactDOM.render(
+            udwRoot = window.ReactDOMClient.createRoot(udwContainer);
+
+            udwRoot.render(
                 React.createElement(ibexa.modules.UniversalDiscovery, {
                     onConfirm,
                     onCancel: closeUDW,
@@ -238,7 +245,6 @@
                     multiple: isSingle ? false : selectedItemsLimit !== 1,
                     multipleItemsLimit: selectedItemsLimit > 1 ? selectedItemsLimit - selectedItems.length : selectedItemsLimit,
                 }),
-                udwContainer,
             );
         };
         const excludeDuplicatedItems = (items) => {
@@ -386,6 +392,7 @@
         };
         let selectedItems = [...fieldContainer.querySelectorAll(SELECTOR_ROW)].map((row) => parseInt(row.dataset.contentId, 10));
         let selectedItemsMap = selectedItems.reduce((total, item) => ({...total, [item]: item}), {});
+        let udwRoot = null;
 
         updateAddBtnState();
         attachRowsEventHandlers();
