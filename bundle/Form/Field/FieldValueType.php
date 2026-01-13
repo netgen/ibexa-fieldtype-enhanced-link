@@ -153,6 +153,21 @@ class FieldValueType extends AbstractType
             ],
         );
 
+        $builder->add(
+            'rel_attribute',
+            ChoiceType::class,
+            [
+                'choices' => [
+                    'ngenhancedlink.rel_attribute.none' => null,
+                    'ngenhancedlink.rel_attribute.noopener' => 'noopener',
+                    'ngenhancedlink.rel_attribute.noreferrer' => 'noreferrer',
+                    'ngenhancedlink.rel_attribute.noopener_noreferrer' => 'noopener noreferrer',
+                ],
+                'label' => /* @Desc("Text") */ 'ngenhancedlink.rel_attribute',
+                'required' => true,
+            ],
+        );
+
         $builder->addModelTransformer(
             new FieldValueTransformer(
                 $this->fieldTypeService->getFieldType('ngenhancedlink'),

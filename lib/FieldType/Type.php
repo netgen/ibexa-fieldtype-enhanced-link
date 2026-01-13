@@ -334,7 +334,7 @@ class Type extends FieldType
                     }
                 }
 
-                return new Value($reference, $hash['label'], $hash['target'], $hash['suffix']);
+                return new Value($reference, $hash['label'], $hash['target'], $hash['suffix'], $hash['rel_attribute']);
             }
         }
 
@@ -349,6 +349,7 @@ class Type extends FieldType
             'label' => $value->label,
             'target' => $value->target,
             'suffix' => $value->suffix,
+            'rel_attribute' => $value->relAttribute,
         ];
     }
 
@@ -379,6 +380,7 @@ class Type extends FieldType
                     'type' => self::LINK_TYPE_EXTERNAL,
                     'target' => $value->target,
                     'suffix' => $value->suffix,
+                    'rel_attribute' => $value->relAttribute,
                 ],
                 'externalData' => $value->reference,
                 'sortKey' => $this->getSortInfo($value),
@@ -393,6 +395,7 @@ class Type extends FieldType
                     'type' => self::LINK_TYPE_INTERNAL,
                     'target' => $value->target,
                     'suffix' => $value->suffix,
+                    'rel_attribute' => $value->relAttribute,
                 ],
                 'externalData' => null,
                 'sortKey' => $this->getSortInfo($value),
@@ -413,6 +416,7 @@ class Type extends FieldType
         $label = $fieldValue->data['label'] ?? null;
         $target = $fieldValue->data['target'] ?? self::TARGET_LINK;
         $suffix = $fieldValue->data['suffix'] ?? null;
+        $relAttribute = $fieldValue->data['rel_attribute'] ?? null;
 
         if ($type === self::LINK_TYPE_INTERNAL && is_int($id)) {
             try {
@@ -427,6 +431,7 @@ class Type extends FieldType
                 $label,
                 $target,
                 $suffix,
+                $relAttribute,
             );
         }
 
@@ -436,6 +441,7 @@ class Type extends FieldType
                 $label,
                 $target,
                 $suffix,
+                $relAttribute,
             );
         }
 

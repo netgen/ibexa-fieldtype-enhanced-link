@@ -11,3 +11,8 @@ ngenhancedlink.url: 'URL'
 ngenhancedlink.target.link_new_tab: 'Link in new tab'
 ngenhancedlink.target.embed: 'Embed'
 ngenhancedlink.target.modal: 'Modal'
+ngenhancedlink.rel_attribute: "Rel attribute (applies only when link is opened in new tab)"
+ngenhancedlink.rel_attribute.none: ""
+ngenhancedlink.rel_attribute.noopener: "noopener"
+ngenhancedlink.rel_attribute.noreferrer: "noreferrer"
+ngenhancedlink.rel_attribute.noopener_noreferrer: "noopener noreferrer"

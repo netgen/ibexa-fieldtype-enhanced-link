@@ -30,6 +30,7 @@ class FieldValueTransformer implements DataTransformerInterface
                 'url' => $value->reference,
                 'label_external' => $value->label,
                 'target_external' => $value->target,
+                'rel_attribute' => $value->relAttribute,
             ];
         }
 
@@ -40,6 +41,7 @@ class FieldValueTransformer implements DataTransformerInterface
                 'label_internal' => $value->label,
                 'target_internal' => $value->target,
                 'suffix' => $value->suffix,
+                'rel_attribute' => $value->relAttribute,
             ];
         }
 
@@ -54,6 +56,7 @@ class FieldValueTransformer implements DataTransformerInterface
                 $value['label_internal'] ?? null,
                 $value['target_internal'],
                 $value['suffix'] ?? null,
+                $value['rel_attribute'] ?? null,
             );
         }
 
@@ -62,6 +65,8 @@ class FieldValueTransformer implements DataTransformerInterface
                 $value['url'],
                 $value['label_external'] ?? null,
                 $value['target_external'],
+                null,
+                $value['rel_attribute'] ?? null,
             );
         }
 
